@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Sign in";
+}
+
+
+<div>
+    <h1><b>Signing in...</b></h1>
+    @using (Html.BeginForm("CheckIn", "User", FormMethod.Post))
+    {
+        <table>
+            <tr><td>Login: </td><td>@Html.TextBox("Login", value: "")</td></tr>
+            <tr><td>Password: </td><td>@Html.Password("Password", value: "")</td></tr>
+        </table>
+        <p><button type="submit">Submit</button></p>
+    }
+</div>

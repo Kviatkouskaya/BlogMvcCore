@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Register";
+}
+
+
+<div>
+    <h1><b>Register new user</b></h1>
+    @using (Html.BeginForm("CheckRegister", "User", FormMethod.Post))
+    {
+        <table>
+            <tr><td>First name:</td><td> @Html.TextBox("first", "")</td></tr>
+            <tr><td>Second name:</td><td> @Html.TextBox("second", "")</td></tr>
+            <tr><td>Login:</td><td> @Html.TextBox("login", "")</td></tr>
+            <tr><td>Password:</td><td> @Html.TextBox("password", "")</td></tr>
+            <tr><td>Repeat password:</td><td> @Html.TextBox("repPassword", "")</td></tr>
+        </table>
+        <p><button type="submit">Submit</button></p>
+    }
+</div>
