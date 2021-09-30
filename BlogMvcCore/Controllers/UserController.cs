@@ -1,11 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Text.Encodings.Web;
-using Microsoft.Extensions.Logging;
-using System.Diagnostics;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System;
 using BlogMvcCore.Models;
 using BlogMvcCore.Helpers;
 
@@ -64,22 +59,26 @@ namespace BlogMvcCore.Controllers
         }
         public ViewResult UserPage()
         {
-
             User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
             ViewBag.UserName = $"{user.FirstName} {user.SecondName}";
-            return View();
+            List<Post> userPost = RepContext.ReturnUserPost(user);
+            if (userPost == null)
+            {
+                return View();
+            }
+            return View(userPost);
         }
         [HttpPost]
-        public ActionResult AddPost(string topic, string postText)
+        public ActionResult AddPost(string title, string postText)
         {
             Post newPost = new()
             {
-                Date = DateTime.Now.Date,
-                Author = new User("first", "second", "login", "pass"), //UserDB.ReturnUser(Session["Login"].ToString()),
-                Title = topic,
-                Text = postText
+                Author = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user"),
+                Title = title,
+                Text = postText,
+                Date = DateTime.Now.Date
             };
-            RepContext.AddPost(newPost);
+            RepContext.AddPost(newPost); //DOESN'T SAVE INSERTED CHANGES ???
             return Redirect("/User/UserPage");
         }
     }

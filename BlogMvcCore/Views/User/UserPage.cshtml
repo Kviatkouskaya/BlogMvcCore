@@ -1,20 +1,31 @@
-﻿@{
+﻿@model List<Post>
+@{
     ViewData["Title"] = "Home Page";
 }
 
  <div>
-        <table>
-            <tr><td><img src="~/Images/Started.jpg" alt="Sample Image" /></td><td><h1> @ViewBag.UserName</h1></td></tr>
-            <tr><td></td><td>
-                    @using(Html.BeginForm("AddPost", "User", FormMethod.Post))
-                    {
-                         <table>
-                            <tr><td><h3>Create new post</h3></td></tr>
-                            <tr><td>Enter topic: @Html.TextBox("topic","")</td></tr>
-                            <tr><td> @Html.TextArea("postText", "",rows:10,columns:40,htmlAttributes:true)</td></tr>
-                            <tr><td><button type="submit">Save</button></td></tr>
-                         </table>
-                    }</td></tr>
-            <tr><td>Previous posts:</td></tr>
-        </table>
+     <table>
+         <tr><td><img src="~/Images/Started.jpg" alt="Sample Image" /></td><td><h1> @ViewBag.UserName</h1></td></tr>
+         <tr>
+             <td></td>
+             <td>
+                 @using (Html.BeginForm("AddPost", "User", FormMethod.Post))
+                 {
+                     <table>
+                         <tr><td><h5><em>Create new post</em></h5></td></tr>
+                         <tr><td>Title:  @Html.TextArea("title", "", rows: 1, columns: 35, htmlAttributes: true)</td></tr>
+                         <tr><td> @Html.TextArea("postText", "", rows: 10, columns: 40, htmlAttributes: true)</td></tr>
+                         <tr><td><button type="submit">Save</button></td></tr>
+                     </table>
+                 }
+             </td>
+         </tr>
+         <tr><td>Previous posts:</td></tr>
+         <tr><td>@foreach (var item in Model)
+         {
+             <p>@item.Author.FirstName @item.Author.SecondName @item.Date.Date</p>
+             <p>@item.Title</p>
+             <p>@item.Text</p>
+         }</td></tr>
+     </table>
  </div>

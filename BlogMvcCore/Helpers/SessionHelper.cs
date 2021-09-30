@@ -12,7 +12,7 @@ namespace BlogMvcCore.Helpers
         public static User GetUserFromJson<User>(this ISession session, string key)
         {
             var value = session.GetString(key);
-            return value == null ? default(User) : JsonConvert.DeserializeObject<User>(value);
+            return value == null ? default : JsonConvert.DeserializeObject<User>(value);
         }
     }
 }

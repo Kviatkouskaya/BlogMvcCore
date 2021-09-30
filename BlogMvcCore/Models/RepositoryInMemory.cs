@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BlogMvcCore.Models
 {
     public class RepositoryInMemory : IUserAction
     {
         private static readonly List<User> allowedUsers = new() { new User("Admin", "System", "admin", "12345678") };
-        private static List<Post> userPosts = new();
+        private static readonly List<Post> postList = new();
         public bool LoginUser(string login, string password)
         {
             foreach (var item in allowedUsers)
@@ -47,12 +45,25 @@ namespace BlogMvcCore.Models
 
         public void AddPost(Post post)
         {
-            userPosts.Add(post);
+            postList.Add(post);
         }
 
         public void Dispose()
         {
             throw new NotImplementedException();
+        }
+
+        public List<Post> ReturnUserPost(User user)
+        {
+            List<Post> userPost = new();
+            foreach (var item in postList)
+            {
+                if (item.Author == user)
+                {
+                    userPost.Add(item);
+                }
+            }
+            return userPost;
         }
     }
 }
