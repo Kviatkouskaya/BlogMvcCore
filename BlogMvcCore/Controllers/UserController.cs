@@ -8,10 +8,10 @@ namespace BlogMvcCore.Controllers
 {
     public class UserController : Controller
     {
-        private readonly Repository RepContext;
+        private readonly Repository repContext;
         public UserController(Repository repository)
         {
-            RepContext = repository;
+            repContext = repository;
         }
         public ActionResult Index()
         {
@@ -33,7 +33,7 @@ namespace BlogMvcCore.Controllers
             if (password == repPassword)
             {
                 User user = new(first, second, login, password);
-                if (RepContext.Register(user))
+                if (repContext.Register(user))
                 {
                     return Redirect("/User/SignIn");
                 }
@@ -49,10 +49,10 @@ namespace BlogMvcCore.Controllers
         [HttpPost]
         public ActionResult CheckIn(string login, string password)
         {
-            bool state = RepContext.LoginUser(login, password);
+            bool state = repContext.LoginUser(login, password);
             if (state)
             {
-                SessionHelper.SetUserAsJson(HttpContext.Session, "user", RepContext.FindUser(login));
+                SessionHelper.SetUserAsJson(HttpContext.Session, "user", repContext.FindUser(login));
                 return Redirect("/User/UserPage");
             }
             return Redirect("/User/SignIn");
@@ -61,7 +61,7 @@ namespace BlogMvcCore.Controllers
         {
             User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
             ViewBag.UserName = $"{user.FirstName} {user.SecondName}";
-            List<Post> userPost = RepContext.ReturnUserPost(user);
+            List<Post> userPost = repContext.ReturnUserPost(user);
             if (userPost == null)
             {
                 return View();
@@ -71,14 +71,16 @@ namespace BlogMvcCore.Controllers
         [HttpPost]
         public ActionResult AddPost(string title, string postText)
         {
+
+            User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
             Post newPost = new()
             {
-                Author = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user"),
+                Author = user,
                 Title = title,
                 Text = postText,
                 Date = DateTime.Now.Date
             };
-            RepContext.AddPost(newPost); //DOESN'T SAVE INSERTED CHANGES ???
+            repContext.AddPost(newPost);
             return Redirect("/User/UserPage");
         }
     }

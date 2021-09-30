@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace BlogMvcCore.Models
@@ -18,6 +19,7 @@ namespace BlogMvcCore.Models
         }
         public void AddPost(Post post)
         {
+            context.Attach(post.Author);
             context.Posts.Add(post);
             context.SaveChanges();
         }
@@ -49,7 +51,7 @@ namespace BlogMvcCore.Models
 
         public List<Post> ReturnUserPost(User user)
         {
-            List<Post> userPost = context.Posts.Where(u => u.Author.Login == user.Login).
+            List<Post> userPost = context.Posts.Include(u => u.Author).Where(u => u.Author.Login == user.Login).
                                                 OrderByDescending(u => u.Date).
                                                 ToList();
             return userPost;
