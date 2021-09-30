@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BlogMvcCore.Models;
+using BlogMvcCore.Helpers;
 
 namespace BlogMvcCore.Controllers
 {
@@ -22,12 +23,6 @@ namespace BlogMvcCore.Controllers
             int dayTime = DateTime.Now.Hour;
             ViewBag.Greeting = dayTime < 12 && dayTime > 6 ? $"Good morning!" :
                               (dayTime < 18 ? "Good afternoon!" : "Good evening!");
-            return View();
-        }
-
-        public ActionResult Hello(string name)
-        {
-            ViewBag.Greeting = name == string.Empty ? "Hello!" : $"Hello, {name}!";
             return View();
         }
 
@@ -62,14 +57,16 @@ namespace BlogMvcCore.Controllers
             bool state = RepContext.LoginUser(login, password);
             if (state)
             {
-                //Session["Login"] = Request.Form["Login"];
+                SessionHelper.SetUserAsJson(HttpContext.Session, "user", RepContext.FindUser(login));
                 return Redirect("/User/UserPage");
             }
             return Redirect("/User/SignIn");
         }
         public ViewResult UserPage()
         {
-            //ViewBag.UserName = RepContext.FindUser(Session["Login"].ToString());
+
+            User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
+            ViewBag.UserName = $"{user.FirstName} {user.SecondName}";
             return View();
         }
         [HttpPost]
