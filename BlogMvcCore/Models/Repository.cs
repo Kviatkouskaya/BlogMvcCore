@@ -19,7 +19,7 @@ namespace BlogMvcCore.Models
         public void AddPost(Post post)
         {
             context.Posts.Add(post);
-            context.SaveChangesAsync();
+            context.SaveChanges();
         }
 
         public bool LoginUser(string login, string password)

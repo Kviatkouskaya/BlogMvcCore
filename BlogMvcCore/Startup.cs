@@ -27,7 +27,7 @@ namespace BlogMvcCore
             services.AddTransient<Repository>();
             services.AddControllersWithViews();
             services.AddDbContext<UserDbContext>(options =>
-            options.UseSqlServer(@"Data Source=(LocalDb)\MSSQLLocalDB;AttachDbFilename=C:\Users\Volha_Kuralenia\source\repos\EpamTraining\BlogMvcCore\BlogMvcCore\App_Data\UserDB.mdf;Initial Catalog=UserDB;Integrated Security=SSPI;"));
+            options.UseSqlServer(Configuration.GetConnectionString("UserContext")));
             services.AddSession();
         }
 
