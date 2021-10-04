@@ -1,8 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using BlogMvcCore.Models;
 
 namespace BlogMvcCore.Models
 {
@@ -16,10 +14,12 @@ namespace BlogMvcCore.Models
 
         public User FindUser(string login)
         {
-            return context.BlogUsers.Where(u => u.Login == login).FirstOrDefault();
+            return context.BlogUsers.Where(u => u.Login == login).
+                                     FirstOrDefault();
         }
         public void AddPost(Post post)
         {
+            context.Attach(post.Author);
             context.Posts.Add(post);
             context.SaveChanges();
         }
@@ -27,13 +27,15 @@ namespace BlogMvcCore.Models
         public bool LoginUser(string login, string password)
         {
             int result = context.BlogUsers.Where(u => u.Login == login
-                                              && u.Password == password).Count();
+                                                && u.Password == password).
+                                           Count();
             return result > 0;
         }
 
         public bool Register(User newUser)
         {
-            int count = context.BlogUsers.Where(u => u.Login == newUser.Login).Count();
+            int count = context.BlogUsers.Where(u => u.Login == newUser.Login).
+                                          Count();
             if (count == 0)
             {
                 context.BlogUsers.Add(newUser);
@@ -45,6 +47,14 @@ namespace BlogMvcCore.Models
         public void Dispose()
         {
             context.Dispose();
+        }
+
+        public List<Post> ReturnUserPost(User user)
+        {
+            List<Post> userPost = context.Posts.Include(u => u.Author).Where(u => u.Author.Login == user.Login).
+                                                OrderByDescending(u => u.Date).
+                                                ToList();
+            return userPost;
         }
     }
 }

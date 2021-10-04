@@ -1,33 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Text.Encodings.Web;
-using Microsoft.Extensions.Logging;
-using System.Diagnostics;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System;
 using BlogMvcCore.Models;
+using BlogMvcCore.Helpers;
 
 namespace BlogMvcCore.Controllers
 {
     public class UserController : Controller
     {
-        private readonly Repository RepContext;
+        private readonly Repository repContext;
         public UserController(Repository repository)
         {
-            RepContext = repository;
+            repContext = repository;
         }
         public ActionResult Index()
         {
             int dayTime = DateTime.Now.Hour;
             ViewBag.Greeting = dayTime < 12 && dayTime > 6 ? $"Good morning!" :
                               (dayTime < 18 ? "Good afternoon!" : "Good evening!");
-            return View();
-        }
-
-        public ActionResult Hello(string name)
-        {
-            ViewBag.Greeting = name == string.Empty ? "Hello!" : $"Hello, {name}!";
             return View();
         }
 
@@ -43,7 +33,7 @@ namespace BlogMvcCore.Controllers
             if (password == repPassword)
             {
                 User user = new(first, second, login, password);
-                if (RepContext.Register(user))
+                if (repContext.Register(user))
                 {
                     return Redirect("/User/SignIn");
                 }
@@ -59,30 +49,38 @@ namespace BlogMvcCore.Controllers
         [HttpPost]
         public ActionResult CheckIn(string login, string password)
         {
-            bool state = RepContext.LoginUser(login, password);
+            bool state = repContext.LoginUser(login, password);
             if (state)
             {
-                //Session["Login"] = Request.Form["Login"];
+                SessionHelper.SetUserAsJson(HttpContext.Session, "user", repContext.FindUser(login));
                 return Redirect("/User/UserPage");
             }
             return Redirect("/User/SignIn");
         }
         public ViewResult UserPage()
         {
-            //ViewBag.UserName = RepContext.FindUser(Session["Login"].ToString());
-            return View();
+            User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
+            ViewBag.UserName = $"{user.FirstName} {user.SecondName}";
+            List<Post> userPost = repContext.ReturnUserPost(user);
+            if (userPost == null)
+            {
+                return View();
+            }
+            return View(userPost);
         }
         [HttpPost]
-        public ActionResult AddPost(string topic, string postText)
+        public ActionResult AddPost(string title, string postText)
         {
+
+            User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
             Post newPost = new()
             {
-                Date = DateTime.Now.Date,
-                Author = new User("first", "second", "login", "pass"), //UserDB.ReturnUser(Session["Login"].ToString()),
-                Title = topic,
-                Text = postText
+                Author = user,
+                Title = title,
+                Text = postText,
+                Date = DateTime.Now.Date
             };
-            RepContext.AddPost(newPost);
+            repContext.AddPost(newPost);
             return Redirect("/User/UserPage");
         }
     }

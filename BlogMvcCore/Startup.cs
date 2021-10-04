@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,8 +27,8 @@ namespace BlogMvcCore
             services.AddTransient<Repository>();
             services.AddControllersWithViews();
             services.AddDbContext<UserDbContext>(options =>
-            options.UseSqlServer(@"Data Source=(LocalDb)\MSSQLLocalDB;AttachDbFilename=C:\Users\Volha_Kuralenia\source\repos\EpamTraining\BlogMvcCore\BlogMvcCore\App_Data\UserDB.mdf;Initial Catalog=UserDB;Integrated Security=SSPI;"));
-            services.AddDistributedMemoryCache();
+            options.UseSqlServer(Configuration.GetConnectionString("UserContext")));
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +45,9 @@ namespace BlogMvcCore
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
+
+            app.UseSession();
+
             app.UseStaticFiles();
 
             app.UseRouting();

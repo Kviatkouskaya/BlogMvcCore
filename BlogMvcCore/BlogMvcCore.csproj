@@ -5,8 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Images\" />
     <Folder Include="App_Data\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Images\Started.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
