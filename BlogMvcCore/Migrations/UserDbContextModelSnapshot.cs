@@ -19,6 +19,32 @@ namespace BlogMvcCore.Migrations
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("BlogMvcCore.Models.Comment", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Author")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("PostIDID")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("PostIDID");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("BlogMvcCore.Models.Post", b =>
                 {
                     b.Property<long>("ID")
@@ -67,16 +93,6 @@ namespace BlogMvcCore.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("BlogUsers");
-
-                    b.HasData(
-                        new
-                        {
-                            ID = 1L,
-                            FirstName = "Admin",
-                            Login = "admin",
-                            Password = "12345678",
-                            SecondName = "System"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -273,6 +289,15 @@ namespace BlogMvcCore.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("BlogMvcCore.Models.Comment", b =>
+                {
+                    b.HasOne("BlogMvcCore.Models.Post", "PostID")
+                        .WithMany()
+                        .HasForeignKey("PostIDID");
+
+                    b.Navigation("PostID");
                 });
 
             modelBuilder.Entity("BlogMvcCore.Models.Post", b =>

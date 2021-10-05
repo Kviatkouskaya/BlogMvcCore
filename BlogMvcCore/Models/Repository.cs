@@ -26,8 +26,7 @@ namespace BlogMvcCore.Models
 
         public bool LoginUser(string login, string password)
         {
-            int result = context.BlogUsers.Where(u => u.Login == login
-                                                && u.Password == password).
+            int result = context.BlogUsers.Where(u => u.Login == login && u.Password == password).
                                            Count();
             return result > 0;
         }
@@ -51,10 +50,26 @@ namespace BlogMvcCore.Models
 
         public List<Post> ReturnUserPost(User user)
         {
-            List<Post> userPost = context.Posts.Include(u => u.Author).Where(u => u.Author.Login == user.Login).
+            List<Post> userPost = context.Posts.Include(u => u.Author).
+                                                Where(u => u.Author.Login == user.Login).
                                                 OrderByDescending(u => u.Date).
                                                 ToList();
             return userPost;
+        }
+
+        public void AddComment(Comment comment)
+        {
+
+            context.Comments.Add(comment);
+            context.SaveChanges();
+        }
+
+        public List<Comment> ReturnPostComment(Post post)
+        {
+            return context.Comments.Include(p => p.PostID).
+                                    Where(p => p.PostID == post).
+                                    OrderByDescending(p => p.Date).
+                                    ToList();
         }
     }
 }

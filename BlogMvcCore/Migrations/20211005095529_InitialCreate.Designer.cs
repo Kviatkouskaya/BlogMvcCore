@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogMvcCore.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20210929135550__initial")]
-    partial class _initial
+    [Migration("20211005095529_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,32 @@ namespace BlogMvcCore.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("BlogMvcCore.Models.Comment", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Author")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("PostIDID")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("PostIDID");
+
+                    b.ToTable("Comments");
+                });
 
             modelBuilder.Entity("BlogMvcCore.Models.Post", b =>
                 {
@@ -69,16 +95,6 @@ namespace BlogMvcCore.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("BlogUsers");
-
-                    b.HasData(
-                        new
-                        {
-                            ID = 1L,
-                            FirstName = "Admin",
-                            Login = "admin",
-                            Password = "12345678",
-                            SecondName = "System"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -275,6 +291,15 @@ namespace BlogMvcCore.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("BlogMvcCore.Models.Comment", b =>
+                {
+                    b.HasOne("BlogMvcCore.Models.Post", "PostID")
+                        .WithMany()
+                        .HasForeignKey("PostIDID");
+
+                    b.Navigation("PostID");
                 });
 
             modelBuilder.Entity("BlogMvcCore.Models.Post", b =>

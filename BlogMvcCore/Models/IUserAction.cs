@@ -10,5 +10,7 @@ namespace BlogMvcCore.Models
         User FindUser(string login);
         public void AddPost(Post post);
         public List<Post> ReturnUserPost(User user);
+        public void AddComment(Comment comment);
+        public List<Comment> ReturnPostComment(Post post);
     }
 }

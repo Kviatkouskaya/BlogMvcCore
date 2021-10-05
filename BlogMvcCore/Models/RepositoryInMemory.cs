@@ -7,6 +7,7 @@ namespace BlogMvcCore.Models
     {
         private static readonly List<User> allowedUsers = new() { new User("Admin", "System", "admin", "12345678") };
         private static readonly List<Post> postList = new();
+        private static readonly List<Comment> commentList = new();
         public bool LoginUser(string login, string password)
         {
             foreach (var item in allowedUsers)
@@ -64,6 +65,24 @@ namespace BlogMvcCore.Models
                 }
             }
             return userPost;
+        }
+
+        public void AddComment(Comment comment)
+        {
+            commentList.Add(comment);
+        }
+
+        public List<Comment> ReturnPostComment(Post post)
+        {
+            List<Comment> postComment = new();
+            foreach (var item in commentList)
+            {
+                if (item.PostID == post)
+                {
+                    postComment.Add(item);
+                }
+            }
+            return postComment;
         }
     }
 }

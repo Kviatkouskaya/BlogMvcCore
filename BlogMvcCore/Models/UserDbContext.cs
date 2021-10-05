@@ -10,5 +10,6 @@ namespace BlogMvcCore.Models
                            : base(options) { Database.EnsureCreated(); }
         public DbSet<User> BlogUsers { get; set; }
         public DbSet<Post> Posts { get; set; }
+        public DbSet<Comment> Comments { get; set; }
     }
 }

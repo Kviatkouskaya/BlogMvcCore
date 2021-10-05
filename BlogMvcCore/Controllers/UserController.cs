@@ -32,10 +32,14 @@ namespace BlogMvcCore.Controllers
         {
             if (password == repPassword)
             {
-                User user = new(first, second, login, password);
-                if (repContext.Register(user))
+                if (first != string.Empty && second != string.Empty &&
+                    login != string.Empty && password != string.Empty && repPassword != string.Empty)
                 {
-                    return Redirect("/User/SignIn");
+                    User user = new(first, second, login, password);
+                    if (repContext.Register(user))
+                    {
+                        return Redirect("/User/SignIn");
+                    }
                 }
             }
             return Redirect("/User/Register");
@@ -71,16 +75,35 @@ namespace BlogMvcCore.Controllers
         [HttpPost]
         public ActionResult AddPost(string title, string postText)
         {
-
-            User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
-            Post newPost = new()
+            if (title != string.Empty && postText != string.Empty)
             {
-                Author = user,
-                Title = title,
-                Text = postText,
-                Date = DateTime.Now.Date
-            };
-            repContext.AddPost(newPost);
+                User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
+                Post newPost = new()
+                {
+                    Author = user,
+                    Title = title,
+                    Text = postText,
+                    Date = DateTime.Now.Date
+                };
+                repContext.AddPost(newPost);
+            }
+            return Redirect("/User/UserPage");
+        }
+        [HttpPost]
+        public ActionResult AddComment(string commentText, Post post)
+        {
+            if (commentText != string.Empty)
+            {
+                User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
+                Comment comment = new()
+                {
+                    PostID = post,
+                    Author = $"{user.FirstName} {user.SecondName}",
+                    Text = commentText,
+                    Date = DateTime.Now.Date
+                };
+                repContext.AddComment(comment);
+            }
             return Redirect("/User/UserPage");
         }
     }

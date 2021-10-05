@@ -13,7 +13,7 @@
                 {
                     <table>
                         <tr><td><h5><em>Create a new post:</em></h5></td></tr>
-                        <tr><td>Title:  @Html.TextArea("title", "", rows: 1, columns: 35, htmlAttributes: true)</td></tr>
+                        <tr><td>Title:  @Html.TextBox("title", "", htmlAttributes: true)</td></tr>
                         <tr><td> @Html.TextArea("postText", "", rows: 8, columns: 40, htmlAttributes: true)</td></tr>
                         <tr><td><button type="submit">Save</button></td></tr>
                     </table>
@@ -29,14 +29,19 @@
                     {
                         <p>@item.Author.FirstName @item.Author.SecondName @item.Date.Day/@item.Date.Month/@item.Date.Year </p>
                         <p>@item.Title</p>
-                        <p>@item.Text</p>
+                        <p>@item.Text</p>@using (Html.BeginForm("AddComment", "User", FormMethod.Post))
+                        {
+                            @Html.TextBox("commentText", "", htmlAttributes: true)
+                            <input type="hidden" name="post" value="item" />
+                            <button type="submit">Comment</button>
+                        }
                     }
                 }
                 else
                 {
-                    <p>Nothing to show you. Write a post at first...</p>
+                    <p>Here's nothing to show you. Write a post at first...</p>
                 }
-        </td>
-    </tr>
-</table>
+            </td>
+        </tr>
+    </table>
 </div>
