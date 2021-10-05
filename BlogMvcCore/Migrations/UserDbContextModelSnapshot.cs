@@ -32,7 +32,7 @@ namespace BlogMvcCore.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("PostIDID")
+                    b.Property<long?>("PostID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Text")
@@ -40,7 +40,7 @@ namespace BlogMvcCore.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("PostIDID");
+                    b.HasIndex("PostID");
 
                     b.ToTable("Comments");
                 });
@@ -293,11 +293,11 @@ namespace BlogMvcCore.Migrations
 
             modelBuilder.Entity("BlogMvcCore.Models.Comment", b =>
                 {
-                    b.HasOne("BlogMvcCore.Models.Post", "PostID")
+                    b.HasOne("BlogMvcCore.Models.Post", "Post")
                         .WithMany()
-                        .HasForeignKey("PostIDID");
+                        .HasForeignKey("PostID");
 
-                    b.Navigation("PostID");
+                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("BlogMvcCore.Models.Post", b =>

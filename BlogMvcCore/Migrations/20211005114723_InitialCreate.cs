@@ -196,7 +196,7 @@ namespace BlogMvcCore.Migrations
                 {
                     ID = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PostIDID = table.Column<long>(type: "bigint", nullable: true),
+                    PostID = table.Column<long>(type: "bigint", nullable: true),
                     Author = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -205,8 +205,8 @@ namespace BlogMvcCore.Migrations
                 {
                     table.PrimaryKey("PK_Comments", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Comments_Posts_PostIDID",
-                        column: x => x.PostIDID,
+                        name: "FK_Comments_Posts_PostID",
+                        column: x => x.PostID,
                         principalTable: "Posts",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
@@ -252,9 +252,9 @@ namespace BlogMvcCore.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_PostIDID",
+                name: "IX_Comments_PostID",
                 table: "Comments",
-                column: "PostIDID");
+                column: "PostID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_AuthorID",

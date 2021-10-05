@@ -8,29 +8,28 @@ namespace BlogMvcCore.Models
         private static readonly List<User> allowedUsers = new() { new User("Admin", "System", "admin", "12345678") };
         private static readonly List<Post> postList = new();
         private static readonly List<Comment> commentList = new();
-        public bool LoginUser(string login, string password)
+        public int LoginUser(string login, string password)
         {
+            var count = 0;
             foreach (var item in allowedUsers)
             {
                 if (item.Login == login &&
                    item.Password == password)
                 {
-                    return true;
+                    return count += 1;
                 }
             }
-            return false;
+            return count;
         }
-        public bool Register(User user)
+        public void Register(User user)
         {
             if (user.FirstName != string.Empty && user.SecondName != string.Empty)
             {
                 if (user.Login != string.Empty && user.Password != string.Empty)
                 {
                     allowedUsers.Add(user);
-                    return true;
                 }
             }
-            return false;
         }
         public User FindUser(string login)
         {
@@ -77,7 +76,7 @@ namespace BlogMvcCore.Models
             List<Comment> postComment = new();
             foreach (var item in commentList)
             {
-                if (item.PostID == post)
+                if (item.Post == post)
                 {
                     postComment.Add(item);
                 }

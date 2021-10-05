@@ -30,16 +30,15 @@ namespace BlogMvcCore.Controllers
         public ActionResult CheckRegister(string first, string second, string login,
                                           string password, string repPassword)
         {
-            if (password == repPassword)
+            var count = repContext.CheckLoginDuplicate(login);
+            if (password == repPassword && count == 0)
             {
                 if (first != string.Empty && second != string.Empty &&
                     login != string.Empty && password != string.Empty && repPassword != string.Empty)
                 {
                     User user = new(first, second, login, password);
-                    if (repContext.Register(user))
-                    {
-                        return Redirect("/User/SignIn");
-                    }
+                    repContext.Register(user);
+                    return Redirect("/User/SignIn");
                 }
             }
             return Redirect("/User/Register");
@@ -53,8 +52,7 @@ namespace BlogMvcCore.Controllers
         [HttpPost]
         public ActionResult CheckIn(string login, string password)
         {
-            bool state = repContext.LoginUser(login, password);
-            if (state)
+            if (repContext.LoginUser(login, password) == 1)
             {
                 SessionHelper.SetUserAsJson(HttpContext.Session, "user", repContext.FindUser(login));
                 return Redirect("/User/UserPage");
@@ -90,18 +88,19 @@ namespace BlogMvcCore.Controllers
             return Redirect("/User/UserPage");
         }
         [HttpPost]
-        public ActionResult AddComment(string commentText, Post post)
+        public ActionResult AddComment(string commentText, long postID)
         {
             if (commentText != string.Empty)
             {
                 User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
                 Comment comment = new()
                 {
-                    PostID = post,
+                    Post = repContext.FindPost(postID),
                     Author = $"{user.FirstName} {user.SecondName}",
                     Text = commentText,
                     Date = DateTime.Now.Date
                 };
+                comment.Post.Author = user;
                 repContext.AddComment(comment);
             }
             return Redirect("/User/UserPage");
