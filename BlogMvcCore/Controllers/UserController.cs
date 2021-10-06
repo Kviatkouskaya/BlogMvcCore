@@ -71,10 +71,9 @@ namespace BlogMvcCore.Controllers
         {
             if (title != string.Empty && postText != string.Empty)
             {
-                User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
                 Post newPost = new()
                 {
-                    Author = user,
+                    Author = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user"),
                     Title = title,
                     Text = postText,
                     Date = DateTime.Now.Date
@@ -92,7 +91,7 @@ namespace BlogMvcCore.Controllers
                 Comment comment = new()
                 {
                     Post = repContext.FindPost(postID),
-                    Author = $"{user.FirstName} {user.SecondName}",
+                    Author = HttpContext.Session.GetString("name"),
                     Text = commentText,
                     Date = DateTime.Now.Date
                 };
