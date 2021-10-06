@@ -32,7 +32,7 @@ namespace BlogMvcCore.Models
         public int CheckLoginDuplicate(string login)
         {
             return context.BlogUsers.Where(u => u.Login == login).
-                                          Count();
+                                     Count();
         }
 
         public void Register(User newUser)

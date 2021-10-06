@@ -13,21 +13,18 @@ namespace BlogMvcCore.Controllers
         {
             repContext = repository;
         }
-        public ActionResult Index()
+        public IActionResult Index()
         {
-            int dayTime = DateTime.Now.Hour;
-            ViewBag.Greeting = dayTime < 12 && dayTime > 6 ? $"Good morning!" :
-                              (dayTime < 18 ? "Good afternoon!" : "Good evening!");
             return View();
         }
 
-        public ViewResult Register()
+        public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
-        public ActionResult CheckRegister(string first, string second, string login,
+        public IActionResult CheckRegister(string first, string second, string login,
                                           string password, string repPassword)
         {
             var count = repContext.CheckLoginDuplicate(login);
@@ -44,13 +41,13 @@ namespace BlogMvcCore.Controllers
             return Redirect("/User/Register");
         }
 
-        public ViewResult SignIn()
+        public IActionResult SignIn()
         {
             return View();
         }
 
         [HttpPost]
-        public ActionResult CheckIn(string login, string password)
+        public IActionResult CheckIn(string login, string password)
         {
             if (repContext.LoginUser(login, password) == 1)
             {
@@ -59,19 +56,15 @@ namespace BlogMvcCore.Controllers
             }
             return Redirect("/User/SignIn");
         }
-        public ViewResult UserPage()
+        public IActionResult UserPage()
         {
             User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
             ViewBag.UserName = $"{user.FirstName} {user.SecondName}";
             List<Post> userPost = repContext.ReturnUserPost(user);
-            if (userPost == null)
-            {
-                return View();
-            }
             return View(userPost);
         }
         [HttpPost]
-        public ActionResult AddPost(string title, string postText)
+        public IActionResult AddPost(string title, string postText)
         {
             if (title != string.Empty && postText != string.Empty)
             {
@@ -88,7 +81,7 @@ namespace BlogMvcCore.Controllers
             return Redirect("/User/UserPage");
         }
         [HttpPost]
-        public ActionResult AddComment(string commentText, long postID)
+        public IActionResult AddComment(string commentText, long postID)
         {
             if (commentText != string.Empty)
             {
