@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using BlogMvcCore.Models;
 using BlogMvcCore.Helpers;
+using Microsoft.AspNetCore.Http;
 
 namespace BlogMvcCore.Controllers
 {
@@ -51,15 +52,17 @@ namespace BlogMvcCore.Controllers
         {
             if (repContext.LoginUser(login, password) == 1)
             {
-                SessionHelper.SetUserAsJson(HttpContext.Session, "user", repContext.FindUser(login));
+                var user = repContext.FindUser(login);
+                HttpContext.Session.SetString("name", $"{user.FirstName} {user.SecondName}");
+                SessionHelper.SetUserAsJson(HttpContext.Session, "user", user);
                 return Redirect("/User/UserPage");
             }
             return Redirect("/User/SignIn");
         }
         public IActionResult UserPage()
         {
+
             User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
-            ViewBag.UserName = $"{user.FirstName} {user.SecondName}";
             List<Post> userPost = repContext.ReturnUserPost(user);
             return View(userPost);
         }
