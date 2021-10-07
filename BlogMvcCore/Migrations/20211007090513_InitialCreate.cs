@@ -54,7 +54,7 @@ namespace BlogMvcCore.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SecondName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Login = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Login = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -250,6 +250,13 @@ namespace BlogMvcCore.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BlogUsers_Login",
+                table: "BlogUsers",
+                column: "Login",
+                unique: true,
+                filter: "[Login] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_PostID",

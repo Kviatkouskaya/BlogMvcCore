@@ -61,7 +61,6 @@ namespace BlogMvcCore.Controllers
         }
         public IActionResult UserPage()
         {
-
             User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
             List<Post> userPost = repContext.ReturnUserPost(user);
             return View(userPost);

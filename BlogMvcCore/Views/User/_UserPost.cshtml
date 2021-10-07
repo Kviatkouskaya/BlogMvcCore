@@ -9,9 +9,12 @@
                 <p>@item.Author.FirstName @item.Author.SecondName @item.Date.Day/@item.Date.Month/@item.Date.Year </p>
                 <p>@item.Title</p>
 
-                <p>@item.Text</p>@using (Html.BeginForm("AddComment", "User", FormMethod.Post))
+                <p>@item.Text</p>
+                @await Html.PartialAsync("_PostComment")
+                @using (Html.BeginForm("AddComment", "User", FormMethod.Post))
                 {
                     @Html.TextBox("commentText", "", htmlAttributes: true)
+
                     <input type="hidden" id="postID" name="postID" value=@item.ID />
                     <button type="submit">Comment</button>
                     <p>---------------------------------------------</p>
