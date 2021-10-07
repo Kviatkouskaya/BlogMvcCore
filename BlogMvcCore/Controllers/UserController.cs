@@ -9,10 +9,10 @@ namespace BlogMvcCore.Controllers
 {
     public class UserController : Controller
     {
-        private readonly Repository repContext;
-        public UserController(Repository repository)
+        private readonly IUserAction repContext;
+        public UserController(IUserAction userAction)
         {
-            repContext = repository;
+            repContext = userAction;
         }
         public IActionResult Index()
         {

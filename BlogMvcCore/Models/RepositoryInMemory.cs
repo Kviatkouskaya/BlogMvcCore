@@ -83,5 +83,15 @@ namespace BlogMvcCore.Models
             }
             return postComment;
         }
+
+        public Post FindPost(long postID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int CheckLoginDuplicate(string login)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
