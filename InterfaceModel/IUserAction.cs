@@ -5,6 +5,7 @@ namespace BlogMvcCore.Models
 {
     public interface IUserAction : IDisposable
     {
+        public List<User> ReturnUsersList();
         int LoginUser(string login, string password);
         void Register(User user);
         User FindUser(string login);
@@ -14,5 +15,6 @@ namespace BlogMvcCore.Models
         public List<Comment> ReturnPostComment(Post post);
         Post FindPost(long postID);
         int CheckLoginDuplicate(string login);
+
     }
 }

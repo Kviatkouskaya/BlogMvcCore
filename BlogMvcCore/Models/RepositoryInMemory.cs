@@ -93,5 +93,10 @@ namespace BlogMvcCore.Models
         {
             throw new NotImplementedException();
         }
+
+        public List<User> ReturnUsersList()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

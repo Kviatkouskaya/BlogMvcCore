@@ -70,5 +70,10 @@ namespace BlogMvcCore.Models
                                     OrderByDescending(p => p.Date).
                                     ToList();
         }
+
+        public List<User> ReturnUsersList()
+        {
+            return context.BlogUsers.ToList();
+        }
     }
 }

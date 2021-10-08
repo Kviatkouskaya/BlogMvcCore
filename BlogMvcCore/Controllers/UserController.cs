@@ -59,6 +59,11 @@ namespace BlogMvcCore.Controllers
             }
             return Redirect("/User/SignIn");
         }
+
+        public IActionResult ShowUsersList()
+        {
+            return View(repContext.ReturnUsersList());
+        }
         public IActionResult UserPage()
         {
             User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
