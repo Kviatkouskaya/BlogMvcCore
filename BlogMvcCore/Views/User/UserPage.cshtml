@@ -5,13 +5,8 @@
 
 <div>
     <table>
-        @await Html.PartialAsync("_UserInfo")
-        <tr>
-            <td></td>
-            <td>
-                @await Html.PartialAsync("_AddPost")
-            </td>
-        </tr>
-        @await Html.PartialAsync("_UserPost")
+        <tr><td>@await Html.PartialAsync("_UserInfo")</td></tr>
+        <tr><td></td><td> @await Html.PartialAsync("_AddPost")</td> </tr>
+        <tr><td>@await Html.PartialAsync("_UserPost")</td></tr>
     </table>
 </div>

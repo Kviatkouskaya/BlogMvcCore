@@ -1,4 +1,6 @@
-﻿namespace BlogMvcCore.Models
+﻿using System.Collections.Generic;
+
+namespace BlogMvcCore.Models
 {
     public class User
     {
@@ -14,5 +16,6 @@
         public string SecondName { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
+        public List<Post> Posts { get; set; }
     }
 }

@@ -68,8 +68,12 @@ namespace BlogMvcCore.Controllers
         public IActionResult UserPage()
         {
             User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
-            List<Post> userPost = repContext.ReturnUserPost(user);
-            return View(userPost);
+            user.Posts = repContext.ReturnUserPost(user);
+            foreach (var item in user.Posts)
+            {
+                item.Comments = repContext.ReturnPostComment(item);
+            }
+            return View(user);
         }
         [HttpPost]
         public IActionResult AddPost(string title, string postText)
