@@ -36,10 +36,10 @@ namespace BlogMvcCore.Controllers
                 {
                     User user = new(first, second, login, password);
                     repContext.Register(user);
-                    return Redirect("/User/SignIn");
+                    return RedirectToAction("SignIn");
                 }
             }
-            return Redirect("/User/Register");
+            return RedirectToAction("Register");
         }
 
         public IActionResult SignIn()
@@ -55,15 +55,16 @@ namespace BlogMvcCore.Controllers
                 var user = repContext.FindUser(login);
                 HttpContext.Session.SetString("name", $"{user.FirstName} {user.SecondName}");
                 SessionHelper.SetUserAsJson(HttpContext.Session, "user", user);
-                return Redirect("/User/UserPage");
+                return RedirectToAction("UserPage");
             }
-            return Redirect("/User/SignIn");
+            return RedirectToAction("SignIn");
         }
 
         public IActionResult ShowUsersList()
         {
             return View(repContext.ReturnUsersList());
         }
+
         public IActionResult UserPage()
         {
             User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
@@ -84,7 +85,7 @@ namespace BlogMvcCore.Controllers
                 };
                 repContext.AddPost(newPost);
             }
-            return Redirect("/User/UserPage");
+            return RedirectToAction("UserPage");
         }
         [HttpPost]
         public IActionResult AddComment(string commentText, long postID)
@@ -102,7 +103,7 @@ namespace BlogMvcCore.Controllers
                 comment.Post.Author = user;
                 repContext.AddComment(comment);
             }
-            return Redirect("/User/UserPage");
+            return RedirectToAction("UserPage");
         }
     }
 }
