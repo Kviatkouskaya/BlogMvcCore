@@ -45,6 +45,11 @@ namespace BlogMvcCore.Controllers
         {
             return View();
         }
+        public IActionResult SignOut()
+        {
+            SessionHelper.SetUserAsJson(HttpContext.Session, "user", null);
+            return RedirectToAction("Index");
+        }
 
         [HttpPost]
         public IActionResult CheckIn(string login, string password)
