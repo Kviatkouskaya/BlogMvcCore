@@ -13,6 +13,7 @@ namespace BlogMvcCore.Controllers
         {
             repContext = userAction;
         }
+
         public IActionResult Index()
         {
             return View();
@@ -25,13 +26,14 @@ namespace BlogMvcCore.Controllers
 
         [HttpPost]
         public IActionResult CheckRegister(string first, string second, string login,
-                                          string password, string repPassword)
+                                           string password, string repPassword)
         {
             var count = repContext.CheckLoginDuplicate(login);
             if (password == repPassword && count == 0)
             {
                 if (first != string.Empty && second != string.Empty &&
-                    login != string.Empty && password != string.Empty && repPassword != string.Empty)
+                    login != string.Empty && password != string.Empty &&
+                    repPassword != string.Empty)
                 {
                     User user = new(first, second, login, password);
                     repContext.Register(user);
@@ -45,6 +47,7 @@ namespace BlogMvcCore.Controllers
         {
             return View();
         }
+
         public IActionResult SignOut()
         {
             SessionHelper.SetUserAsJson(HttpContext.Session, "user", null);
@@ -70,22 +73,27 @@ namespace BlogMvcCore.Controllers
 
         public IActionResult VisitUserPage(string login)
         {
-            User user = repContext.FindUser(login);
-            user.Posts = repContext.ReturnUserPost(user);
-            foreach (var item in user.Posts)
+            if (login == SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user").Login)
             {
-                item.Comments = repContext.ReturnPostComment(item);
+                return RedirectToAction("UserPage");
             }
+            User user = FillPostsComments(repContext.FindUser(login));
             return View(user);
         }
-        public IActionResult UserPage()
+
+        private User FillPostsComments(User user)
         {
-            User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
             user.Posts = repContext.ReturnUserPost(user);
             foreach (var item in user.Posts)
             {
                 item.Comments = repContext.ReturnPostComment(item);
             }
+            return user;
+        }
+
+        public IActionResult UserPage()
+        {
+            User user = FillPostsComments(SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user"));
             return View(user);
         }
 
@@ -105,11 +113,12 @@ namespace BlogMvcCore.Controllers
             }
             return RedirectToAction("UserPage");
         }
+
         [HttpPost]
         public IActionResult AddComment(string commentText, long postID, string ownerLogin)
         {
             User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
-            if (commentText != string.Empty)
+            if (commentText != string.Empty && !string.IsNullOrWhiteSpace(commentText))
             {
                 Comment comment = new()
                 {
@@ -121,7 +130,8 @@ namespace BlogMvcCore.Controllers
                 comment.Post.Author = repContext.FindUser(ownerLogin);
                 repContext.AddComment(comment);
             }
-            return RedirectToAction("UserPage");
+            return user.Login == ownerLogin ? RedirectToAction("UserPage") :
+                                              RedirectToAction("VisitUserPage", new { login = ownerLogin });
         }
     }
 }
