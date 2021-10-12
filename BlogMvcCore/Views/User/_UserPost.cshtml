@@ -12,21 +12,17 @@
                         <tr><td>@item.Title</td></tr>
 
                         <tr><td>@item.Text</td></tr>
-                        <tr>
-                            <td></td><td>
-                                @await Html.PartialAsync("_PostComment", item.Comments)
-                            </td>
-                        </tr>
+                        <tr><td></td><td>@await Html.PartialAsync("_PostComment", item.Comments)</td> </tr>
                     </table>
                     @using (Html.BeginForm("AddComment", "User", FormMethod.Post))
                     {
                         @Html.TextBox("commentText", "", htmlAttributes: true)
 
                         <input type="hidden" id="postID" name="postID" value=@item.ID />
+                        <input type="hidden" id="ownerLogin" name="ownerLogin" value=@Model.Login />
                         <button type="submit">Comment</button>
                         <p>---------------------------------------------</p>
                     }
-
                 }
             }
             else

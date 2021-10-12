@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System;
 using BlogMvcCore.Models;
 using BlogMvcCore.Helpers;
@@ -53,7 +52,6 @@ namespace BlogMvcCore.Controllers
             if (repContext.LoginUser(login, password) == 1)
             {
                 var user = repContext.FindUser(login);
-                HttpContext.Session.SetString("name", $"{user.FirstName} {user.SecondName}");
                 SessionHelper.SetUserAsJson(HttpContext.Session, "user", user);
                 return RedirectToAction("UserPage");
             }
@@ -65,6 +63,16 @@ namespace BlogMvcCore.Controllers
             return View(repContext.ReturnUsersList());
         }
 
+        public IActionResult VisitUserPage(string login)
+        {
+            User user = repContext.FindUser(login);
+            user.Posts = repContext.ReturnUserPost(user);
+            foreach (var item in user.Posts)
+            {
+                item.Comments = repContext.ReturnPostComment(item);
+            }
+            return View(user);
+        }
         public IActionResult UserPage()
         {
             User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
@@ -75,14 +83,15 @@ namespace BlogMvcCore.Controllers
             }
             return View(user);
         }
+
         [HttpPost]
-        public IActionResult AddPost(string title, string postText)
+        public IActionResult AddPost(string title, string postText, string ownerLogin)
         {
             if (title != string.Empty && postText != string.Empty)
             {
                 Post newPost = new()
                 {
-                    Author = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user"),
+                    Author = repContext.FindUser(ownerLogin),
                     Title = title,
                     Text = postText,
                     Date = DateTime.Now.Date
@@ -92,19 +101,19 @@ namespace BlogMvcCore.Controllers
             return RedirectToAction("UserPage");
         }
         [HttpPost]
-        public IActionResult AddComment(string commentText, long postID)
+        public IActionResult AddComment(string commentText, long postID, string ownerLogin)
         {
+            User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
             if (commentText != string.Empty)
             {
-                User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
                 Comment comment = new()
                 {
                     Post = repContext.FindPost(postID),
-                    Author = HttpContext.Session.GetString("name"),
+                    Author = $"{user.FirstName} {user.SecondName}",
                     Text = commentText,
                     Date = DateTime.Now.Date
                 };
-                comment.Post.Author = user;
+                comment.Post.Author = repContext.FindUser(ownerLogin);
                 repContext.AddComment(comment);
             }
             return RedirectToAction("UserPage");

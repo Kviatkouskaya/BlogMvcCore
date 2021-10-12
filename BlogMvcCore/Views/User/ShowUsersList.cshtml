@@ -8,7 +8,7 @@
     <table>
         @foreach (var item in Model)
         {
-            <tr><td>@Html.ActionLink($"{item.FirstName} {item.SecondName}", "UserPage") </td></tr>
+            <tr><td>@Html.ActionLink($"{item.FirstName} {item.SecondName}", "VisitUserPage", "User", new { login = item.Login }) </td></tr>
         }
     </table>
 </div>

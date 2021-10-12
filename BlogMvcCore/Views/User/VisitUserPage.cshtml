@@ -1,0 +1,11 @@
+﻿@model User;
+@{
+    ViewData["Title"] = $"{Model.FirstName} {Model.SecondName}";
+}
+
+<div>
+    <table>
+        <tr><td>@await Html.PartialAsync("_UserInfo")</td></tr>
+        <tr><td>@await Html.PartialAsync("_UserPost")</td></tr>
+    </table>
+</div>
