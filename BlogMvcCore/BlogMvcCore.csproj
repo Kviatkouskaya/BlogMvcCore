@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\" />
     <Folder Include="Models\" />
   </ItemGroup>
 
@@ -23,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Controller\Controller.csproj" />
-    <ProjectReference Include="..\InterfaceModel\InterfaceModel(CommonPart).csproj" />
+    <ProjectReference Include="..\Controller\Storage.csproj" />
+    <ProjectReference Include="..\InterfaceModel\DomainModel.csproj" />
   </ItemGroup>
 
 </Project>
