@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BlogMvcCore.DomainModel
+namespace BlogMvcCore.Storage
 {
     public class User
     {

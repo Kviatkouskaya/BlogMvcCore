@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace BlogMvcCore.Models
+namespace BlogMvcCore.Storage
 {
     public class UserDbContext : IdentityDbContext<IdentityUser>
     {

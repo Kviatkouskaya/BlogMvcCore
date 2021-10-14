@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BlogMvcCore.DomainModel
+namespace BlogMvcCore.Storage
 {
     public class Comment
     {

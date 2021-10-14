@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
-namespace BlogMvcCore.DomainModel
+namespace BlogMvcCore.Storage
 {
     public class Post
     {

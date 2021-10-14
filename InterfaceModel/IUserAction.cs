@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BlogMvcCore.Models
+namespace BlogMvcCore.DomainModel
 {
     public interface IUserAction : IDisposable
     {

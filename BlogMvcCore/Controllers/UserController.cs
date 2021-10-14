@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using BlogMvcCore.Models;
+using BlogMvcCore.DomainModel;
 using BlogMvcCore.Helpers;
 using Microsoft.AspNetCore.Http;
 
