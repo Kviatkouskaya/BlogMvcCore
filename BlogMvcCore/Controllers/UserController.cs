@@ -1,87 +1,137 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System;
-using BlogMvcCore.Models;
+using BlogMvcCore.DomainModel;
 using BlogMvcCore.Helpers;
+using Microsoft.AspNetCore.Http;
 
 namespace BlogMvcCore.Controllers
 {
     public class UserController : Controller
     {
-        private readonly Repository repContext;
-        public UserController(Repository repository)
+        private readonly IUserAction repContext;
+        public UserController(IUserAction userAction)
         {
-            repContext = repository;
+            repContext = userAction;
         }
-        public ActionResult Index()
+
+        public IActionResult Index()
         {
-            int dayTime = DateTime.Now.Hour;
-            ViewBag.Greeting = dayTime < 12 && dayTime > 6 ? $"Good morning!" :
-                              (dayTime < 18 ? "Good afternoon!" : "Good evening!");
             return View();
         }
 
-        public ViewResult Register()
+        public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
-        public ActionResult CheckRegister(string first, string second, string login,
-                                          string password, string repPassword)
+        public IActionResult CheckRegister(string first, string second, string login,
+                                           string password, string repPassword)
         {
-            if (password == repPassword)
+            var count = repContext.CheckLoginDuplicate(login);
+            if (password == repPassword && count == 0)
             {
-                User user = new(first, second, login, password);
-                if (repContext.Register(user))
+                if (first != string.Empty && second != string.Empty &&
+                    login != string.Empty && password != string.Empty &&
+                    repPassword != string.Empty)
                 {
-                    return Redirect("/User/SignIn");
+                    User user = new(first, second, login, password);
+                    repContext.Register(user);
+                    return RedirectToAction("SignIn");
                 }
             }
-            return Redirect("/User/Register");
+            return RedirectToAction("Register");
         }
 
-        public ViewResult SignIn()
+        public IActionResult SignIn()
         {
             return View();
         }
 
-        [HttpPost]
-        public ActionResult CheckIn(string login, string password)
+        public IActionResult SignOut()
         {
-            bool state = repContext.LoginUser(login, password);
-            if (state)
-            {
-                SessionHelper.SetUserAsJson(HttpContext.Session, "user", repContext.FindUser(login));
-                return Redirect("/User/UserPage");
-            }
-            return Redirect("/User/SignIn");
+            SessionHelper.SetUserAsJson(HttpContext.Session, "user", null);
+            return RedirectToAction("Index");
         }
-        public ViewResult UserPage()
-        {
-            User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
-            ViewBag.UserName = $"{user.FirstName} {user.SecondName}";
-            List<Post> userPost = repContext.ReturnUserPost(user);
-            if (userPost == null)
-            {
-                return View();
-            }
-            return View(userPost);
-        }
-        [HttpPost]
-        public ActionResult AddPost(string title, string postText)
-        {
 
-            User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
-            Post newPost = new()
+        [HttpPost]
+        public IActionResult CheckIn(string login, string password)
+        {
+            if (repContext.LoginUser(login, password) == 1)
             {
-                Author = user,
-                Title = title,
-                Text = postText,
-                Date = DateTime.Now.Date
-            };
-            repContext.AddPost(newPost);
-            return Redirect("/User/UserPage");
+                var user = repContext.FindUser(login);
+                SessionHelper.SetUserAsJson(HttpContext.Session, "user", user);
+                return RedirectToAction("UserPage");
+            }
+            return RedirectToAction("SignIn");
+        }
+
+        public IActionResult ShowUsersList()
+        {
+            return View(repContext.ReturnUsersList());
+        }
+
+        public IActionResult VisitUserPage(string login)
+        {
+            if (login == SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user").Login)
+            {
+                return RedirectToAction("UserPage");
+            }
+            User user = FillPostsComments(repContext.FindUser(login));
+            return View(user);
+        }
+
+        private User FillPostsComments(User user)
+        {
+            user.Posts = repContext.ReturnUserPost(user);
+            foreach (var item in user.Posts)
+            {
+                item.Comments = repContext.ReturnPostComment(item);
+            }
+            return user;
+        }
+
+        public IActionResult UserPage()
+        {
+            User user = FillPostsComments(SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user"));
+            return View(user);
+        }
+
+        [HttpPost]
+        public IActionResult AddPost(string title, string postText, string ownerLogin)
+        {
+            if (title != string.Empty && postText != string.Empty)
+            {
+                Post newPost = new()
+                {
+                    Author = repContext.FindUser(ownerLogin),
+                    Title = title,
+                    Text = postText,
+                    Date = DateTime.Now.Date
+                };
+                repContext.AddPost(newPost);
+            }
+            return RedirectToAction("UserPage");
+        }
+
+        [HttpPost]
+        public IActionResult AddComment(string commentText, long postID, string ownerLogin)
+        {
+            User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
+            if (commentText != string.Empty && !string.IsNullOrWhiteSpace(commentText))
+            {
+                Comment comment = new()
+                {
+                    Post = repContext.FindPost(postID),
+                    Author = $"{user.FirstName} {user.SecondName}",
+                    Text = commentText,
+                    Date = DateTime.Now.Date
+                };
+                comment.Post.Author = repContext.FindUser(ownerLogin);
+                repContext.AddComment(comment);
+            }
+            return user.Login == ownerLogin ? RedirectToAction("UserPage") :
+                                              RedirectToAction("VisitUserPage", new { login = ownerLogin });
         }
     }
 }

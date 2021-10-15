@@ -1,0 +1,11 @@
+﻿@model User
+@using (Html.BeginForm("AddPost", "User", FormMethod.Post))
+{
+    <table>
+        <tr><td><h5><em>Create a new post:</em></h5></td></tr>
+        <tr><td>Title:  @Html.TextBox("title", "", htmlAttributes: true)</td></tr>
+        <tr><td> @Html.TextArea("postText", "", rows: 8, columns: 40, htmlAttributes: true)</td></tr>
+        <tr><td><button type="submit">Save</button></td></tr>
+    </table>
+    <input type="hidden" id="ownerLogin" name="ownerLogin" value=@Model.Login />
+}

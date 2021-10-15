@@ -1,0 +1,34 @@
+﻿@model User
+<table>
+    <tr><td><h5><em>Previous posts:</em></h5></td></tr>
+    <tr>
+        <td>
+            @if (Model.Posts.Count > 0)
+            {
+                @foreach (var item in Model.Posts)
+                {
+                    <table>
+                        <tr><td>@item.Author.FirstName @item.Author.SecondName @item.Date.Day/@item.Date.Month/@item.Date.Year</td></tr>
+                        <tr><td>@item.Title</td></tr>
+
+                        <tr><td>@item.Text</td></tr>
+                        <tr><td></td><td>@await Html.PartialAsync("_PostComment", item.Comments)</td> </tr>
+                    </table>
+                    @using (Html.BeginForm("AddComment", "User", FormMethod.Post))
+                    {
+                        @Html.TextBox("commentText", "", htmlAttributes: true)
+
+                        <input type="hidden" id="postID" name="postID" value=@item.ID />
+                        <input type="hidden" id="ownerLogin" name="ownerLogin" value=@Model.Login />
+                        <button type="submit">Comment</button>
+                        <p>---------------------------------------------</p>
+                    }
+                }
+            }
+            else
+            {
+                <p>Here's nothing to show you. Write a post at first...</p>
+            }
+        </td>
+    </tr>
+</table>

@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 
-namespace BlogMvcCore.Models
+namespace BlogMvcCore.Storage
 {
     public class Post
     {

@@ -1,4 +1,6 @@
-﻿namespace BlogMvcCore.Models
+﻿using System.Collections.Generic;
+
+namespace BlogMvcCore.DomainModel
 {
     public class User
     {
@@ -9,10 +11,10 @@
             Login = login;
             Password = password;
         }
-        public long ID { get; set; }
         public string FirstName { get; set; }
         public string SecondName { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
+        public List<Post> Posts { get; set; }
     }
 }

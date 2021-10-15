@@ -1,9 +1,15 @@
 ﻿@{
+    var time = DateTime.Now.Hour;
+    var dayTime = time < 12 && time > 6 ? $"morning" :
+                      (time < 18 ? "afternoon" : "evening");
+    var greeting = $"Good {dayTime}!";
+}
+@{
     ViewData["Title"] = "Sign in or register";
 }
 
 
 <div>
-    <h2><b><em>@ViewBag.Greeting</em></b></h2>
+    <h2><b><em>@greeting</em></b></h2>
     @Html.ActionLink("Sign in", "SignIn") or @Html.ActionLink("Register", "Register")
 </div>
