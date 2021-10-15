@@ -11,7 +11,6 @@ namespace BlogMvcCore.DomainModel
             Login = login;
             Password = password;
         }
-        public long ID { get; set; }
         public string FirstName { get; set; }
         public string SecondName { get; set; }
         public string Login { get; set; }

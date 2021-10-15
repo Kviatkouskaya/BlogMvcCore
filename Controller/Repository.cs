@@ -84,8 +84,6 @@ namespace BlogMvcCore.Storage
             DomainModel.Post postDomain = new()
             {
                 ID = postStorage.ID,
-                //Author = postStorage.Author,                   ///convert FK??
-                //Comments = postStorage.Comments,
                 Title = postStorage.Title,
                 Text = postStorage.Text,
                 Date = postStorage.Date
@@ -98,7 +96,6 @@ namespace BlogMvcCore.Storage
             {
                 ID = comment.ID,
                 Author = comment.Author,
-                //Post = comment.Post,
                 Text = comment.Text,
                 Date = comment.Date
             };
@@ -121,7 +118,6 @@ namespace BlogMvcCore.Storage
                 {
                     ID = item.ID,
                     Author = item.Author,
-                    //Post = comment.Post,
                     Text = item.Text,
                     Date = item.Date
                 };
