@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using BlogMvcCore.DomainModel;
 namespace BlogMvcCore.Models
 {
     public class RepositoryInMemory : IUserAction
