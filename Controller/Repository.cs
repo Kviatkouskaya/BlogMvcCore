@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace BlogMvcCore.Storage
 {
-    public class Repository : IUserAction  //working with DB connection
+    public class Repository : IUserAction
     {
         private readonly UserDbContext context;
         public Repository(UserDbContext context)
@@ -16,9 +16,10 @@ namespace BlogMvcCore.Storage
         public DomainModel.User FindUser(string login)
         {
             var user = context.BlogUsers.Where(u => u.Login == login).
-                                     FirstOrDefault();
+                                         FirstOrDefault();
             return new(user.FirstName, user.SecondName, user.Login, user.Password);
         }
+
         public void AddPost(DomainModel.Post post)
         {
             User entityAuthor = context.BlogUsers.Where(u => u.Login == post.Author.Login).
@@ -32,8 +33,7 @@ namespace BlogMvcCore.Storage
                 Text = post.Text,
                 Date = post.Date
             };
-
-            context.Attach(entityAuthor); //input FK before adding post in DB
+            context.Attach(entityAuthor);
             context.Posts.Add(postStorage);
             context.SaveChanges();
         }
@@ -43,6 +43,7 @@ namespace BlogMvcCore.Storage
             return context.BlogUsers.Where(u => u.Login == login && u.Password == password).
                                      Count();
         }
+
         public int CheckLoginDuplicate(string login)
         {
             return context.BlogUsers.Where(u => u.Login == login).
@@ -55,6 +56,7 @@ namespace BlogMvcCore.Storage
             context.BlogUsers.Add(user);
             context.SaveChanges();
         }
+
         public void Dispose()
         {
             context.Dispose();
@@ -63,9 +65,9 @@ namespace BlogMvcCore.Storage
         public List<DomainModel.Post> ReturnUserPost(DomainModel.User user)
         {
             var entityPostsList = context.Posts.Include(u => u.Author).
-                                            Where(u => u.Author.Login == user.Login).
-                                            OrderByDescending(u => u.Date).
-                                            ToList();
+                                                Where(u => u.Author.Login == user.Login).
+                                                OrderByDescending(u => u.Date).
+                                                ToList();
 
             List<DomainModel.Post> postsDomain = new();
             foreach (var item in entityPostsList)
@@ -84,6 +86,7 @@ namespace BlogMvcCore.Storage
             }
             return postsDomain;
         }
+
         public DomainModel.Post FindPost(long postID)
         {
             var postStorage = context.Posts.Find(postID);
@@ -96,6 +99,7 @@ namespace BlogMvcCore.Storage
             };
             return postDomain;
         }
+
         public void AddComment(DomainModel.Comment comment)
         {
             Post entityPost = context.Posts.Find(comment.Post.ID);
@@ -116,9 +120,9 @@ namespace BlogMvcCore.Storage
         {
 
             List<Comment> commentsStorage = context.Comments.Include(p => p.Post).
-                                    Where(p => p.Post.ID == post.ID).
-                                    OrderByDescending(p => p.Date).
-                                    ToList();
+                                                             Where(p => p.Post.ID == post.ID).
+                                                             OrderByDescending(p => p.Date).
+                                                             ToList();
             List<DomainModel.Comment> commentsDomain = new();
             foreach (var item in commentsStorage)
             {
