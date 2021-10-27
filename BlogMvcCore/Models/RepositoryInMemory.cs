@@ -5,47 +5,49 @@ namespace BlogMvcCore.Models
 {
     public class RepositoryInMemory : IUserAction
     {
-        private static readonly List<User> allowedUsers = new() { new User("Admin", "System", "admin", "12345678") };
-        private static readonly List<Post> postList = new();
-        private static readonly List<Comment> commentList = new();
+        public readonly List<User> allowedUsers;
+        public RepositoryInMemory()
+        {
+            allowedUsers = new()
+            {
+                new User("Admin", "System", "admin", "12345678"),
+                new User("Adam", "Smith", "adamsm", "qweasdzxc"),
+                new User("Frank", "Right", "right", "123qwe123")
+            };
+        }
+
         public int LoginUser(string login, string password)
         {
-            var count = 0;
-            foreach (var item in allowedUsers)
-            {
-                if (item.Login == login &&
-                   item.Password == password)
-                {
-                    return count += 1;
-                }
-            }
-            return count;
+            User user = allowedUsers.Find(u => u.Login == login && u.Password == password);
+            return user == null ? 0 : 1;
         }
+
         public void Register(User user)
         {
-            if (user.FirstName != string.Empty && user.SecondName != string.Empty)
-            {
-                if (user.Login != string.Empty && user.Password != string.Empty)
-                {
-                    allowedUsers.Add(user);
-                }
-            }
+            allowedUsers.Add(user);
         }
+
         public User FindUser(string login)
         {
-            foreach (var item in allowedUsers)
-            {
-                if (item.Login == login)
-                {
-                    return item;
-                }
-            }
-            return null;
+            User user = allowedUsers.Find(u => u.Login == login);
+            return user ?? null;
         }
 
         public void AddPost(Post post)
         {
-            postList.Add(post);
+            if (post.Author == null) return;
+            foreach (var item in allowedUsers)
+            {
+                if (item.Login == post.Author.Login)
+                {
+                    if (item.Posts == null)
+                    {
+                        item.Posts = new List<Post>();
+                    }
+                    item.Posts.Add(post);
+                    return;
+                }
+            }
         }
 
         public void Dispose()
@@ -55,33 +57,36 @@ namespace BlogMvcCore.Models
 
         public List<Post> ReturnUserPost(User user)
         {
-            List<Post> userPost = new();
-            foreach (var item in postList)
+            foreach (var item in allowedUsers)
             {
-                if (item.Author == user)
+                if (item.Login == user.Login)
                 {
-                    userPost.Add(item);
+                    return item.Posts;
                 }
             }
-            return userPost;
+            return null;
         }
 
         public void AddComment(Comment comment)
         {
-            commentList.Add(comment);
+            foreach (var user in allowedUsers)
+            {
+                foreach (var item in user.Posts)
+                {
+                    if (item == comment.Post)
+                    {
+                        item.Comments.Add(comment);
+                        return;
+                    }
+                }
+            }
         }
 
         public List<Comment> ReturnPostComment(Post post)
         {
-            List<Comment> postComment = new();
-            foreach (var item in commentList)
-            {
-                if (item.Post == post)
-                {
-                    postComment.Add(item);
-                }
-            }
-            return postComment;
+            User user = allowedUsers.Find(u => u.Login == post.Author.Login);
+            Post userPost = user.Posts.Find(p => p.Title == post.Title);
+            return userPost.Comments;
         }
 
         public Post FindPost(long postID)
@@ -91,7 +96,8 @@ namespace BlogMvcCore.Models
 
         public int CheckLoginDuplicate(string login)
         {
-            throw new NotImplementedException();
+            var result = allowedUsers.Find(u => u.Login == login);
+            return result == null ? 0 : 1;
         }
 
         public List<User> ReturnUsersList()

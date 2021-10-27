@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using BlogMvcCore.DomainModel;
+﻿using BlogMvcCore.DomainModel;
 using BlogMvcCore.Helpers;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace BlogMvcCore.Controllers
 {
@@ -64,7 +64,7 @@ namespace BlogMvcCore.Controllers
         [HttpPost]
         public IActionResult CheckIn(string login, string password)
         {
-            if (repContext.LoginUser(login, password) == 1 && CheckStringParams(login, password))
+            if (CheckStringParams(login, password) && repContext.LoginUser(login, password) == 1)
             {
                 var user = repContext.FindUser(login);
                 SessionHelper.SetUserAsJson(HttpContext.Session, "user", user);
