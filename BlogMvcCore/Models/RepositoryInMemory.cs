@@ -10,9 +10,10 @@ namespace BlogMvcCore.Models
         {
             allowedUsers = new()
             {
-                new User("Admin", "System", "admin", "12345678"),
-                new User("Adam", "Smith", "adamsm", "qweasdzxc"),
-                new User("Frank", "Right", "right", "123qwe123")
+                new User("Admin", "System", "admin", "12345678") { Posts = new() },
+                new User("Adam", "Smith", "adamsm", "qweasdzxc") { Posts = new() },
+                new User("Frank", "Right", "right", "123qwe123") { Posts = new() },
+                new User("First", "Second", "first", "12312312") { Posts = new() }
             };
         }
 
@@ -57,14 +58,7 @@ namespace BlogMvcCore.Models
 
         public List<Post> ReturnUserPost(User user)
         {
-            foreach (var item in allowedUsers)
-            {
-                if (item.Login == user.Login)
-                {
-                    return item.Posts;
-                }
-            }
-            return null;
+            return user.Posts;
         }
 
         public void AddComment(Comment comment)
@@ -91,7 +85,15 @@ namespace BlogMvcCore.Models
 
         public Post FindPost(long postID)
         {
-            throw new NotImplementedException();
+            Post post = new();
+            foreach (var item in allowedUsers)
+            {
+                if (item.Posts != null)
+                {
+                    post = item.Posts.Find(p => p.ID == postID);
+                }
+            }
+            return null;
         }
 
         public int CheckLoginDuplicate(string login)
@@ -102,7 +104,7 @@ namespace BlogMvcCore.Models
 
         public List<User> ReturnUsersList()
         {
-            throw new NotImplementedException();
+            return allowedUsers;
         }
     }
 }

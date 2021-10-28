@@ -68,7 +68,14 @@ namespace TestProject
         {
             if (sessionStorage[key] != null)
             {
-                value = Encoding.ASCII.GetBytes(sessionStorage[key].ToString());
+                if(sessionStorage[key] is byte[])
+                {
+                    value = (byte[])sessionStorage[key];
+                }
+                else
+                {
+                    value = Encoding.ASCII.GetBytes(sessionStorage[key].ToString());
+                }
                 return true;
             }
             else

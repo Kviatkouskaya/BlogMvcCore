@@ -1,5 +1,6 @@
 using BlogMvcCore.Controllers;
 using BlogMvcCore.DomainModel;
+using BlogMvcCore.Helpers;
 using BlogMvcCore.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,59 @@ namespace TestProject
     [TestClass]
     public class ControllerTests
     {
+        [TestMethod]
+        [DataRow("admin")]
+        [DataRow("adamsm")]
+        [DataRow("right")]
+        public void UserPageTest(string login)
+        {
+            RepositoryInMemory repository = new();
+            UserController controller = new(repository);
+            MockHttpSession mockHttpSession = new();
+            controller.ControllerContext = CreateControllerContext(mockHttpSession);
+            User user = repository.allowedUsers.Find(u => u.Login == login);
+            SessionHelper.SetUserAsJson(controller.ControllerContext.HttpContext.Session, "user", user);
+
+            var result = controller.UserPage();
+
+            Assert.IsInstanceOfType(result, typeof(ViewResult));
+        }
+
+        [TestMethod]
+        [DataRow("admin")]
+        [DataRow("adamsm")]
+        [DataRow("right")]
+        public void VisitUserPageTest(string login)
+        {
+            RepositoryInMemory repository = new();
+            UserController controller = new(repository);
+            MockHttpSession mockHttpSession = new();
+            controller.ControllerContext = CreateControllerContext(mockHttpSession);
+            User user = repository.allowedUsers.Find(u => u.Login == login);
+            SessionHelper.SetUserAsJson(controller.ControllerContext.HttpContext.Session, "user", user);
+
+            var result = controller.VisitUserPage(user.Login);
+            Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
+        }
+
+        [TestMethod]
+        [DataRow("right")]
+        [DataRow("adamsm")]
+        [DataRow("first")]
+        public void VisitUserPageUnsuccessTest(string login)
+        {
+            RepositoryInMemory repository = new();
+            UserController controller = new(repository);
+            MockHttpSession mockHttpSession = new();
+            controller.ControllerContext = CreateControllerContext(mockHttpSession);
+            User user = repository.allowedUsers[0];
+            SessionHelper.SetUserAsJson(controller.ControllerContext.HttpContext.Session, "user", user);
+
+            var result = controller.VisitUserPage(login);
+
+            Assert.IsInstanceOfType(result, typeof(ViewResult));
+        }
+
         [TestMethod]
         [DataRow("Post title", "Post text", "admin")]
         [DataRow("New Post title", "New post text", "adamsm")]
