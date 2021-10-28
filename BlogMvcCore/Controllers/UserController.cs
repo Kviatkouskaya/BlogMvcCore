@@ -64,7 +64,7 @@ namespace BlogMvcCore.Controllers
         [HttpPost]
         public IActionResult CheckIn(string login, string password)
         {
-            if (CheckStringParams(login, password) && repContext.LoginUser(login, password) == 1)
+            if (CheckStringParams(login, password) && repContext.LoginUser(login, password))
             {
                 var user = repContext.FindUser(login);
                 SessionHelper.SetUserAsJson(HttpContext.Session, "user", user);
@@ -88,7 +88,7 @@ namespace BlogMvcCore.Controllers
             return View(user);
         }
 
-        private User FillPostsComments(User user)
+        public User FillPostsComments(User user)
         {
             user.Posts = repContext.ReturnUserPost(user);
             foreach (var item in user.Posts)

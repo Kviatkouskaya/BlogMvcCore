@@ -17,10 +17,10 @@ namespace BlogMvcCore.Models
             };
         }
 
-        public int LoginUser(string login, string password)
+        public bool LoginUser(string login, string password)
         {
             User user = allowedUsers.Find(u => u.Login == login && u.Password == password);
-            return user == null ? 0 : 1;
+            return user == null;
         }
 
         public void Register(User user)
@@ -99,7 +99,7 @@ namespace BlogMvcCore.Models
         public int CheckLoginDuplicate(string login)
         {
             var result = allowedUsers.Find(u => u.Login == login);
-            return result == null ? 0 : 1;
+            return result is default(User) ? 0 : 1;
         }
 
         public List<User> ReturnUsersList()

@@ -38,10 +38,11 @@ namespace BlogMvcCore.Storage
             context.SaveChanges();
         }
 
-        public int LoginUser(string login, string password)
+        public bool LoginUser(string login, string password)
         {
-            return context.BlogUsers.Where(u => u.Login == login && u.Password == password).
-                                     Count();
+            var result = context.BlogUsers.Where(u => u.Login == login && u.Password == password).
+                                           Count();
+            return result != 0;
         }
 
         public int CheckLoginDuplicate(string login)

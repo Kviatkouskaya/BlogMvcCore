@@ -9,7 +9,7 @@ namespace TestProject
 {
     public class MockHttpSession : ISession
     {
-        Dictionary<string, object> sessionStorage = new Dictionary<string, object>();
+        Dictionary<string, object> sessionStorage = new();
 
         public object this[string name]
         {
@@ -68,7 +68,7 @@ namespace TestProject
         {
             if (sessionStorage[key] != null)
             {
-                if(sessionStorage[key] is byte[])
+                if (sessionStorage[key] is byte[])
                 {
                     value = (byte[])sessionStorage[key];
                 }
