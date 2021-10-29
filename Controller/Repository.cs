@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace BlogMvcCore.Storage
 {
-    public class Repository : IUserAction  //working with DB connection
+    public class Repository : IUserAction
     {
         private readonly UserDbContext context;
         public Repository(UserDbContext context)
@@ -16,29 +16,35 @@ namespace BlogMvcCore.Storage
         public DomainModel.User FindUser(string login)
         {
             var user = context.BlogUsers.Where(u => u.Login == login).
-                                     FirstOrDefault();
+                                         FirstOrDefault();
             return new(user.FirstName, user.SecondName, user.Login, user.Password);
         }
+
         public void AddPost(DomainModel.Post post)
         {
+            User entityAuthor = context.BlogUsers.Where(u => u.Login == post.Author.Login).
+                                                  FirstOrDefault();
             Post postStorage = new()
             {
                 ID = post.ID,
-                //Author=post.Author,
+
+                Author = entityAuthor,
                 Title = post.Title,
                 Text = post.Text,
                 Date = post.Date
             };
-            context.Attach(postStorage.Author); //input FK before adding post in DB
+            context.Attach(entityAuthor);
             context.Posts.Add(postStorage);
             context.SaveChanges();
         }
 
-        public int LoginUser(string login, string password)
+        public bool LoginUser(string login, string password)
         {
-            return context.BlogUsers.Where(u => u.Login == login && u.Password == password).
-                                     Count();
+            var result = context.BlogUsers.Where(u => u.Login == login && u.Password == password).
+                                           Count();
+            return result != 0;
         }
+
         public int CheckLoginDuplicate(string login)
         {
             return context.BlogUsers.Where(u => u.Login == login).
@@ -51,6 +57,7 @@ namespace BlogMvcCore.Storage
             context.BlogUsers.Add(user);
             context.SaveChanges();
         }
+
         public void Dispose()
         {
             context.Dispose();
@@ -58,26 +65,29 @@ namespace BlogMvcCore.Storage
 
         public List<DomainModel.Post> ReturnUserPost(DomainModel.User user)
         {
-            var listStorage = context.Posts.Include(u => u.Author).
-                                 Where(u => u.Author.Login == user.Login).
-                                 OrderByDescending(u => u.Date).
-                                 ToList();
+            var entityPostsList = context.Posts.Include(u => u.Author).
+                                                Where(u => u.Author.Login == user.Login).
+                                                OrderByDescending(u => u.Date).
+                                                ToList();
+
             List<DomainModel.Post> postsDomain = new();
-            foreach (var item in listStorage)
+            foreach (var item in entityPostsList)
             {
+
                 DomainModel.Post postDomain = new()
                 {
                     ID = item.ID,
-                    //Author = item.Author,                   ///convert FK??
-                    //Comments = item.Comments,
+                    Author = user,
                     Title = item.Title,
                     Text = item.Text,
-                    Date = item.Date
+                    Date = item.Date,
                 };
+                postDomain.Comments = ReturnPostComment(postDomain);
                 postsDomain.Add(postDomain);
             }
             return postsDomain;
         }
+
         public DomainModel.Post FindPost(long postID)
         {
             var postStorage = context.Posts.Find(postID);
@@ -90,16 +100,19 @@ namespace BlogMvcCore.Storage
             };
             return postDomain;
         }
+
         public void AddComment(DomainModel.Comment comment)
         {
+            Post entityPost = context.Posts.Find(comment.Post.ID);
             Comment commentStorage = new()
             {
                 ID = comment.ID,
+                Post = entityPost,
                 Author = comment.Author,
                 Text = comment.Text,
                 Date = comment.Date
             };
-            context.Attach(comment.Post);
+            context.Attach(entityPost);
             context.Comments.Add(commentStorage);
             context.SaveChanges();
         }
@@ -108,9 +121,9 @@ namespace BlogMvcCore.Storage
         {
 
             List<Comment> commentsStorage = context.Comments.Include(p => p.Post).
-                                    Where(p => p.Post.ID == post.ID).
-                                    OrderByDescending(p => p.Date).
-                                    ToList();
+                                                             Where(p => p.Post.ID == post.ID).
+                                                             OrderByDescending(p => p.Date).
+                                                             ToList();
             List<DomainModel.Comment> commentsDomain = new();
             foreach (var item in commentsStorage)
             {

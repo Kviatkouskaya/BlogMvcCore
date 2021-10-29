@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using BlogMvcCore.DomainModel;
+﻿using BlogMvcCore.DomainModel;
 using BlogMvcCore.Helpers;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace BlogMvcCore.Controllers
 {
@@ -28,19 +28,26 @@ namespace BlogMvcCore.Controllers
         public IActionResult CheckRegister(string first, string second, string login,
                                            string password, string repPassword)
         {
-            var count = repContext.CheckLoginDuplicate(login);
-            if (password == repPassword && count == 0)
+            bool stringCheck = CheckStringParams(first, second, login, password, repPassword);
+            if (password == repPassword && stringCheck &&
+                repContext.CheckLoginDuplicate(login) == 0)
             {
-                if (first != string.Empty && second != string.Empty &&
-                    login != string.Empty && password != string.Empty &&
-                    repPassword != string.Empty)
-                {
-                    User user = new(first, second, login, password);
-                    repContext.Register(user);
-                    return RedirectToAction("SignIn");
-                }
+                repContext.Register(new User(first, second, login, password));
+                return RedirectToAction("SignIn");
             }
             return RedirectToAction("Register");
+        }
+
+        private static bool CheckStringParams(params string[] input)
+        {
+            foreach (var item in input)
+            {
+                if (item == string.Empty || string.IsNullOrWhiteSpace(item))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public IActionResult SignIn()
@@ -57,7 +64,7 @@ namespace BlogMvcCore.Controllers
         [HttpPost]
         public IActionResult CheckIn(string login, string password)
         {
-            if (repContext.LoginUser(login, password) == 1)
+            if (CheckStringParams(login, password) && repContext.LoginUser(login, password))
             {
                 var user = repContext.FindUser(login);
                 SessionHelper.SetUserAsJson(HttpContext.Session, "user", user);
@@ -81,12 +88,15 @@ namespace BlogMvcCore.Controllers
             return View(user);
         }
 
-        private User FillPostsComments(User user)
+        public User FillPostsComments(User user)
         {
-            user.Posts = repContext.ReturnUserPost(user);
-            foreach (var item in user.Posts)
+            if (user != null)
             {
-                item.Comments = repContext.ReturnPostComment(item);
+                user.Posts = repContext.ReturnUserPost(user);
+                foreach (var item in user.Posts)
+                {
+                    item.Comments = repContext.ReturnPostComment(item);
+                }
             }
             return user;
         }
@@ -100,7 +110,7 @@ namespace BlogMvcCore.Controllers
         [HttpPost]
         public IActionResult AddPost(string title, string postText, string ownerLogin)
         {
-            if (title != string.Empty && postText != string.Empty)
+            if (CheckStringParams(title, postText, ownerLogin))
             {
                 Post newPost = new()
                 {
@@ -118,7 +128,7 @@ namespace BlogMvcCore.Controllers
         public IActionResult AddComment(string commentText, long postID, string ownerLogin)
         {
             User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
-            if (commentText != string.Empty && !string.IsNullOrWhiteSpace(commentText))
+            if (CheckStringParams(commentText))
             {
                 Comment comment = new()
                 {

@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogMvcCore", "BlogMvcCore\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainModel", "InterfaceModel\DomainModel.csproj", "{E2AD1CE5-FA28-4188-8C4F-CA09871B7CCD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage", "Controller\Storage.csproj", "{EE41FE5A-4711-4A18-B9D4-11E1F8163F51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Storage", "Controller\Storage.csproj", "{EE41FE5A-4711-4A18-B9D4-11E1F8163F51}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject\TestProject.csproj", "{0C8886B5-3A65-4124-8B61-ACEABEB55032}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{EE41FE5A-4711-4A18-B9D4-11E1F8163F51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE41FE5A-4711-4A18-B9D4-11E1F8163F51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE41FE5A-4711-4A18-B9D4-11E1F8163F51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C8886B5-3A65-4124-8B61-ACEABEB55032}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C8886B5-3A65-4124-8B61-ACEABEB55032}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C8886B5-3A65-4124-8B61-ACEABEB55032}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C8886B5-3A65-4124-8B61-ACEABEB55032}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
