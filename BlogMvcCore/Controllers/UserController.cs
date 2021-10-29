@@ -90,10 +90,13 @@ namespace BlogMvcCore.Controllers
 
         public User FillPostsComments(User user)
         {
-            user.Posts = repContext.ReturnUserPost(user);
-            foreach (var item in user.Posts)
+            if (user != null)
             {
-                item.Comments = repContext.ReturnPostComment(item);
+                user.Posts = repContext.ReturnUserPost(user);
+                foreach (var item in user.Posts)
+                {
+                    item.Comments = repContext.ReturnPostComment(item);
+                }
             }
             return user;
         }
