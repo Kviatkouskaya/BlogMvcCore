@@ -30,7 +30,7 @@ namespace BlogMvcCore.Controllers
         {
             bool stringCheck = CheckStringParams(first, second, login, password, repPassword);
             if (password == repPassword && stringCheck &&
-                repContext.CheckLoginDuplicate(login) == 0)
+                repContext.CheckLoginDuplicate(login))
             {
                 repContext.Register(new User(first, second, login, password));
                 return RedirectToAction("SignIn");

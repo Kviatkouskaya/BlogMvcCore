@@ -45,10 +45,11 @@ namespace BlogMvcCore.Storage
             return result != 0;
         }
 
-        public int CheckLoginDuplicate(string login)
+        public bool CheckLoginDuplicate(string login)
         {
-            return context.BlogUsers.Where(u => u.Login == login).
-                                     Count();
+            var result= context.BlogUsers.Where(u => u.Login == login).
+                                          Count();
+            return result == 0;
         }
 
         public void Register(DomainModel.User newUser)

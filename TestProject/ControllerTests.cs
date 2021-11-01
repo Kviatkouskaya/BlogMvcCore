@@ -38,13 +38,15 @@ namespace TestProject
             Assert.AreEqual(second, userSession.SecondName);
             Assert.AreEqual(login, userSession.Login);
             Assert.AreEqual(password, userSession.Password);
+            mock.Verify(m => m.LoginUser(It.IsAny<string>(), It.IsAny<string>()), Times.Once());
+            mock.Verify(m => m.FindUser(It.IsAny<string>()), Times.Once());
             mock.Verify();
         }
 
         [TestMethod]
         [DataRow("admin", "12345679")]
-        [DataRow("", "qweasdzxc")]
-        [DataRow("right", null)]
+        [DataRow("adams1", "qweasdzxc")]
+        [DataRow("ight1", "123qwe123")]
         public void CheckInUnsuccess(string login, string password)
         {
             Mock<IUserAction> mock = new();
@@ -56,6 +58,7 @@ namespace TestProject
             Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
             RedirectToActionResult newResult = (RedirectToActionResult)result;
             Assert.AreEqual("SignIn", newResult.ActionName);
+            mock.Verify(m => m.LoginUser(It.IsAny<string>(), It.IsAny<string>()), Times.Once());
             mock.Verify();
         }
 
@@ -67,7 +70,7 @@ namespace TestProject
                                       string password, string repPassword)
         {
             Mock<IUserAction> mock = new();
-            mock.Setup(m => m.CheckLoginDuplicate(login)).Returns(0);
+            mock.Setup(m => m.CheckLoginDuplicate(login)).Returns(true);
             UserController controller = new(mock.Object);
 
             var result = controller.CheckRegister(first, second, login, password, repPassword);
@@ -75,18 +78,19 @@ namespace TestProject
             Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
             RedirectToActionResult newResult = (RedirectToActionResult)result;
             Assert.AreEqual(newResult.ActionName, "SignIn");
+            mock.Verify(m => m.CheckLoginDuplicate(It.IsAny<string>()), Times.Once());
             mock.Verify();
         }
 
         [TestMethod]
-        [DataRow("Admin", "System", null, "12345678", "12345678")]
-        [DataRow("Adam", "Smith", "adamsm1", "qweasdzxc", "qweasdzx11")]
-        [DataRow("Frank", "Right", "right1", "", "123qwe123")]
+        [DataRow("Admin", "System", "admin", "12345678", "12345678")]
+        [DataRow("Adam", "Smith", "adamsm1", "qweasdzxc", "qweasdzxc")]
+        [DataRow("Frank", "Right", "right1", "123qwe123", "123qwe123")]
         public void RegisterUnsuccess(string first, string second, string login,
                                       string password, string repPassword)
         {
             Mock<IUserAction> mock = new();
-            mock.Setup(m => m.CheckLoginDuplicate(login)).Returns(1);
+            mock.Setup(m => m.CheckLoginDuplicate(login)).Returns(false);
             UserController controller = new(mock.Object);
 
             var result = controller.CheckRegister(first, second, login, password, repPassword);
@@ -94,6 +98,7 @@ namespace TestProject
             Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
             RedirectToActionResult newResult = (RedirectToActionResult)result;
             Assert.AreEqual("Register", newResult.ActionName);
+            mock.Verify(m => m.CheckLoginDuplicate(It.IsAny<string>()), Times.Once());
             mock.Verify();
         }
 
@@ -148,6 +153,10 @@ namespace TestProject
             Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
             RedirectToActionResult redirect = (RedirectToActionResult)result;
             Assert.AreEqual("UserPage", redirect.ActionName);
+            mock.Verify(m => m.FindUser(It.IsAny<string>()), Times.Once());
+            mock.Verify(m => m.FindPost(It.IsAny<long>()), Times.Once());
+            mock.Verify(m => m.AddComment(It.IsAny<Comment>()), Times.Once());
+            mock.Verify();
         }
 
         [TestMethod]
@@ -171,6 +180,10 @@ namespace TestProject
             Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
             RedirectToActionResult redirect = (RedirectToActionResult)result;
             Assert.AreEqual("VisitUserPage", redirect.ActionName);
+            mock.Verify(m => m.FindUser(It.IsAny<string>()), Times.Once());
+            mock.Verify(m => m.FindPost(It.IsAny<long>()), Times.Once());
+            mock.Verify(m => m.AddComment(It.IsAny<Comment>()), Times.Once());
+            mock.Verify();
         }
 
         [TestMethod]
@@ -192,6 +205,8 @@ namespace TestProject
             var result = controller.VisitUserPage(fakeLogin);
 
             Assert.IsInstanceOfType(result, typeof(ViewResult));
+            mock.Verify(m => m.FindUser(It.IsAny<string>()), Times.Once());
+            mock.Verify(m => m.ReturnUserPost(It.IsAny<User>()), Times.Never());
             mock.Verify();
         }
 
@@ -212,6 +227,8 @@ namespace TestProject
             Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
             RedirectToActionResult redirect = (RedirectToActionResult)result;
             Assert.AreEqual("UserPage", redirect.ActionName);
+            mock.Verify(m => m.FindUser(It.IsAny<string>()), Times.Once());
+            mock.Verify(m => m.AddPost(It.IsAny<Post>()), Times.Once());
             mock.Verify();
         }
     }
