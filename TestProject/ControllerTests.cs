@@ -15,8 +15,6 @@ namespace TestProject
     {
         [TestMethod]
         [DataRow("Admin", "System", "admin", "12345678")]
-        [DataRow("Adam", "Smith", "adamsm1", "qweasdzxc")]
-        [DataRow("Frank", "Right", "right1", "123qwe123")]
         public void CheckIn(string first, string second, string login, string password)
         {
             Mock<IUserAction> mock = new();
@@ -106,8 +104,6 @@ namespace TestProject
 
         [TestMethod]
         [DataRow("Admin", "System", "admin1", "12345678")]
-        [DataRow("Adam", "Smith", "adamsm1", "qweasdzxc")]
-        [DataRow("Frank", "Right", "right1", "123qwe123")]
         public void VisitUserPage(string first, string second, string login, string password)
         {
             Mock<IUserAction> mock = new();
