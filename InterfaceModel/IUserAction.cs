@@ -14,6 +14,5 @@ namespace BlogMvcCore.DomainModel
         public void AddComment(Comment comment);
         public List<Comment> ReturnPostComment(Post post);
         Post FindPost(long postID);
-        bool CheckLoginDuplicate(string login);
     }
 }

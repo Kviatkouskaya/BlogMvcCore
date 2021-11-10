@@ -63,7 +63,6 @@ namespace TestProject
                                       string password, string repPassword)
         {
             Mock<IUserAction> mock = new();
-            mock.Setup(m => m.CheckLoginDuplicate(login)).Returns(true).Verifiable();
             UserController controller = new(mock.Object);
 
             var result = controller.CheckRegister(first, second, login, password, repPassword);
@@ -75,14 +74,13 @@ namespace TestProject
         }
 
         [TestMethod]
-        [DataRow("Admin", "System", "admin", "12345678", "12345678")]
-        [DataRow("Adam", "Smith", "adamsm1", "qweasdzxc", "qweasdzxc")]
-        [DataRow("Frank", "Right", "right1", "123qwe123", "123qwe123")]
+        [DataRow("Admin", "System", "", "12345678", "12345678")]
+        [DataRow("Adam", "", "adamsm1", "qweasdzxc", "qweasdzxc")]
+        [DataRow("Frank", "Right", "right1", "123qwe123", "")]
         public void RegisterFail(string first, string second, string login,
                                       string password, string repPassword)
         {
             Mock<IUserAction> mock = new();
-            mock.Setup(m => m.CheckLoginDuplicate(login)).Returns(false);
             UserController controller = new(mock.Object);
 
             var result = controller.CheckRegister(first, second, login, password, repPassword);

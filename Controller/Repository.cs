@@ -16,7 +16,7 @@ namespace BlogMvcCore.Storage
         public DomainModel.User FindUser(string login)
         {
             var user = context.BlogUsers.Where(u => u.Login == login).
-                                         FirstOrDefault();
+                                         First();
             return new(user.FirstName, user.SecondName, user.Login, user.Password);
         }
 
@@ -43,13 +43,6 @@ namespace BlogMvcCore.Storage
             var result = context.BlogUsers.Where(u => u.Login == login && u.Password == password).
                                            Count();
             return result != 0;
-        }
-
-        public bool CheckLoginDuplicate(string login)
-        {
-            var result= context.BlogUsers.Where(u => u.Login == login).
-                                          Count();
-            return result == 0;
         }
 
         public void Register(DomainModel.User newUser)
@@ -142,7 +135,7 @@ namespace BlogMvcCore.Storage
 
         public List<DomainModel.User> ReturnUsersList()
         {
-            List<User> usersStorage = context.BlogUsers.ToList();
+            List<User> usersStorage = context.BlogUsers.Select(u => u).ToList();
             List<DomainModel.User> usersDomain = new();
             foreach (var item in usersStorage)
             {

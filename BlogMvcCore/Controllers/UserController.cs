@@ -29,8 +29,7 @@ namespace BlogMvcCore.Controllers
                                            string password, string repPassword)
         {
             bool stringCheck = CheckStringParams(first, second, login, password, repPassword);
-            if (password == repPassword && stringCheck &&
-                repContext.CheckLoginDuplicate(login))
+            if (password == repPassword && stringCheck)
             {
                 repContext.Register(new User(first, second, login, password));
                 return RedirectToAction("SignIn");
@@ -58,6 +57,7 @@ namespace BlogMvcCore.Controllers
         public IActionResult SignOut()
         {
             SessionHelper.SetUserAsJson(HttpContext.Session, "user", null);
+            repContext.Dispose();
             return RedirectToAction("Index");
         }
 
