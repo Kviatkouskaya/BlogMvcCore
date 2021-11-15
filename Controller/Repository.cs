@@ -1,5 +1,4 @@
 ﻿using BlogMvcCore.DomainModel;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -57,15 +56,11 @@ namespace BlogMvcCore.Storage
 
         public List<DomainModel.Post> ReturnUserPost(DomainModel.User user)
         {
-            var joinEntity = context.Posts.Join(context.Comments,
+            var joinEntity = context.Posts.Join(context.Comments.Where(p => p.Post.Author.Login == user.Login),
                                                 post => post.Author.Login,
                                                 comm => comm.Post.Author.Login,
                                                 (posts, comm) => new { Post = posts, Comment = comm });
-
-            var entityPostsList = joinEntity.Select(p => p).
-                                             Where(p => p.Post.Author.Login == user.Login).
-                                             ToList();
-
+            var entityPostsList = joinEntity.Select(p => p).ToList();
             List<DomainModel.Post> postsDomain = new();
             foreach (var item in entityPostsList)
             {
@@ -77,9 +72,8 @@ namespace BlogMvcCore.Storage
                         Author = user,
                         Title = item.Post.Title,
                         Text = item.Post.Text,
-                        Date = item.Post.Date,
+                        Date = item.Post.Date
                     };
-
                     postDomain.Comments = entityPostsList.Select(c => new DomainModel.Comment
                     {
                         ID = c.Comment.ID,
