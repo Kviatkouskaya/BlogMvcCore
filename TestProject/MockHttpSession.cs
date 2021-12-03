@@ -66,7 +66,7 @@ namespace TestProject
 
         bool ISession.TryGetValue(string key, out byte[] value)
         {
-            if (sessionStorage[key] != null)
+            if (sessionStorage[key] is not null)
             {
                 if (sessionStorage[key] is byte[])
                 {

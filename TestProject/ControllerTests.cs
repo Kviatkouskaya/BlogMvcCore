@@ -78,7 +78,7 @@ namespace TestProject
         [DataRow("Adam", "", "adamsm1", "qweasdzxc", "qweasdzxc")]
         [DataRow("Frank", "Right", "right1", "123qwe123", "")]
         public void RegisterFail(string first, string second, string login,
-                                      string password, string repPassword)
+                                 string password, string repPassword)
         {
             Mock<IUserAction> mock = new();
             UserController controller = new(mock.Object);
