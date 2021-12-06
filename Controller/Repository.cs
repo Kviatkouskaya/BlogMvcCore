@@ -56,11 +56,14 @@ namespace BlogMvcCore.Storage
 
         public List<DomainModel.Post> ReturnUserPost(DomainModel.User user)
         {
-            var joinEntity = context.Posts.Join(context.Comments.Where(p => p.Post.Author.Login == user.Login),
+            var joinEntity = context.Posts.GroupJoin(context.Comments.Where(p => p.Post.Author.Login == user.Login),
                                                 post => post.Author.Login,
                                                 comm => comm.Post.Author.Login,
-                                                (posts, comm) => new { Post = posts, Comment = comm });
-            var entityPostsList = joinEntity.Select(p => p).ToList();
+                                                (posts, comm) => new { Post = posts, Comment = comm }).
+                                           SelectMany(comm => comm.Comment.DefaultIfEmpty(),
+                                                     (post, comm) => new { post.Post, Comment = comm });
+
+            var entityPostsList = joinEntity.Select(p => p).Where(p => p.Post.Author.Login == user.Login).ToList();
             List<DomainModel.Post> postsDomain = new();
             foreach (var item in entityPostsList)
             {
@@ -74,17 +77,21 @@ namespace BlogMvcCore.Storage
                         Text = item.Post.Text,
                         Date = item.Post.Date
                     };
-                    postDomain.Comments = entityPostsList.Select(c => new DomainModel.Comment
+                    if (postDomain.Comments != null)
                     {
-                        ID = c.Comment.ID,
-                        Author = item.Comment.Author,
-                        Text = item.Comment.Text,
-                        Date = item.Comment.Date
-                    }).ToList();
+                        postDomain.Comments = entityPostsList.Select(c => new DomainModel.Comment
+                        {
+                            ID = c.Comment.ID,
+                            Author = item.Comment.Author,
+                            Text = item.Comment.Text,
+                            Date = item.Comment.Date
+                        }).ToList();
+                    }
+
                     postsDomain.Add(postDomain);
                 }
             }
-            return postsDomain;
+            return postsDomain.OrderByDescending(p => p.Date).ToList();
         }
 
         public DomainModel.Post FindPost(long postID)

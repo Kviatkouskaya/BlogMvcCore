@@ -54,7 +54,7 @@ namespace BlogMvcCore.Controllers
             return View();
         }
 
-        public IActionResult SignOut()
+        public new IActionResult SignOut()
         {
             SessionHelper.SetUserAsJson(HttpContext.Session, "user", null);
             repContext.Dispose();
@@ -90,7 +90,7 @@ namespace BlogMvcCore.Controllers
 
         public User FillPostsComments(User user)
         {
-            if (user != null)
+            if (user is not null)
             {
                 user.Posts = repContext.ReturnUserPost(user);
                 foreach (var item in user.Posts)
