@@ -14,8 +14,7 @@ namespace BlogMvcCore.Storage
 
         public DomainModel.User FindUser(string login)
         {
-            var user = context.BlogUsers.Where(u => u.Login == login).
-                                         First();
+            var user = context.BlogUsers.Where(u => u.Login == login).First();
             return new(user.FirstName, user.SecondName, user.Login, user.Password);
         }
 
@@ -37,8 +36,8 @@ namespace BlogMvcCore.Storage
 
         public bool LoginUser(string login, string password)
         {
-            var result = context.BlogUsers.Where(u => u.Login == login && u.Password == password).
-                                           Count();
+            var result = context.BlogUsers.Where(u => u.Login == login && u.Password == password)
+                                          .Count();
             return result != 0;
         }
 
@@ -57,13 +56,16 @@ namespace BlogMvcCore.Storage
         public List<DomainModel.Post> ReturnUserPost(DomainModel.User user)
         {
             var joinEntity = context.Posts.GroupJoin(context.Comments.Where(p => p.Post.Author.Login == user.Login),
-                                                post => post.Author.Login,
-                                                comm => comm.Post.Author.Login,
-                                                (posts, comm) => new { Post = posts, Comment = comm }).
-                                           SelectMany(comm => comm.Comment.DefaultIfEmpty(),
+                                                     post => post.Author.Login,
+                                                     comm => comm.Post.Author.Login,
+                                                     (posts, comm) => new { Post = posts, Comment = comm })
+                                                    .SelectMany(comm => comm.Comment.DefaultIfEmpty(),
                                                      (post, comm) => new { post.Post, Comment = comm });
 
-            var entityPostsList = joinEntity.Select(p => p).Where(p => p.Post.Author.Login == user.Login).ToList();
+            var entityPostsList = joinEntity.Select(p => p)
+                                            .Where(p => p.Post.Author.Login == user.Login)
+                                            .ToList();
+
             List<DomainModel.Post> postsDomain = new();
             foreach (var item in entityPostsList)
             {
@@ -123,24 +125,25 @@ namespace BlogMvcCore.Storage
 
         public List<DomainModel.Comment> ReturnPostComment(DomainModel.Post post)
         {
-            var commentsList = context.Comments.Select(c => c).
-                                                Where(c => c.Post.ID == post.ID).
-                                                ToList();
+            var commentsList = context.Comments.Select(c => c)
+                                               .Where(c => c.Post.ID == post.ID)
+                                               .ToList();
+
             var result = commentsList.Select(c => new DomainModel.Comment
             {
                 ID = c.ID,
                 Author = c.Author,
                 Text = c.Text,
                 Date = c.Date
-            }).OrderByDescending(c => c.Date).
-               ToList();
+            }).OrderByDescending(c => c.Date)
+              .ToList();
             return result;
         }
 
         public List<DomainModel.User> ReturnUsersList()
         {
-            var userDomainList = context.BlogUsers.Select(u => new DomainModel.User(u.FirstName, u.SecondName, u.Login, u.Password)).
-                                                   ToList();
+            var userDomainList = context.BlogUsers.Select(u => new DomainModel.User(u.FirstName, u.SecondName, u.Login, u.Password))
+                                                  .ToList();
             return userDomainList;
         }
     }
