@@ -11,18 +11,28 @@
                         <tr><td>@item.Author.FirstName @item.Author.SecondName @item.Date.Day/@item.Date.Month/@item.Date.Year</td></tr>
                         <tr><td>@item.Title</td></tr>
 
-                        <tr><td>@item.Text</td></tr>
-                        <tr><td></td><td>@await Html.PartialAsync("_PostComment", item.Comments)</td> </tr>
+                        @if (item.Text.Count() > 500)
+                        {
+                            <tr><td>@item.Text.Substring(0,500) ... @Html.ActionLink("view more","ViewPostAndComments","User", new{postID=item.ID})</td></tr>
+                        }
+                        else
+                        {
+                            <tr><td>@item.Text ... @Html.ActionLink("view more","ViewPostAndComments","User", new{postID=item.ID})</td></tr>
+                        }
+                        @* <tr><td></td><td>@await Html.PartialAsync("_PostComment", item.Comments)</td> </tr>*@
                     </table>
-                    @using (Html.BeginForm("AddComment", "User", FormMethod.Post))
-                    {
+                    @*
+                        @using (Html.BeginForm("AddComment", "User", FormMethod.Post))
+                        {
                         @Html.TextBox("commentText", "", htmlAttributes: true)
 
                         <input type="hidden" id="postID" name="postID" value=@item.ID />
                         <input type="hidden" id="ownerLogin" name="ownerLogin" value=@Model.Login />
                         <button type="submit">Comment</button>
-                        <p>---------------------------------------------</p>
-                    }
+
+                    *@
+                    <p>---------------------------------------------</p>
+                    // }
                 }
             }
             else

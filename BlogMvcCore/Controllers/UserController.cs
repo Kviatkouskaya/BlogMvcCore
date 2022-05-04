@@ -78,6 +78,12 @@ namespace BlogMvcCore.Controllers
             return View(repContext.ReturnUsersList());
         }
 
+        public IActionResult ViewPostAndComments(long postID)
+        {
+            Post post = repContext.FindPost(postID);
+            return View(post);
+        }
+
         public IActionResult VisitUserPage(string login)
         {
             if (login == SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user").Login)
