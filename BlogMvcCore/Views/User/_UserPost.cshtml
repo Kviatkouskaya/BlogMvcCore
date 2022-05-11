@@ -1,4 +1,5 @@
 ﻿@model User
+
 <table>
     <tr><td><h5><em>Previous posts:</em></h5></td></tr>
     <tr>
@@ -14,26 +15,14 @@
                         @if (item.Text.Count() > 500)
                         {
                             <tr><td>@item.Text.Substring(0,500) @Html.ActionLink("view more","ViewPostAndComments", "User", new {postID=item.ID}, new {target="_blank"})</td></tr>
-                            
+
                         }
                         else
                         {
                             <tr><td>@item.Text @Html.ActionLink("view more","ViewPostAndComments","User", new {postID=item.ID}, new {target="_blank"})</td></tr>
                         }
-                        @* <tr><td></td><td>@await Html.PartialAsync("_PostComment", item.Comments)</td> </tr>*@
+                       <tr><td>--------------------------------------------------------</td></tr>
                     </table>
-                    @*
-                        @using (Html.BeginForm("AddComment", "User", FormMethod.Post))
-                        {
-                        @Html.TextBox("commentText", "", htmlAttributes: true)
-
-                        <input type="hidden" id="postID" name="postID" value=@item.ID />
-                        <input type="hidden" id="ownerLogin" name="ownerLogin" value=@Model.Login />
-                        <button type="submit">Comment</button>
-
-                    *@
-                    <p>---------------------------------------------</p>
-                    // }
                 }
             }
             else

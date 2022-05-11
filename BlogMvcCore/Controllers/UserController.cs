@@ -81,6 +81,7 @@ namespace BlogMvcCore.Controllers
         public IActionResult ViewPostAndComments(long postID)
         {
             Post post = repContext.FindPost(postID);
+            post.Comments = repContext.ReturnPostComment(post);
             return View(post);
         }
 
@@ -90,7 +91,7 @@ namespace BlogMvcCore.Controllers
             {
                 return RedirectToAction("UserPage");
             }
-            User user = FillPostsComments(repContext.FindUser(login));
+            User user = repContext.FindUser(login);
             return View(user);
         }
 
@@ -146,8 +147,7 @@ namespace BlogMvcCore.Controllers
                 comment.Post.Author = repContext.FindUser(ownerLogin);
                 repContext.AddComment(comment);
             }
-            return user.Login == ownerLogin ? RedirectToAction("UserPage") :
-                                              RedirectToAction("VisitUserPage", new { login = ownerLogin });
+            return RedirectToAction("ViewPostAndComments", new { postID });
         }
     }
 }
