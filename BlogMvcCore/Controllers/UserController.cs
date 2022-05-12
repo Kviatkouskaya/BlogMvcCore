@@ -92,6 +92,7 @@ namespace BlogMvcCore.Controllers
                 return RedirectToAction("UserPage");
             }
             User user = repContext.FindUser(login);
+            user.Posts = repContext.ReturnUserPost(user);
             return View(user);
         }
 
@@ -108,9 +109,11 @@ namespace BlogMvcCore.Controllers
             return user;
         }
 
+        
         public IActionResult UserPage()
         {
             User user = FillPostsComments(SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user"));
+            user.Posts = repContext.ReturnUserPost(user);
             return View(user);
         }
 
