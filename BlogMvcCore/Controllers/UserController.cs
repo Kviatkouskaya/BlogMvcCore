@@ -109,7 +109,7 @@ namespace BlogMvcCore.Controllers
             return user;
         }
 
-        
+
         public IActionResult UserPage()
         {
             User user = FillPostsComments(SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user"));
@@ -135,7 +135,7 @@ namespace BlogMvcCore.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddComment(string commentText, long postID, string ownerLogin)
+        public IActionResult AddComment(string commentText, long postID)
         {
             User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
             if (CheckStringParams(commentText))
@@ -147,7 +147,7 @@ namespace BlogMvcCore.Controllers
                     Text = commentText,
                     Date = DateTime.Now.Date
                 };
-                comment.Post.Author = repContext.FindUser(ownerLogin);
+                comment.Post.Author = repContext.FindUser(user.Login);
                 repContext.AddComment(comment);
             }
             return RedirectToAction("ViewPostAndComments", new { postID });

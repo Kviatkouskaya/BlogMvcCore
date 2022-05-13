@@ -1,13 +1,7 @@
-﻿@inject IHttpContextAccessor HttpContextAccessor
-@model Post
-
-@{
-    string activeUserLogin = HttpContextAccessor.HttpContext.Session.GetUserFromJson<User>("user").Login;
-}
+﻿@model Post
 
 <div>
     <table>
-
         <tr><td> @Model.Author</td><td>@Model.Date</td></tr>
         <tr><td>@Model.Title</td></tr>
         <tr><td>@Model.Text</td></tr>
@@ -19,7 +13,6 @@
                         {
                             @Html.TextBox("commentText", "", htmlAttributes: true)
                             <input type="hidden" id="postID" name="postID" value=@Model.ID />
-                            <input type="hidden" id="ownerLogin" name="ownerLogin" value=@activeUserLogin />
                             <button type="submit">Comment</button>
                         }
             </td>

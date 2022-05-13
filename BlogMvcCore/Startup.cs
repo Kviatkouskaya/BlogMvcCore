@@ -26,7 +26,6 @@ namespace BlogMvcCore
             services.AddDbContext<UserDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("UserContext")));
             services.AddSession();
-            services.AddHttpContextAccessor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
