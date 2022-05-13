@@ -81,6 +81,7 @@ namespace BlogMvcCore.Controllers
         public IActionResult ViewPostAndComments(long postID)
         {
             Post post = repContext.FindPost(postID);
+            post.Comments = repContext.ReturnPostComment(post);
             return View(post);
         }
 
@@ -90,7 +91,8 @@ namespace BlogMvcCore.Controllers
             {
                 return RedirectToAction("UserPage");
             }
-            User user = FillPostsComments(repContext.FindUser(login));
+            User user = repContext.FindUser(login);
+            user.Posts = repContext.ReturnUserPost(user);
             return View(user);
         }
 
@@ -107,9 +109,11 @@ namespace BlogMvcCore.Controllers
             return user;
         }
 
+
         public IActionResult UserPage()
         {
             User user = FillPostsComments(SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user"));
+            user.Posts = repContext.ReturnUserPost(user);
             return View(user);
         }
 
@@ -131,7 +135,7 @@ namespace BlogMvcCore.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddComment(string commentText, long postID, string ownerLogin)
+        public IActionResult AddComment(string commentText, long postID)
         {
             User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
             if (CheckStringParams(commentText))
@@ -143,11 +147,10 @@ namespace BlogMvcCore.Controllers
                     Text = commentText,
                     Date = DateTime.Now.Date
                 };
-                comment.Post.Author = repContext.FindUser(ownerLogin);
+                comment.Post.Author = repContext.FindUser(user.Login);
                 repContext.AddComment(comment);
             }
-            return user.Login == ownerLogin ? RedirectToAction("UserPage") :
-                                              RedirectToAction("VisitUserPage", new { login = ownerLogin });
+            return RedirectToAction("ViewPostAndComments", new { postID });
         }
     }
 }
