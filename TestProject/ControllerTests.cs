@@ -136,11 +136,11 @@ namespace TestProject
             controller.ControllerContext = CreateControllerContext(mockHttpSession);
             controller.ControllerContext.HttpContext.Session.SetUserAsJson("user", user);
 
-            var result = controller.AddComment(commentText, 0, ownerLogin);
+            var result = controller.AddComment(commentText, 0);
 
             Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
             RedirectToActionResult redirect = (RedirectToActionResult)result;
-            Assert.AreEqual("UserPage", redirect.ActionName);
+            Assert.AreEqual("ViewPostAndComments", redirect.ActionName);
             mock.VerifyAll();
         }
 
@@ -152,7 +152,7 @@ namespace TestProject
         {
             User user = new("admin", "secondName", userLogin, "123123");
             Mock<IUserAction> mock = new();
-            mock.Setup(m => m.FindUser(ownerLogin)).Returns(user).Verifiable();
+            mock.Setup(m => m.FindUser(userLogin)).Returns(user).Verifiable();
             mock.Setup(m => m.FindPost(0)).Returns(new Post()).Verifiable();
             mock.Setup(m => m.AddComment(It.Is<Comment>(c => c.Post != null &&
                                                              c.Author != null))).
@@ -162,11 +162,11 @@ namespace TestProject
             controller.ControllerContext = CreateControllerContext(mockHttpSession);
             controller.ControllerContext.HttpContext.Session.SetUserAsJson("user", user);
 
-            var result = controller.AddComment(commentText, 0, ownerLogin);
+            var result = controller.AddComment(commentText, 0);
 
             Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
             RedirectToActionResult redirect = (RedirectToActionResult)result;
-            Assert.AreEqual("VisitUserPage", redirect.ActionName);
+            Assert.AreEqual("ViewPostAndComments", redirect.ActionName);
             mock.VerifyAll();
         }
 
