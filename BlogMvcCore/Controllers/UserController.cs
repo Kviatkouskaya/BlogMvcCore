@@ -144,7 +144,7 @@ namespace BlogMvcCore.Controllers
                 {
                     Post = repContext.FindPost(postID),
                     Author = $"{user.FirstName} {user.SecondName}",
-                    Parent = parentID == postID ? 0 : parentID,
+                    Parent = parentID,
                     Text = commentText,
                     Date = DateTime.Now.Date
                 };

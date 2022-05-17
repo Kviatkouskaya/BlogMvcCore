@@ -97,6 +97,7 @@ namespace BlogMvcCore.Storage
             context.Comments.Add(new Comment
             {
                 ID = comment.ID,
+                Parent=comment.Parent,
                 Post = entityPost,
                 Author = comment.Author,
                 Text = comment.Text,
@@ -113,6 +114,15 @@ namespace BlogMvcCore.Storage
 
             var result = commentsList.Select(c => new DomainModel.Comment
             {
+                Post = new DomainModel.Post
+                {
+                    ID = post.ID,
+                    Author = post.Author,
+                    Title =post.Title,
+                    Text=post.Text,
+                    Date=post.Date,
+                    Comments=post.Comments
+                },
                 ID = c.ID,
                 Author = c.Author,
                 Text = c.Text,
