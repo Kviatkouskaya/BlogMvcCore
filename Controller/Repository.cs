@@ -55,41 +55,23 @@ namespace BlogMvcCore.Storage
 
         public List<DomainModel.Post> ReturnUserPost(DomainModel.User user)
         {
-            var joinEntity = context.Posts.GroupJoin(context.Comments.Where(p => p.Post.Author.Login == user.Login),
-                                                     post => post.Author.Login,
-                                                     comm => comm.Post.Author.Login,
-                                                     (posts, comm) => new { Post = posts, Comment = comm })
-                                                    .SelectMany(comm => comm.Comment.DefaultIfEmpty(),
-                                                     (post, comm) => new { post.Post, Comment = comm });
-
-            var entityPostsList = joinEntity.Select(p => p)
-                                            .Where(p => p.Post.Author.Login == user.Login)
-                                            .ToList();
+            var entityPostsList = context.Posts.Select(p => p)
+                                               .Where(p => p.Author.Login == user.Login)
+                                               .ToList();
 
             List<DomainModel.Post> postsDomain = new();
             foreach (var item in entityPostsList)
             {
-                if (!postsDomain.Exists(p => p.ID == item.Post.ID))
+                if (!postsDomain.Exists(p => p.ID == item.ID))
                 {
                     DomainModel.Post postDomain = new()
                     {
-                        ID = item.Post.ID,
+                        ID = item.ID,
                         Author = user,
-                        Title = item.Post.Title,
-                        Text = item.Post.Text,
-                        Date = item.Post.Date
+                        Title = item.Title,
+                        Text = item.Text,
+                        Date = item.Date
                     };
-                    if (postDomain.Comments != null)
-                    {
-                        postDomain.Comments = entityPostsList.Select(c => new DomainModel.Comment
-                        {
-                            ID = c.Comment.ID,
-                            Author = item.Comment.Author,
-                            Text = item.Comment.Text,
-                            Date = item.Comment.Date
-                        }).ToList();
-                    }
-
                     postsDomain.Add(postDomain);
                 }
             }
