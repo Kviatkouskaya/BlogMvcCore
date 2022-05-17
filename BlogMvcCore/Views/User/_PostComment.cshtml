@@ -3,19 +3,18 @@
 <tr><td><h5><em>Comments:</em></h5></td><td></td></tr>
 <tr>
     <td>
-        @if (Model.Count > 0)
+        @foreach (var item in Model)
         {
-            @foreach (var item in Model)
+            <p> @item.Author @item.Date.Day/@item.Date.Month/@item.Date.Year </p>
+            <p> @item.Text</p>
+            @using (Html.BeginForm("AddComment", "User", FormMethod.Post))
             {
-
-                <p>@item.Author @item.Date.Day/@item.Date.Month/@item.Date.Year </p>
-                <p>@item.Text</p>
-                <p>------------------------------------------------</p>
+                @Html.TextBox("commentText", "", htmlAttributes: true)
+                <input type="hidden" id="postID" name="postID" value=@item.Post.ID />
+                <input type="hidden" id="parentID" name="parentID" value=@item.ID />
+                <button type="submit">Comment</button>
             }
-        }
-        else
-        {
-            <p>Let's start discussing...</p>
+            <p>------------------------------------------------</p>
         }
     </td>
     <td></td>

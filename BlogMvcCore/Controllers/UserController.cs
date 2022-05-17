@@ -135,7 +135,7 @@ namespace BlogMvcCore.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddComment(string commentText, long postID)
+        public IActionResult AddComment(string commentText, long postID, long parentID)
         {
             User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
             if (CheckStringParams(commentText))
@@ -144,6 +144,7 @@ namespace BlogMvcCore.Controllers
                 {
                     Post = repContext.FindPost(postID),
                     Author = $"{user.FirstName} {user.SecondName}",
+                    Parent = parentID,
                     Text = commentText,
                     Date = DateTime.Now.Date
                 };

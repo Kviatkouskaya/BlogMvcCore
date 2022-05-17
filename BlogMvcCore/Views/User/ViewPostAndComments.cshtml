@@ -5,17 +5,16 @@
         <tr><td> @Model.Author</td><td>@Model.Date</td></tr>
         <tr><td>@Model.Title</td></tr>
         <tr><td>@Model.Text</td></tr>
-        <tr><td>
-        <tr><td>@await Html.PartialAsync("_PostComment", Model.Comments)</td> </tr>
         <tr>
             <td>
-                        @using (Html.BeginForm("AddComment", "User", FormMethod.Post))
-                        {
-                            @Html.TextBox("commentText", "", htmlAttributes: true)
-                            <input type="hidden" id="postID" name="postID" value=@Model.ID />
-                            <button type="submit">Comment</button>
-                        }
-            </td>
-        </tr>
+                <p>Let's start discussing...</p>
+                @using (Html.BeginForm("AddComment", "User", FormMethod.Post))
+                {
+                    @Html.TextBox("commentText", "", htmlAttributes: true)
+                    <input type="hidden" id="postID" name="postID" value=@Model.ID />
+                    <button type="submit">Comment</button>
+                }
+                <p>------------------------------------------------</p>
+        <tr><td>@await Html.PartialAsync("_PostComment", Model.Comments)</td> </tr>
     </table>
 </div>
