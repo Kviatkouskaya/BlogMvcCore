@@ -15,22 +15,25 @@ namespace BlogMvcCore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.10")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "5.0.11");
 
-            modelBuilder.Entity("BlogMvcCore.Models.Comment", b =>
+            modelBuilder.Entity("BlogMvcCore.Storage.Comment", b =>
                 {
                     b.Property<long>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Author")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
+
+                    b.Property<long>("Parent")
+                        .HasColumnType("bigint");
 
                     b.Property<long?>("PostID")
                         .HasColumnType("bigint");
@@ -45,12 +48,12 @@ namespace BlogMvcCore.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("BlogMvcCore.Models.Post", b =>
+            modelBuilder.Entity("BlogMvcCore.Storage.Post", b =>
                 {
                     b.Property<long>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<long?>("AuthorID")
                         .HasColumnType("bigint");
@@ -71,12 +74,12 @@ namespace BlogMvcCore.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("BlogMvcCore.Models.User", b =>
+            modelBuilder.Entity("BlogMvcCore.Storage.User", b =>
                 {
                     b.Property<long>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
@@ -131,7 +134,7 @@ namespace BlogMvcCore.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -220,7 +223,7 @@ namespace BlogMvcCore.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -295,18 +298,18 @@ namespace BlogMvcCore.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("BlogMvcCore.Models.Comment", b =>
+            modelBuilder.Entity("BlogMvcCore.Storage.Comment", b =>
                 {
-                    b.HasOne("BlogMvcCore.Models.Post", "Post")
+                    b.HasOne("BlogMvcCore.Storage.Post", "Post")
                         .WithMany()
                         .HasForeignKey("PostID");
 
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("BlogMvcCore.Models.Post", b =>
+            modelBuilder.Entity("BlogMvcCore.Storage.Post", b =>
                 {
-                    b.HasOne("BlogMvcCore.Models.User", "Author")
+                    b.HasOne("BlogMvcCore.Storage.User", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorID");
 
