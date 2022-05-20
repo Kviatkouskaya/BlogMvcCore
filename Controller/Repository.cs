@@ -97,7 +97,7 @@ namespace BlogMvcCore.Storage
             context.Comments.Add(new Comment
             {
                 ID = comment.ID,
-                Parent=comment.Parent,
+                Parent = comment.Parent,
                 Post = entityPost,
                 Author = comment.Author,
                 Text = comment.Text,
@@ -117,13 +117,13 @@ namespace BlogMvcCore.Storage
                 {
                     ID = post.ID,
                     Author = post.Author,
-                    Title =post.Title,
-                    Text=post.Text,
-                    Date=post.Date,
-                    Comments=post.Comments
+                    Title = post.Title,
+                    Text = post.Text,
+                    Date = post.Date,
+                    Comments = post.Comments
                 },
                 ID = c.ID,
-                Parent=c.Parent,
+                Parent = c.Parent,
                 Author = c.Author,
                 Text = c.Text,
                 Date = c.Date
@@ -137,6 +137,28 @@ namespace BlogMvcCore.Storage
             var userDomainList = context.BlogUsers.Select(u => new DomainModel.User(u.FirstName, u.SecondName, u.Login, u.Password))
                                                   .ToList();
             return userDomainList;
+        }
+
+        public List<DomainModel.Post> ReturnPostList()
+        {
+            var entityPostsList = context.Posts.ToList().OrderByDescending(p => p.Date);
+
+            List<DomainModel.Post> postList = new();
+            foreach (var item in entityPostsList)
+            {
+                if (!postList.Exists(p => p.ID == item.ID))
+                {
+                    DomainModel.Post postDomain = new()
+                    {
+                        ID = item.ID,
+                        Title = item.Title,
+                        Text = item.Text,
+                        Date = item.Date
+                    };
+                    postList.Add(postDomain);
+                }
+            }
+            return postList;
         }
     }
 }

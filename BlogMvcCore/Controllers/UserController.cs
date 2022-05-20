@@ -153,5 +153,11 @@ namespace BlogMvcCore.Controllers
             }
             return RedirectToAction("ViewPostAndComments", new { postID });
         }
+
+        public IActionResult ViewRecentAddedPostList()
+        {
+
+            return View("ViewRecentAddedPostList", repContext.ReturnPostList());
+        }
     }
 }
