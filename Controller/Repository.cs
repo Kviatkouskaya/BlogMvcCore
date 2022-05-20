@@ -108,8 +108,7 @@ namespace BlogMvcCore.Storage
 
         public List<DomainModel.Comment> ReturnPostComment(DomainModel.Post post)
         {
-            var commentsList = context.Comments.Select(c => c)
-                                               .Where(c => c.Post.ID == post.ID)
+            var commentsList = context.Comments.Where(c => c.Post.ID == post.ID)
                                                .ToList();
 
             var result = commentsList.Select(c => new DomainModel.Comment
@@ -124,6 +123,7 @@ namespace BlogMvcCore.Storage
                     Comments=post.Comments
                 },
                 ID = c.ID,
+                Parent=c.Parent,
                 Author = c.Author,
                 Text = c.Text,
                 Date = c.Date
