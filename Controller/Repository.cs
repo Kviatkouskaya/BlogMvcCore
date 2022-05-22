@@ -62,18 +62,15 @@ namespace BlogMvcCore.Storage
             List<DomainModel.Post> postsDomain = new();
             foreach (var item in entityPostsList)
             {
-                if (!postsDomain.Exists(p => p.ID == item.ID))
+                DomainModel.Post postDomain = new()
                 {
-                    DomainModel.Post postDomain = new()
-                    {
-                        ID = item.ID,
-                        Author = user,
-                        Title = item.Title,
-                        Text = item.Text,
-                        Date = item.Date
-                    };
-                    postsDomain.Add(postDomain);
-                }
+                    ID = item.ID,
+                    Author = user,
+                    Title = item.Title,
+                    Text = item.Text,
+                    Date = item.Date
+                };
+                postsDomain.Add(postDomain);
             }
             return postsDomain.OrderByDescending(p => p.Date).ToList();
         }
@@ -146,17 +143,14 @@ namespace BlogMvcCore.Storage
             List<DomainModel.Post> postList = new();
             foreach (var item in entityPostsList)
             {
-                if (!postList.Exists(p => p.ID == item.ID))
+                DomainModel.Post postDomain = new()
                 {
-                    DomainModel.Post postDomain = new()
-                    {
-                        ID = item.ID,
-                        Title = item.Title,
-                        Text = item.Text,
-                        Date = item.Date
-                    };
-                    postList.Add(postDomain);
-                }
+                    ID = item.ID,
+                    Title = item.Title,
+                    Text = item.Text,
+                    Date = item.Date
+                };
+                postList.Add(postDomain);
             }
             return postList;
         }
