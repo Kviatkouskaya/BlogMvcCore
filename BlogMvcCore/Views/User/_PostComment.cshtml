@@ -1,20 +1,52 @@
 ﻿@model List<Comment>
+@{
+    var firstGeneration = FindChildComment(0);
+}
+
+@functions {
+
+    List<Comment> FindChildComment(long parent)
+    {
+        return Model.Where(x => x.Parent == parent).OrderByDescending(x => x.Date).ToList();
+    }
+
+    void ShowChild(List<Comment> childList)
+    {
+        foreach (var item in childList)
+        {
+            <p> @item.Author @item.Date.Day/@item.Date.Month/@item.Date.Year </p>
+            <p> @item.Text</p>
+            ShowAddCommentSection(item.Post.ID, item.ID);
+            <hr class="hr1">
+
+            var itemChild = FindChildComment(item.ID);
+            if (itemChild != null)
+            {
+                ShowChild(itemChild);
+            }
+        }
+    }
+
+    void ShowAddCommentSection(long itemPostID, long itemID)
+    {
+        @using (Html.BeginForm("AddComment", "User", FormMethod.Post))
+        {
+            @Html.TextBox("commentText", "", htmlAttributes: true)
+            <input type="hidden" id="postID" name="postID" value=@itemPostID />
+            <input type="hidden" id="parentID" name="parentID" value=@itemID />
+            <button type="submit">Comment</button>
+        }
+        <div class="menu-line"></div>
+        <div class="menu"></div>
+    }
+}
 
 <tr><td><h5><em>Comments:</em></h5></td><td></td></tr>
 <tr>
     <td>
-        @foreach (var item in Model)
+        @if (firstGeneration != null)
         {
-            <p> @item.Author @item.Date.Day/@item.Date.Month/@item.Date.Year </p>
-            <p> @item.Text</p>
-            @using (Html.BeginForm("AddComment", "User", FormMethod.Post))
-            {
-                @Html.TextBox("commentText", "", htmlAttributes: true)
-                <input type="hidden" id="postID" name="postID" value=@item.Post.ID />
-                <input type="hidden" id="parentID" name="parentID" value=@item.ID />
-                <button type="submit">Comment</button>
-            }
-            <p>------------------------------------------------</p>
+            ShowChild(firstGeneration);
         }
     </td>
     <td></td>
