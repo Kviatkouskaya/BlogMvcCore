@@ -8,13 +8,14 @@
         <tr>
             <td>
                 <p>Let's start discussing...</p>
+                <p></p>
                 @using (Html.BeginForm("AddComment", "User", FormMethod.Post))
                 {
                     @Html.TextBox("commentText", "", htmlAttributes: true)
                     <input type="hidden" id="postID" name="postID" value=@Model.ID />
                     <button type="submit">Comment</button>
                 }
-                <p>------------------------------------------------</p>
+                <hr class="hr1">
         <tr><td>@await Html.PartialAsync("_PostComment", Model.Comments)</td> </tr>
     </table>
 </div>

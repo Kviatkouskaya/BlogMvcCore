@@ -120,7 +120,7 @@ namespace BlogMvcCore.Storage
                     Comments = post.Comments
                 },
                 ID = c.ID,
-                Parent = c.Parent,
+                Parent=c.Parent,
                 Author = c.Author,
                 Text = c.Text,
                 Date = c.Date
