@@ -62,18 +62,15 @@ namespace BlogMvcCore.Storage
             List<DomainModel.Post> postsDomain = new();
             foreach (var item in entityPostsList)
             {
-                if (!postsDomain.Exists(p => p.ID == item.ID))
+                DomainModel.Post postDomain = new()
                 {
-                    DomainModel.Post postDomain = new()
-                    {
-                        ID = item.ID,
-                        Author = user,
-                        Title = item.Title,
-                        Text = item.Text,
-                        Date = item.Date
-                    };
-                    postsDomain.Add(postDomain);
-                }
+                    ID = item.ID,
+                    Author = user,
+                    Title = item.Title,
+                    Text = item.Text,
+                    Date = item.Date
+                };
+                postsDomain.Add(postDomain);
             }
             return postsDomain.OrderByDescending(p => p.Date).ToList();
         }
@@ -97,7 +94,7 @@ namespace BlogMvcCore.Storage
             context.Comments.Add(new Comment
             {
                 ID = comment.ID,
-                Parent=comment.Parent,
+                Parent = comment.Parent,
                 Post = entityPost,
                 Author = comment.Author,
                 Text = comment.Text,
@@ -117,10 +114,10 @@ namespace BlogMvcCore.Storage
                 {
                     ID = post.ID,
                     Author = post.Author,
-                    Title =post.Title,
-                    Text=post.Text,
-                    Date=post.Date,
-                    Comments=post.Comments
+                    Title = post.Title,
+                    Text = post.Text,
+                    Date = post.Date,
+                    Comments = post.Comments
                 },
                 ID = c.ID,
                 Parent=c.Parent,
@@ -137,6 +134,25 @@ namespace BlogMvcCore.Storage
             var userDomainList = context.BlogUsers.Select(u => new DomainModel.User(u.FirstName, u.SecondName, u.Login, u.Password))
                                                   .ToList();
             return userDomainList;
+        }
+
+        public List<DomainModel.Post> ReturnPostList()
+        {
+            var entityPostsList = context.Posts.ToList().OrderByDescending(p => p.Date);
+
+            List<DomainModel.Post> postList = new();
+            foreach (var item in entityPostsList)
+            {
+                DomainModel.Post postDomain = new()
+                {
+                    ID = item.ID,
+                    Title = item.Title,
+                    Text = item.Text,
+                    Date = item.Date
+                };
+                postList.Add(postDomain);
+            }
+            return postList;
         }
     }
 }
