@@ -15,14 +15,13 @@
                         @if (item.Text.Count() > 500)
                         {
                             <tr><td>@item.Text.Substring(0,500) @Html.ActionLink("view more","ViewPostAndComments", "User", new {postID=item.ID}, new {target="_blank"})</td></tr>
-
                         }
                         else
                         {
                             <tr><td>@item.Text @Html.ActionLink("view more","ViewPostAndComments","User", new {postID=item.ID}, new {target="_blank"})</td></tr>
                         }
-                       <tr><td>--------------------------------------------------------</td></tr>
                     </table>
+                    <hr class="hr1">
                 }
             }
             else
