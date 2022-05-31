@@ -1,52 +1,25 @@
-﻿@model List<Comment>
-@{
-    var firstGeneration = FindChildComment(0);
-}
+﻿@model List<CommentWithLevel>
 
-@functions {
-
-    List<Comment> FindChildComment(long parent)
-    {
-        return Model.Where(x => x.Parent == parent).OrderByDescending(x => x.Date).ToList();
-    }
-
-    void ShowChild(List<Comment> childList)
-    {
-        foreach (var item in childList)
+<div>
+    <table>
+        @foreach (var item in Model)
         {
-            <p> @item.Author @item.Date.Day/@item.Date.Month/@item.Date.Year </p>
-            <p> @item.Text</p>
-            ShowAddCommentSection(item.Post.ID, item.ID);
-            <hr class="hr1">
-
-            var itemChild = FindChildComment(item.ID);
-            if (itemChild != null)
-            {
-                ShowChild(itemChild);
-            }
+            <tr>
+                <td>
+                    <div style="margin-left: @((item.Level + 1) * 20)px">
+                        <p> @item.Comment.Author @item.Comment.Date.Day/ @item.Comment.Date.Month/ @item.Comment.Date.Year </p>
+                        <p> @item.Comment.Text</p>
+                        @using (Html.BeginForm("AddComment", "User", FormMethod.Post))
+                        {
+                            @Html.TextBox("commentText", "", htmlAttributes: true)
+                            <input type="hidden" id="postID" name="postID" value=@item.Comment.Post.ID />
+                            <input type="hidden" id="parentID" name="parentID" value=@item.Comment.ID />
+                            <button type="submit">Comment</button>
+                        }
+                        <hr class="hr1">
+                    </div>
+                </td>
+            </tr>
         }
-    }
-
-    void ShowAddCommentSection(long itemPostID, long itemID)
-    {
-        @using (Html.BeginForm("AddComment", "User", FormMethod.Post))
-        {
-            @Html.TextBox("commentText", "", htmlAttributes: true)
-            <input type="hidden" id="postID" name="postID" value=@itemPostID />
-            <input type="hidden" id="parentID" name="parentID" value=@itemID />
-            <button type="submit">Comment</button>
-        }
-        <div class="menu-line"></div>
-        <div class="menu"></div>
-    }
-}
-
-<tr><td></td><td></td></tr>
-<tr>
-    <td>
-        @if (firstGeneration != null)
-        {
-            ShowChild(firstGeneration);
-        }
-    </td>
-</tr>
+    </table>
+</div>

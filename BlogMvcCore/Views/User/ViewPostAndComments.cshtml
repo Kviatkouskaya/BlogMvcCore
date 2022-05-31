@@ -16,6 +16,9 @@
                     <button type="submit">Comment</button>
                 }
                 <hr class="hr1">
-        <tr><td>@await Html.PartialAsync("_PostComment", Model.Comments)</td> </tr>
+                @if (Model.Comments.Count() != 0)
+                {
+            <tr><td>@await Html.PartialAsync("_PostComment", Model.Comments)</td> </tr>
+                }
     </table>
 </div>
