@@ -3,6 +3,8 @@ using BlogMvcCore.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BlogMvcCore.Controllers
 {
@@ -81,8 +83,29 @@ namespace BlogMvcCore.Controllers
         public IActionResult ViewPostAndComments(long postID)
         {
             Post post = repContext.FindPost(postID);
-            post.Comments = repContext.ReturnPostComment(post);
+            var commentList = repContext.ReturnPostComment(post);
+
+            List<CommentWithLevel> commentWithLevels = new();
+            FillCommentGen(commentWithLevels, commentList, 0, default);
+            post.Comments = commentWithLevels;
+
             return View(post);
+        }
+
+        private void FillCommentGen(List<CommentWithLevel> finalList, List<Comment> commentList, int level, long parentID)
+        {
+            List<CommentWithLevel> commentWithLevels = new();
+            List<Comment> childComment = commentList.Where(x => x.Parent == parentID).ToList();
+            if (childComment.Count != 0)
+            {
+                foreach (var child in childComment)
+                {
+                    finalList.Add(new CommentWithLevel { Comment = child, Level = level });
+                    var nextLevel = level + 1;
+                    FillCommentGen(finalList, commentList, nextLevel, child.ID);
+                    var nextCommentGeneration = commentList.Where(x => x.Parent == child.ID).ToList();
+                }
+            }
         }
 
         public IActionResult VisitUserPage(string login)
@@ -96,23 +119,10 @@ namespace BlogMvcCore.Controllers
             return View(user);
         }
 
-        public User FillPostsComments(User user)
-        {
-            if (user is not null)
-            {
-                user.Posts = repContext.ReturnUserPost(user);
-                foreach (var item in user.Posts)
-                {
-                    item.Comments = repContext.ReturnPostComment(item);
-                }
-            }
-            return user;
-        }
-
 
         public IActionResult UserPage()
         {
-            User user = FillPostsComments(SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user"));
+            User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
             user.Posts = repContext.ReturnUserPost(user);
             return View(user);
         }

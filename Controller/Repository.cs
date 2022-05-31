@@ -105,10 +105,10 @@ namespace BlogMvcCore.Storage
 
         public List<DomainModel.Comment> ReturnPostComment(DomainModel.Post post)
         {
-            var commentsList = context.Comments.Where(c => c.Post.ID == post.ID)
+            var entityComments = context.Comments.Where(c => c.Post.ID == post.ID)
                                                .ToList();
 
-            var result = commentsList.Select(c => new DomainModel.Comment
+            var commentList = entityComments.Select(c => new DomainModel.Comment
             {
                 Post = new DomainModel.Post
                 {
@@ -120,13 +120,14 @@ namespace BlogMvcCore.Storage
                     Comments = post.Comments
                 },
                 ID = c.ID,
-                Parent=c.Parent,
+                Parent = c.Parent,
                 Author = c.Author,
                 Text = c.Text,
                 Date = c.Date
             }).OrderByDescending(c => c.Date)
               .ToList();
-            return result;
+
+            return commentList;
         }
 
         public List<DomainModel.User> ReturnUsersList()
