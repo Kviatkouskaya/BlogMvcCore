@@ -26,15 +26,9 @@ namespace BlogMvcCore.Controllers
             this.commentService = commentService;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
 
-        public IActionResult Register()
-        {
-            return View();
-        }
+        public IActionResult Register() => View();
 
         [HttpPost]
         public IActionResult CheckRegister(string first, string second, string login,
@@ -44,15 +38,13 @@ namespace BlogMvcCore.Controllers
             return registrationCheck ? RedirectToAction("SignIn") : RedirectToAction("Register");
         }
 
-        public IActionResult SignIn()
-        {
-            return View();
-        }
+        public IActionResult SignIn() => View();
 
         public new IActionResult SignOut()
         {
             SessionHelper.SetUserAsJson(HttpContext.Session, "user", null);
             authentication.SignOut();
+
             return RedirectToAction("Index");
         }
 
@@ -61,6 +53,7 @@ namespace BlogMvcCore.Controllers
         {
             var user = authentication.CheckIn(login, password);
             SessionHelper.SetUserAsJson(HttpContext.Session, "user", user);
+
             return user == null ? RedirectToAction("SignIn") : RedirectToAction("UserPage");
         }
 
@@ -73,18 +66,13 @@ namespace BlogMvcCore.Controllers
         public IActionResult UserPage()
         {
             var userLogin = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user").Login;
+
             return View(userService.VisitUserPage(userLogin));
         }
 
-        public IActionResult ShowUsersList()
-        {
-            return View(userService.ReturnUsers());
-        }
+        public IActionResult ShowUsersList() => View(userService.ReturnUsers());
 
-        public IActionResult ViewRecentAddedPostList()
-        {
-            return View("ViewRecentAddedPostList", postService.ReturnPostList());
-        }
+        public IActionResult ViewRecentAddedPostList() => View("ViewRecentAddedPostList", postService.ReturnPostList());
 
         [HttpPost]
         public IActionResult AddPost(string title, string postText, string ownerLogin)
@@ -95,10 +83,7 @@ namespace BlogMvcCore.Controllers
             return RedirectToAction("UserPage");
         }
 
-        public IActionResult ViewPostAndComments(long postID)
-        {
-            return View(postService.GetPostWithComments(postID));
-        }
+        public IActionResult ViewPostAndComments(long postID) => View(postService.GetPostWithComments(postID));
 
         [HttpPost]
         public IActionResult AddComment(string commentText, long postID, long parentID)

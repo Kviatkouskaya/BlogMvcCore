@@ -41,6 +41,7 @@ namespace BlogMvcCore.Services
             List<CommentWithLevel> commentWithLevels = new();
             commentService.FillCommentGen(commentWithLevels, commentList, 0, default);
             post.Comments = commentWithLevels;
+
             return post;
         }
     }

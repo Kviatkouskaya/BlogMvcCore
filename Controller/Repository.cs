@@ -7,14 +7,12 @@ namespace BlogMvcCore.Storage
     public class Repository : IUserAction
     {
         private readonly UserDbContext context;
-        public Repository(UserDbContext context)
-        {
-            this.context = context;
-        }
+        public Repository(UserDbContext context) => this.context = context;
 
         public DomainModel.User FindUser(string login)
         {
             var user = context.BlogUsers.Where(u => u.Login == login).First();
+
             return new(user.FirstName, user.SecondName, user.Login, user.Password);
         }
 
@@ -48,10 +46,7 @@ namespace BlogMvcCore.Storage
             context.SaveChanges();
         }
 
-        public void Dispose()
-        {
-            context.Dispose();
-        }
+        public void Dispose() => context.Dispose();
 
         public List<DomainModel.Post> ReturnUserPost(DomainModel.User user)
         {
@@ -72,12 +67,14 @@ namespace BlogMvcCore.Storage
                 };
                 postsDomain.Add(postDomain);
             }
+
             return postsDomain.OrderByDescending(p => p.Date).ToList();
         }
 
         public DomainModel.Post FindPost(long postID)
         {
             var postStorage = context.Posts.Find(postID);
+
             return new DomainModel.Post()
             {
                 ID = postStorage.ID,
@@ -153,6 +150,7 @@ namespace BlogMvcCore.Storage
                 };
                 postList.Add(postDomain);
             }
+
             return postList;
         }
     }

@@ -8,10 +8,7 @@ namespace BlogMvcCore.Services
     public class CommentService
     {
         private readonly IUserAction userActionContext;
-        public CommentService(IUserAction userAction)
-        {
-            userActionContext = userAction;
-        }
+        public CommentService(IUserAction userAction) => userActionContext = userAction;
 
         public void AddComment(string commentText, long postID, long parentID, User user)
         {

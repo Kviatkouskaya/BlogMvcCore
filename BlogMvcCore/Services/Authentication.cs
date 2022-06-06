@@ -6,10 +6,8 @@ namespace BlogMvcCore.Services
     {
         private readonly IUserAction userActionContext;
 
-        public Authentication(IUserAction userAction)
-        {
+        public Authentication(IUserAction userAction) =>
             userActionContext = userAction;
-        }
 
         public bool CheckUserRegistration(string first, string second, string login,
                                            string password, string repPassword)
@@ -24,9 +22,8 @@ namespace BlogMvcCore.Services
         {
 
             if (CheckStringParams(login, password) && userActionContext.LoginUser(login, password))
-            {
                 return userActionContext.FindUser(login);
-            }
+
             return null;
         }
 

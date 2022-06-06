@@ -6,21 +6,16 @@ namespace BlogMvcCore.Services
     public class UserService
     {
         private readonly IUserAction userActionContext;
-        public UserService(IUserAction action)
-        {
-            userActionContext = action;
-        }
+        public UserService(IUserAction action) => userActionContext = action;
 
         public User VisitUserPage(string login)
         {
             User user = userActionContext.FindUser(login);
             user.Posts = userActionContext.ReturnUserPost(user);
+
             return user;
         }
 
-        public List<User> ReturnUsers()
-        {
-            return userActionContext.ReturnUsersList();
-        }
+        public List<User> ReturnUsers() => userActionContext.ReturnUsersList();
     }
 }
