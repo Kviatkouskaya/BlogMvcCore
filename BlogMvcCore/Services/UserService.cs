@@ -10,12 +10,14 @@ namespace BlogMvcCore.Services
         {
             userActionContext = action;
         }
+
         public User VisitUserPage(string login)
         {
             User user = userActionContext.FindUser(login);
             user.Posts = userActionContext.ReturnUserPost(user);
             return user;
         }
+
         public List<User> ReturnUsers()
         {
             return userActionContext.ReturnUsersList();

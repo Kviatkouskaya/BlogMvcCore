@@ -25,6 +25,8 @@ namespace BlogMvcCore
             services.AddTransient<IUserAction, Repository>();
             services.AddTransient<Authentication>();
             services.AddTransient<UserService>();
+            services.AddTransient<PostService>();
+            services.AddTransient<CommentService>();
             services.AddControllersWithViews();
             services.AddDbContext<UserDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("UserContext")));

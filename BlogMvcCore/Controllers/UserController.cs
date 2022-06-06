@@ -13,10 +13,17 @@ namespace BlogMvcCore.Controllers
     {
         private readonly Authentication authentication;
         private readonly UserService userService;
-        public UserController(Authentication authentication, UserService userService)
+        private readonly PostService postService;
+        private readonly CommentService commentService;
+        public UserController(Authentication authentication,
+                              UserService userService,
+                              PostService postService,
+                              CommentService commentService)
         {
             this.authentication = authentication;
             this.userService = userService;
+            this.postService = postService;
+            this.commentService = commentService;
         }
 
         public IActionResult Index()
@@ -73,85 +80,34 @@ namespace BlogMvcCore.Controllers
         {
             return View(userService.ReturnUsers());
         }
-        /*
-        public IActionResult ViewPostAndComments(long postID)
+
+        public IActionResult ViewRecentAddedPostList()
         {
-            Post post = repContext.FindPost(postID);
-            var commentList = repContext.ReturnPostComment(post);
-
-            List<CommentWithLevel> commentWithLevels = new();
-            FillCommentGen(commentWithLevels, commentList, 0, default);
-            post.Comments = commentWithLevels;
-
-            return View(post);
+            return View("ViewRecentAddedPostList", postService.ReturnPostList());
         }
 
-        private void FillCommentGen(List<CommentWithLevel> finalList, List<Comment> commentList, int level, long parentID)
-        {
-            List<CommentWithLevel> commentWithLevels = new();
-            List<Comment> childComment = commentList.Where(x => x.Parent == parentID).ToList();
-            if (childComment.Count != 0)
-            {
-                foreach (var child in childComment)
-                {
-                    finalList.Add(new CommentWithLevel { Comment = child, Level = level });
-                    var nextLevel = level + 1;
-                    FillCommentGen(finalList, commentList, nextLevel, child.ID);
-                    var nextCommentGeneration = commentList.Where(x => x.Parent == child.ID).ToList();
-                }
-            }
-        }
-
-        
-
-        */
-
-        /*
         [HttpPost]
         public IActionResult AddPost(string title, string postText, string ownerLogin)
         {
-            Authentication authentication = new();
             if (authentication.CheckStringParams(title, postText, ownerLogin))
-            {
-                Post newPost = new()
-                {
-                    Author = repContext.FindUser(ownerLogin),
-                    Title = title,
-                    Text = postText,
-                    Date = DateTime.Now.Date
-                };
-                repContext.AddPost(newPost);
-            }
+                postService.AddPost(title, postText, ownerLogin);
+
             return RedirectToAction("UserPage");
+        }
+
+        public IActionResult ViewPostAndComments(long postID)
+        {
+            return View(postService.GetPostWithComments(postID));
         }
 
         [HttpPost]
         public IActionResult AddComment(string commentText, long postID, long parentID)
         {
             User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
-            Authentication authentication = new();
             if (authentication.CheckStringParams(commentText))
-            {
-                Comment comment = new()
-                {
-                    Post = repContext.FindPost(postID),
-                    Author = $"{user.FirstName} {user.SecondName}",
-                    Parent = parentID,
-                    Text = commentText,
-                    Date = DateTime.Now.Date
-                };
-                comment.Post.Author = repContext.FindUser(user.Login);
-                repContext.AddComment(comment);
-            }
+                commentService.AddComment(commentText, postID, parentID, user);
+
             return RedirectToAction("ViewPostAndComments", new { postID });
         }
-
-        public IActionResult ViewRecentAddedPostList()
-        {
-
-            return View("ViewRecentAddedPostList", repContext.ReturnPostList());
-        }
-
-        */
     }
 }
