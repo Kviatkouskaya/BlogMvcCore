@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using BlogMvcCore.DomainModel;
 using BlogMvcCore.Storage;
+using BlogMvcCore.Services;
 
 namespace BlogMvcCore
 {
@@ -22,6 +23,7 @@ namespace BlogMvcCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IUserAction, Repository>();
+            services.AddTransient<Authentication>();
             services.AddControllersWithViews();
             services.AddDbContext<UserDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("UserContext")));

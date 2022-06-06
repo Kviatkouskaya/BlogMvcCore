@@ -1,21 +1,22 @@
 ﻿using BlogMvcCore.DomainModel;
+using BlogMvcCore.Services;
 using BlogMvcCore.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace BlogMvcCore.Controllers
 {
     public class UserController : Controller
     {
-        private readonly IUserAction repContext;
-        public UserController(IUserAction userAction)
+        private readonly Authentication authentication;
+        public UserController(Authentication authentication)
         {
-            repContext = userAction;
+            this.authentication = authentication;
         }
-
+        
         public IActionResult Index()
         {
             return View();
@@ -30,25 +31,8 @@ namespace BlogMvcCore.Controllers
         public IActionResult CheckRegister(string first, string second, string login,
                                            string password, string repPassword)
         {
-            bool stringCheck = CheckStringParams(first, second, login, password, repPassword);
-            if (password == repPassword && stringCheck)
-            {
-                repContext.Register(new User(first, second, login, password));
-                return RedirectToAction("SignIn");
-            }
-            return RedirectToAction("Register");
-        }
-
-        private static bool CheckStringParams(params string[] input)
-        {
-            foreach (var item in input)
-            {
-                if (item == string.Empty || string.IsNullOrWhiteSpace(item))
-                {
-                    return false;
-                }
-            }
-            return true;
+            var registrationCheck = authentication.CheckUserRegistration(first, second, login, password, repPassword);
+            return registrationCheck ? RedirectToAction("SignIn") : RedirectToAction("Register");
         }
 
         public IActionResult SignIn()
@@ -59,22 +43,19 @@ namespace BlogMvcCore.Controllers
         public new IActionResult SignOut()
         {
             SessionHelper.SetUserAsJson(HttpContext.Session, "user", null);
-            repContext.Dispose();
+            authentication.SignOut();
             return RedirectToAction("Index");
         }
 
         [HttpPost]
         public IActionResult CheckIn(string login, string password)
         {
-            if (CheckStringParams(login, password) && repContext.LoginUser(login, password))
-            {
-                var user = repContext.FindUser(login);
-                SessionHelper.SetUserAsJson(HttpContext.Session, "user", user);
-                return RedirectToAction("UserPage");
-            }
-            return RedirectToAction("SignIn");
+            var user = authentication.CheckIn(login, password);
+            SessionHelper.SetUserAsJson(HttpContext.Session, "user", user);
+            return user == null ? RedirectToAction("SignIn") : RedirectToAction("UserPage");
         }
 
+        /*
         public IActionResult ShowUsersList()
         {
             return View(repContext.ReturnUsersList());
@@ -119,18 +100,19 @@ namespace BlogMvcCore.Controllers
             return View(user);
         }
 
-
+        */
         public IActionResult UserPage()
         {
             User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
-            user.Posts = repContext.ReturnUserPost(user);
+            user.Posts = null;// repContext.ReturnUserPost(user);
             return View(user);
         }
-
+        /*
         [HttpPost]
         public IActionResult AddPost(string title, string postText, string ownerLogin)
         {
-            if (CheckStringParams(title, postText, ownerLogin))
+            Authentication authentication = new();
+            if (authentication.CheckStringParams(title, postText, ownerLogin))
             {
                 Post newPost = new()
                 {
@@ -148,7 +130,8 @@ namespace BlogMvcCore.Controllers
         public IActionResult AddComment(string commentText, long postID, long parentID)
         {
             User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
-            if (CheckStringParams(commentText))
+            Authentication authentication = new();
+            if (authentication.CheckStringParams(commentText))
             {
                 Comment comment = new()
                 {
@@ -169,5 +152,7 @@ namespace BlogMvcCore.Controllers
 
             return View("ViewRecentAddedPostList", repContext.ReturnPostList());
         }
+
+        */
     }
 }
