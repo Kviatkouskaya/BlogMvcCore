@@ -1,6 +1,4 @@
 ﻿using BlogMvcCore.DomainModel;
-using BlogMvcCore.Helpers;
-using Microsoft.AspNetCore.Http;
 
 namespace BlogMvcCore.Services
 {

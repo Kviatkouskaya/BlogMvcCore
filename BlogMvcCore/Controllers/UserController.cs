@@ -12,11 +12,13 @@ namespace BlogMvcCore.Controllers
     public class UserController : Controller
     {
         private readonly Authentication authentication;
-        public UserController(Authentication authentication)
+        private readonly UserService userService;
+        public UserController(Authentication authentication, UserService userService)
         {
             this.authentication = authentication;
+            this.userService = userService;
         }
-        
+
         public IActionResult Index()
         {
             return View();
@@ -55,12 +57,23 @@ namespace BlogMvcCore.Controllers
             return user == null ? RedirectToAction("SignIn") : RedirectToAction("UserPage");
         }
 
-        /*
-        public IActionResult ShowUsersList()
+        public IActionResult VisitUserPage(string login)
         {
-            return View(repContext.ReturnUsersList());
+            return login == SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user").Login ?
+                            RedirectToAction("UserPage") : View(userService.VisitUserPage(login));
         }
 
+        public IActionResult UserPage()
+        {
+            var userLogin = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user").Login;
+            return View(userService.VisitUserPage(userLogin));
+        }
+
+        public IActionResult ShowUsersList()
+        {
+            return View(userService.ReturnUsers());
+        }
+        /*
         public IActionResult ViewPostAndComments(long postID)
         {
             Post post = repContext.FindPost(postID);
@@ -89,24 +102,10 @@ namespace BlogMvcCore.Controllers
             }
         }
 
-        public IActionResult VisitUserPage(string login)
-        {
-            if (login == SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user").Login)
-            {
-                return RedirectToAction("UserPage");
-            }
-            User user = repContext.FindUser(login);
-            user.Posts = repContext.ReturnUserPost(user);
-            return View(user);
-        }
+        
 
         */
-        public IActionResult UserPage()
-        {
-            User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
-            user.Posts = null;// repContext.ReturnUserPost(user);
-            return View(user);
-        }
+
         /*
         [HttpPost]
         public IActionResult AddPost(string title, string postText, string ownerLogin)
