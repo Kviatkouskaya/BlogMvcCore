@@ -7,21 +7,16 @@ namespace BlogMvcCore.Services
     public class PostService
     {
         private readonly IUserAction userActionContext;
-        private readonly CommentService commentService;
-        public PostService(IUserAction userAction, CommentService commentService)
-        {
-            userActionContext = userAction;
-            this.commentService = commentService;
-        }
+        public PostService(IUserAction userAction) => userActionContext = userAction;
 
-        private Post GetPost(long postID) => userActionContext.FindPost(postID);
+        public virtual Post GetPost(long postID) => userActionContext.FindPost(postID);
 
-        public List<Post> ReturnPostList()
+        public virtual List<Post> ReturnPostList()
         {
             return userActionContext.ReturnPostList();
         }
 
-        public void AddPost(string title, string postText, string ownerLogin)
+        public virtual void AddPost(string title, string postText, string ownerLogin)
         {
             Post newPost = new()
             {
@@ -33,7 +28,7 @@ namespace BlogMvcCore.Services
             userActionContext.AddPost(newPost);
         }
 
-        public Post GetPostWithComments(long postID)
+        public virtual Post GetPostWithComments(long postID, CommentService commentService)
         {
             var post = GetPost(postID);
             var commentList = userActionContext.ReturnPostComment(post);

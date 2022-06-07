@@ -3,18 +3,15 @@ using BlogMvcCore.Services;
 using BlogMvcCore.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
-using System;
 
 namespace BlogMvcCore.Controllers
 {
     public class UserController : Controller
     {
-        private readonly Authentication authentication;
-        private readonly UserService userService;
-        private readonly PostService postService;
-        private readonly CommentService commentService;
+        public readonly Authentication authentication;
+        public readonly UserService userService;
+        public readonly PostService postService;
+        public readonly CommentService commentService;
         public UserController(Authentication authentication,
                               UserService userService,
                               PostService postService,
@@ -83,7 +80,7 @@ namespace BlogMvcCore.Controllers
             return RedirectToAction("UserPage");
         }
 
-        public IActionResult ViewPostAndComments(long postID) => View(postService.GetPostWithComments(postID));
+        public IActionResult ViewPostAndComments(long postID) => View(postService.GetPostWithComments(postID, commentService));
 
         [HttpPost]
         public IActionResult AddComment(string commentText, long postID, long parentID)

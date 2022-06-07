@@ -10,7 +10,7 @@ namespace BlogMvcCore.Services
         private readonly IUserAction userActionContext;
         public CommentService(IUserAction userAction) => userActionContext = userAction;
 
-        public void AddComment(string commentText, long postID, long parentID, User user)
+        public virtual void AddComment(string commentText, long postID, long parentID, User user)
         {
             Comment comment = new()
             {
@@ -24,7 +24,7 @@ namespace BlogMvcCore.Services
             userActionContext.AddComment(comment);
         }
 
-        public void FillCommentGen(List<CommentWithLevel> finalList, List<Comment> commentList, int level, long parentID)
+        public virtual void FillCommentGen(List<CommentWithLevel> finalList, List<Comment> commentList, int level, long parentID)
         {
             List<CommentWithLevel> commentWithLevels = new();
             List<Comment> childComment = commentList.Where(x => x.Parent == parentID).ToList();
