@@ -9,7 +9,7 @@ namespace BlogMvcCore.Services
         public Authentication(IUserAction userAction) =>
             userActionContext = userAction;
 
-        public bool CheckUserRegistration(string first, string second, string login,
+        public virtual bool CheckUserRegistration(string first, string second, string login,
                                            string password, string repPassword)
         {
             bool stringCheck = CheckStringParams(first, second, login, password, repPassword);
@@ -18,7 +18,7 @@ namespace BlogMvcCore.Services
             return password == repPassword && stringCheck;
         }
 
-        public User CheckIn(string login, string password)
+        public virtual User CheckIn(string login, string password)
         {
 
             if (CheckStringParams(login, password) && userActionContext.LoginUser(login, password))
@@ -27,9 +27,9 @@ namespace BlogMvcCore.Services
             return null;
         }
 
-        public void SignOut() => userActionContext.Dispose();
+        public virtual void SignOut() => userActionContext.Dispose();
 
-        public bool CheckStringParams(params string[] input)
+        public virtual bool CheckStringParams(params string[] input)
         {
             foreach (var item in input)
             {
