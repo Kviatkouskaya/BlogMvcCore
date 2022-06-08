@@ -80,6 +80,12 @@ namespace BlogMvcCore.Controllers
             return RedirectToAction("UserPage");
         }
 
+        public IActionResult DeletePost(long postID)
+        {
+            postService.DeletePost(postID);
+            return RedirectToAction("UserPage");
+        }
+
         public IActionResult ViewPostAndComments(long postID) => View(postService.GetPostWithComments(postID, commentService));
 
         [HttpPost]

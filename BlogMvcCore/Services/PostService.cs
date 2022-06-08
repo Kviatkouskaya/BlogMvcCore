@@ -28,6 +28,8 @@ namespace BlogMvcCore.Services
             userActionContext.AddPost(newPost);
         }
 
+        public virtual void DeletePost(long postID) => userActionContext.DeletePost(postID);
+
         public virtual Post GetPostWithComments(long postID, CommentService commentService)
         {
             var post = GetPost(postID);
