@@ -10,6 +10,7 @@ namespace BlogMvcCore.DomainModel
         void Register(User user);
         User FindUser(string login);
         public void AddPost(Post post);
+        public void DeletePost(long postID);
         public List<Post> ReturnUserPost(User user);
         public void AddComment(Comment comment);
         public List<Comment> ReturnPostComment(Post post);

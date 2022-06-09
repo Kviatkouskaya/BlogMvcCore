@@ -9,6 +9,7 @@
                 @foreach (var item in Model.Posts)
                 {
                     <table>
+                        <tr><td>@Html.ActionLink("Delete post","DeletePost","User", new {postID=item.ID})</td></tr>
                         <tr><td>@item.Author.FirstName @item.Author.SecondName @item.Date.Day/@item.Date.Month/@item.Date.Year</td></tr>
                         <tr><td>@item.Title</td></tr>
 

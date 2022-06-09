@@ -32,6 +32,14 @@ namespace BlogMvcCore.Storage
             context.SaveChanges();
         }
 
+        public void DeletePost(long postID)
+        {
+            var deletingPost = context.Posts.FirstOrDefault(x=>x.ID==postID);
+            if (deletingPost != null)
+                context.Entry(deletingPost).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
+            context.SaveChanges();
+        }
+
         public bool LoginUser(string login, string password)
         {
             var result = context.BlogUsers.Where(u => u.Login == login && u.Password == password)
@@ -50,8 +58,7 @@ namespace BlogMvcCore.Storage
 
         public List<DomainModel.Post> ReturnUserPost(DomainModel.User user)
         {
-            var entityPostsList = context.Posts.Select(p => p)
-                                               .Where(p => p.Author.Login == user.Login)
+            var entityPostsList = context.Posts.Where(p => p.Author.Login == user.Login)
                                                .ToList();
 
             List<DomainModel.Post> postsDomain = new();
