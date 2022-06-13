@@ -13,7 +13,7 @@ namespace BlogMvcCore.Services
 
         public virtual List<Post> ReturnPostList()
         {
-            return userActionContext.ReturnPostList();
+            return userActionContext.GetPostList();
         }
 
         public virtual void AddPost(string title, string postText, string ownerLogin)
@@ -33,7 +33,7 @@ namespace BlogMvcCore.Services
         public virtual Post GetPostWithComments(long postID, CommentService commentService)
         {
             var post = GetPost(postID);
-            var commentList = userActionContext.ReturnPostComment(post);
+            var commentList = userActionContext.GetPostComment(post);
 
             List<CommentWithLevel> commentWithLevels = new();
             commentService.FillCommentGen(commentWithLevels, commentList, 0, default);

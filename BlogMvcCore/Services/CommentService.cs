@@ -24,15 +24,9 @@ namespace BlogMvcCore.Services
             userActionContext.AddComment(comment);
         }
 
-        public virtual void EditComment(long commentID, string commentText)
-        {
+        public virtual void UpdateComment(long commentID, string commentText) => userActionContext.UpdateComment(commentID, commentText);
 
-        }
-
-        public virtual void DeleteComment(long commentID)
-        {
-            userActionContext.DeleteComment(commentID);
-        }
+        public virtual void DeleteComment(long commentID) => userActionContext.DeleteComment(commentID);
 
         public virtual void FillCommentGen(List<CommentWithLevel> finalList, List<Comment> commentList, int level, long parentID)
         {
