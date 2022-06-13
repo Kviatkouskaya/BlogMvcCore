@@ -98,11 +98,10 @@ namespace BlogMvcCore.Controllers
             return RedirectToAction("ViewPostAndComments", new { postID });
         }
 
-        public IActionResult UpdateComment(long postID, string commentText, long commentID, string ownerLogin)
+        public IActionResult UpdateComment(long postID, long commentID, string text)
         {
-            var owner = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user").Login;
-            if (owner == ownerLogin && authentication.CheckStringParams(commentText))
-                commentService.UpdateComment(commentID, commentText);
+            if (authentication.CheckStringParams(text))
+                commentService.UpdateComment(commentID, text);
 
             return ViewPostAndComments(postID);
         }

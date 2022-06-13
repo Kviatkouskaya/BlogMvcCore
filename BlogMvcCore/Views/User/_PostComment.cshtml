@@ -1,5 +1,4 @@
 ﻿@model List<CommentWithLevel>
-
 <div>
     <table>
         @foreach (var item in Model)
@@ -8,7 +7,8 @@
                 <td>
                     <div style="margin-left: @((item.Level + 1) * 20)px">
                         <p>
-                            @Html.ActionLink("Delete comment", "DeleteComment", "User", new{postID = item.Comment.Post.ID,commentID = item.Comment.ID})
+                            @Html.ActionLink("Delete", "DeleteComment", "User", new{postID = item.Comment.Post.ID,commentID = item.Comment.ID})
+                            @Html.ActionLink("Update", "UpdateComment", "User",new{postID = item.Comment.Post.ID, commentID=item.Comment.ID, Text = item.Comment.Text})
                         </p>
                         <p> @item.Comment.Author @item.Comment.Date.Day/ @item.Comment.Date.Month/ @item.Comment.Date.Year </p>
                         <p> @item.Comment.Text</p>
