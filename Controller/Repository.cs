@@ -34,7 +34,7 @@ namespace BlogMvcCore.Storage
 
         public void DeletePost(long postID)
         {
-            var deletingPost = context.Posts.FirstOrDefault(x=>x.ID==postID);
+            var deletingPost = context.Posts.FirstOrDefault(x => x.ID == postID);
             if (deletingPost != null)
                 context.Entry(deletingPost).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
             context.SaveChanges();
@@ -104,6 +104,22 @@ namespace BlogMvcCore.Storage
                 Text = comment.Text,
                 Date = comment.Date
             });
+            context.SaveChanges();
+        }
+
+        public void EditComment(long commentID, string commentText)
+        {
+            var entityComment = context.Comments.Find(commentID);
+            entityComment.Text = commentText;
+            context.Comments.Update(entityComment);
+            context.SaveChanges();
+        }
+
+        public void DeleteComment(long commentID)
+        {
+            var entity = context.Comments.FirstOrDefault(x=>x.ID==commentID);
+            if (entity != null)
+                context.Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
             context.SaveChanges();
         }
 
