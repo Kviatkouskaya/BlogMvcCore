@@ -7,26 +7,31 @@ namespace BlogMvcCore.Services
 {
     public class CommentService
     {
-        private readonly IUserAction userActionContext;
-        public CommentService(IUserAction userAction) => userActionContext = userAction;
+        private readonly IUserAction userAction;
+        private readonly IPostAction postAction;
+        public CommentService(IUserAction userAction, IPostAction postAction)
+        {
+            this.userAction = userAction;
+            this.postAction = postAction;
+        }
 
         public virtual void AddComment(string commentText, long postID, long parentID, User user)
         {
             Comment comment = new()
             {
-                Post = userActionContext.FindPost(postID),
+                Post = postAction.FindPost(postID),
                 Author = $"{user.FirstName} {user.SecondName}",
                 Parent = parentID,
                 Text = commentText,
                 Date = DateTime.Now.Date
             };
-            comment.Post.Author = userActionContext.FindUser(user.Login);
-            userActionContext.AddComment(comment);
+            comment.Post.Author = userAction.FindUser(user.Login);
+            userAction.AddComment(comment);
         }
 
-        public virtual void UpdateComment(long commentID, string commentText) => userActionContext.UpdateComment(commentID, commentText);
+        public virtual void UpdateComment(long commentID, string commentText) => userAction.UpdateComment(commentID, commentText);
 
-        public virtual void DeleteComment(long commentID) => userActionContext.DeleteComment(commentID);
+        public virtual void DeleteComment(long commentID) => userAction.DeleteComment(commentID);
 
         public virtual void FillCommentGen(List<CommentWithLevel> finalList, List<Comment> commentList, int level, long parentID)
         {
