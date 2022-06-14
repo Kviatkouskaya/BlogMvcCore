@@ -7,10 +7,5 @@ namespace BlogMvcCore.DomainModel
     {
         List<User> GetUsersList();
         User FindUser(string login);
-        
-        void AddComment(Comment comment);
-        void UpdateComment(long commentID, string text);
-        void DeleteComment(long commentID);
-        
     }
 }

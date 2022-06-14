@@ -7,12 +7,14 @@ namespace BlogMvcCore.Services
 {
     public class CommentService
     {
-        private readonly IUserAction userAction;
+        private readonly ICommentAction commentAction;
         private readonly IPostAction postAction;
-        public CommentService(IUserAction userAction, IPostAction postAction)
+        private readonly IUserAction userAction;
+        public CommentService(ICommentAction commentAction, IPostAction postAction, IUserAction userAction)
         {
-            this.userAction = userAction;
+            this.commentAction = commentAction;
             this.postAction = postAction;
+            this.userAction = userAction;
         }
 
         public virtual void AddComment(string commentText, long postID, long parentID, User user)
@@ -26,12 +28,12 @@ namespace BlogMvcCore.Services
                 Date = DateTime.Now.Date
             };
             comment.Post.Author = userAction.FindUser(user.Login);
-            userAction.AddComment(comment);
+            commentAction.AddComment(comment);
         }
 
-        public virtual void UpdateComment(long commentID, string commentText) => userAction.UpdateComment(commentID, commentText);
+        public virtual void UpdateComment(long commentID, string commentText) => commentAction.UpdateComment(commentID, commentText);
 
-        public virtual void DeleteComment(long commentID) => userAction.DeleteComment(commentID);
+        public virtual void DeleteComment(long commentID) => commentAction.DeleteComment(commentID);
 
         public virtual void FillCommentGen(List<CommentWithLevel> finalList, List<Comment> commentList, int level, long parentID)
         {
