@@ -62,7 +62,11 @@ namespace BlogMvcCore
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
+                    name: "Authentication",
+                    pattern: "{controller=Authentication}/{action=index}/{id?}");
+
+                endpoints.MapControllerRoute(
+                    name: "User",
                     pattern: "{controller=User}/{action=Index}/{id?}");
             });
         }
