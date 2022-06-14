@@ -6,8 +6,6 @@ namespace BlogMvcCore.DomainModel
     public interface IUserAction : IDisposable
     {
         List<User> GetUsersList();
-        bool LoginUser(string login, string password);
-        void Register(User user);
         User FindUser(string login);
         void AddPost(Post post);
         void DeletePost(long postID);
