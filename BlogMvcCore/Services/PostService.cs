@@ -6,34 +6,39 @@ namespace BlogMvcCore.Services
 {
     public class PostService
     {
-        private readonly IUserAction userActionContext;
-        public PostService(IUserAction userAction) => userActionContext = userAction;
+        private readonly IPostAction postAction;
+        private readonly IUserAction userAction;
+        public PostService(IPostAction postAction, IUserAction userAction)
+        {
+            this.postAction = postAction;
+            this.userAction = userAction;
+        }
 
-        public virtual Post GetPost(long postID) => userActionContext.FindPost(postID);
+        public virtual Post GetPost(long postID) => postAction.FindPost(postID);
 
         public virtual List<Post> ReturnPostList()
         {
-            return userActionContext.GetPostList();
+            return postAction.GetPostList();
         }
 
         public virtual void AddPost(string title, string postText, string ownerLogin)
         {
             Post newPost = new()
             {
-                Author = userActionContext.FindUser(ownerLogin),
+                Author = userAction.FindUser(ownerLogin),
                 Title = title,
                 Text = postText,
                 Date = DateTime.Now.Date
             };
-            userActionContext.AddPost(newPost);
+            postAction.AddPost(newPost);
         }
 
-        public virtual void DeletePost(long postID) => userActionContext.DeletePost(postID);
+        public virtual void DeletePost(long postID) => postAction.DeletePost(postID);
 
         public virtual Post GetPostWithComments(long postID, CommentService commentService)
         {
             var post = GetPost(postID);
-            var commentList = userActionContext.GetPostComment(post);
+            var commentList = postAction.GetPostComment(post);
 
             List<CommentWithLevel> commentWithLevels = new();
             commentService.FillCommentGen(commentWithLevels, commentList, 0, default);

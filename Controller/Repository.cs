@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace BlogMvcCore.Storage
 {
-    public class Repository : IUserAction
+    public class Repository : IAuthenticationAction, IUserAction, IPostAction, ICommentAction
     {
         private readonly UserDbContext context;
         public Repository(UserDbContext context) => this.context = context;
