@@ -98,12 +98,19 @@ namespace BlogMvcCore.Controllers
             return RedirectToAction("ViewPostAndComments", new { postID });
         }
 
-        public IActionResult UpdateComment(long postID, long commentID, string text)
+        public IActionResult EditComment(long commentID, string text, long postID) => View(new Comment
+        {
+            ID = commentID,
+            Text = text,
+            Post = new Post { ID = postID }
+        });
+
+        public IActionResult UpdateComment(long commentID, string text, long postID)
         {
             if (authentication.CheckStringParams(text))
                 commentService.UpdateComment(commentID, text);
 
-            return ViewPostAndComments(postID);
+            return RedirectToAction("ViewPostAndComments", new { postID });
         }
 
         public IActionResult DeleteComment(long postID, long commentID)
