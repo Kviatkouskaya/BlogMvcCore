@@ -11,11 +11,11 @@ namespace BlogMvcCore.Services
         public virtual User VisitUserPage(string login)
         {
             User user = UserActionContext.FindUser(login);
-            user.Posts = UserActionContext.ReturnUserPost(user);
+            user.Posts = UserActionContext.GetUserPost(user);
 
             return user;
         }
 
-        public virtual List<User> ReturnUsers() => UserActionContext.ReturnUsersList();
+        public virtual List<User> ReturnUsers() => UserActionContext.GetUsersList();
     }
 }

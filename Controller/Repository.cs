@@ -34,7 +34,7 @@ namespace BlogMvcCore.Storage
 
         public void DeletePost(long postID)
         {
-            var deletingPost = context.Posts.FirstOrDefault(x=>x.ID==postID);
+            var deletingPost = context.Posts.FirstOrDefault(x => x.ID == postID);
             if (deletingPost != null)
                 context.Entry(deletingPost).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
             context.SaveChanges();
@@ -56,7 +56,7 @@ namespace BlogMvcCore.Storage
 
         public void Dispose() => context.Dispose();
 
-        public List<DomainModel.Post> ReturnUserPost(DomainModel.User user)
+        public List<DomainModel.Post> GetUserPost(DomainModel.User user)
         {
             var entityPostsList = context.Posts.Where(p => p.Author.Login == user.Login)
                                                .ToList();
@@ -107,10 +107,25 @@ namespace BlogMvcCore.Storage
             context.SaveChanges();
         }
 
-        public List<DomainModel.Comment> ReturnPostComment(DomainModel.Post post)
+        public void UpdateComment(long commentID, string commentText)
         {
-            var entityComments = context.Comments.Where(c => c.Post.ID == post.ID)
-                                               .ToList();
+            var entityComment = context.Comments.Find(commentID);
+            entityComment.Text = commentText;
+            context.Comments.Update(entityComment);
+            context.SaveChanges();
+        }
+
+        public void DeleteComment(long commentID)
+        {
+            var entity = context.Comments.FirstOrDefault(x => x.ID == commentID);
+            if (entity != null)
+                context.Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
+            context.SaveChanges();
+        }
+
+        public List<DomainModel.Comment> GetPostComment(DomainModel.Post post)
+        {
+            var entityComments = context.Comments.Where(c => c.Post.ID == post.ID).ToList();
 
             var commentList = entityComments.Select(c => new DomainModel.Comment
             {
@@ -134,14 +149,14 @@ namespace BlogMvcCore.Storage
             return commentList;
         }
 
-        public List<DomainModel.User> ReturnUsersList()
+        public List<DomainModel.User> GetUsersList()
         {
             var userDomainList = context.BlogUsers.Select(u => new DomainModel.User(u.FirstName, u.SecondName, u.Login, u.Password))
                                                   .ToList();
             return userDomainList;
         }
 
-        public List<DomainModel.Post> ReturnPostList()
+        public List<DomainModel.Post> GetPostList()
         {
             var entityPostsList = context.Posts.ToList().OrderByDescending(p => p.Date);
 

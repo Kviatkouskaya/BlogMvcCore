@@ -79,7 +79,7 @@ namespace BlogMvcCore.Controllers
 
             return RedirectToAction("UserPage");
         }
-
+        [HttpDelete]
         public IActionResult DeletePost(long postID)
         {
             postService.DeletePost(postID);
@@ -95,6 +95,27 @@ namespace BlogMvcCore.Controllers
             if (authentication.CheckStringParams(commentText))
                 commentService.AddComment(commentText, postID, parentID, user);
 
+            return RedirectToAction("ViewPostAndComments", new { postID });
+        }
+
+        public IActionResult EditComment(long commentID, string text, long postID) => View(new Comment
+        {
+            ID = commentID,
+            Text = text,
+            Post = new Post { ID = postID }
+        });
+
+        public IActionResult UpdateComment(long commentID, string text, long postID)
+        {
+            if (authentication.CheckStringParams(text))
+                commentService.UpdateComment(commentID, text);
+
+            return RedirectToAction("ViewPostAndComments", new { postID });
+        }
+
+        public IActionResult DeleteComment(long postID, long commentID)
+        {
+            commentService.DeleteComment(commentID);
             return RedirectToAction("ViewPostAndComments", new { postID });
         }
     }

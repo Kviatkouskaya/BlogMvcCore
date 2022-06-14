@@ -1,0 +1,23 @@
+﻿@model Comment;
+
+<div>
+    <table>
+        <tr>
+            <td>
+                <h5><em>Comment editing:</em></h5>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @using (Html.BeginForm("UpdateComment", "User", FormMethod.Post))
+                {
+                    @Html.TextBox("text", $"{Model.Text}", htmlAttributes: true)
+                    <input type="hidden" id="commentID" name="commentID" value=@Model.ID />
+                    <input type="hidden" id="postID" name="postID" value=@Model.Post.ID />
+                    <button type="submit">Comment</button>
+                }
+            </td>
+        </tr>
+    </table>
+</div>
+
