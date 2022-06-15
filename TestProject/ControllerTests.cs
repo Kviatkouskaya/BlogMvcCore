@@ -27,7 +27,7 @@ namespace TestProject
             controllerContext.HttpContext = httpContext;
             return controllerContext;
         }
-
+        /*
         [TestMethod]
         [DataRow("Admin", "System", "admin", "12345678")]
         public void CheckIn(string first, string second, string login, string password)
@@ -192,5 +192,6 @@ namespace TestProject
             AuthMock.VerifyAll();
             PostServiceMock.VerifyAll();
         }
+        */
     }
 }
