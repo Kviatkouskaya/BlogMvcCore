@@ -36,9 +36,9 @@ namespace TestProject.Controller_Tests
         {
             User user = new("testUser", "secondName", "user", "123123");
             PostServiceMock.Setup(x => x.AddPost(title, postText, ownerLogin)).Verifiable();
-            PostController userController = new(PostServiceMock.Object, CommentService.Object);
+            PostController controller = new(PostServiceMock.Object, CommentService.Object);
 
-            var result = userController.AddPost(title, postText, ownerLogin);
+            var result = controller.AddPost(title, postText, ownerLogin);
 
             Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
             RedirectToActionResult redirect = (RedirectToActionResult)result;

@@ -6,18 +6,17 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Newtonsoft.Json;
 
-namespace TestProject
+namespace TestProject.Controller_Tests
 {
     [TestClass]
-    public class ControllerTests
+    public class UserTests
     {
         private static IUserAction UserAction { get; set; }
-        private Mock<Authentication> AuthMock = new(UserAction);
-        private Mock<UserService> UserServiceMock = new(UserAction);
-        private Mock<PostService> PostServiceMock = new(UserAction);
-        private Mock<CommentService> CommentServiceMock = new(UserAction);
+        private static IPostAction PostAction { get; set; }
+        private static ICommentAction CommentAction { get; set; }
+        private readonly Mock<UserService> UserServiceMock = new(UserAction, PostAction);
+        private readonly Mock<CommentService> CommentServiceMock = new(CommentAction, PostAction, UserAction);
 
         private static ControllerContext CreateControllerContext(MockHttpSession mockHttpSession)
         {
@@ -32,14 +31,13 @@ namespace TestProject
         [DataRow("Admin", "System", "admin1", "12345678")]
         public void VisitUserPage(string first, string second, string login, string password)
         {
-            UserController userController = new(AuthMock.Object, UserServiceMock.Object,
-                                                PostServiceMock.Object, CommentServiceMock.Object);
+            UserController controller = new(UserServiceMock.Object, CommentServiceMock.Object);
             MockHttpSession mockHttpSession = new();
-            userController.ControllerContext = CreateControllerContext(mockHttpSession);
+            controller.ControllerContext = CreateControllerContext(mockHttpSession);
             User user = new(first, second, login, password);
-            userController.ControllerContext.HttpContext.Session.SetUserAsJson("user", user);
+            controller.ControllerContext.HttpContext.Session.SetUserAsJson("user", user);
 
-            var result = userController.VisitUserPage(login);
+            var result = controller.VisitUserPage(login);
 
             Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
             RedirectToActionResult redirect = (RedirectToActionResult)result;
@@ -55,13 +53,12 @@ namespace TestProject
         {
             User user = new(first, second, login, password);
             UserServiceMock.Setup(x => x.VisitUserPage(fakeLogin)).Returns(user).Verifiable();
-            UserController userController = new(AuthMock.Object, UserServiceMock.Object,
-                                                PostServiceMock.Object, CommentServiceMock.Object);
+            UserController controller = new(UserServiceMock.Object, CommentServiceMock.Object);
             MockHttpSession mockHttpSession = new();
-            userController.ControllerContext = CreateControllerContext(mockHttpSession);
-            userController.ControllerContext.HttpContext.Session.SetUserAsJson("user", user);
+            controller.ControllerContext = CreateControllerContext(mockHttpSession);
+            controller.ControllerContext.HttpContext.Session.SetUserAsJson("user", user);
 
-            var result = userController.VisitUserPage(fakeLogin);
+            var result = controller.VisitUserPage(fakeLogin);
 
             Assert.IsInstanceOfType(result, typeof(ViewResult));
             UserServiceMock.VerifyAll();
