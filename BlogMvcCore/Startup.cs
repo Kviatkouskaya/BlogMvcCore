@@ -24,14 +24,14 @@ namespace BlogMvcCore
         {
             services.AddTransient<IAuthenticationAction, Repository>();
             services.AddTransient<IUserAction, Repository>();
-            services.AddTransient<IPostAction, Repository>();
+            services.AddTransient<IPostAction, PostRepository>();
             services.AddTransient<ICommentAction, Repository>();
             services.AddTransient<Authentication>();
             services.AddTransient<UserService>();
             services.AddTransient<PostService>();
             services.AddTransient<CommentService>();
             services.AddControllersWithViews();
-            services.AddDbContext<UserDbContext>(options =>
+            services.AddDbContext<Storage.DbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("UserContext")));
             services.AddSession();
         }
