@@ -1,20 +1,19 @@
 ﻿using BlogMvcCore.DomainModel;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace BlogMvcCore.Storage
 {
     public class CommentRepository : ICommentAction
     {
-        private readonly DbContext commentCcontext;
-        public CommentRepository(DbContext context) => this.commentCcontext = context;
-        public void Dispose() => commentCcontext.Dispose();
+        private readonly DbContext DbContext;
+        public CommentRepository(DbContext context) => DbContext = context;
+        public void Dispose() => DbContext.Dispose();
 
         public void AddComment(DomainModel.Comment comment)
         {
-            Post entityPost = commentCcontext.Posts.Find(comment.Post.ID);
-            commentCcontext.Attach(entityPost);
-            commentCcontext.Comments.Add(new Comment
+            Post entityPost = DbContext.Posts.Find(comment.Post.ID);
+            DbContext.Attach(entityPost);
+            DbContext.Comments.Add(new Comment
             {
                 ID = comment.ID,
                 Parent = comment.Parent,
@@ -23,23 +22,23 @@ namespace BlogMvcCore.Storage
                 Text = comment.Text,
                 Date = comment.Date
             });
-            commentCcontext.SaveChanges();
+            DbContext.SaveChanges();
         }
 
         public void UpdateComment(long commentID, string commentText)
         {
-            var entityComment = commentCcontext.Comments.Find(commentID);
+            var entityComment = DbContext.Comments.Find(commentID);
             entityComment.Text = commentText;
-            commentCcontext.Comments.Update(entityComment);
-            commentCcontext.SaveChanges();
+            DbContext.Comments.Update(entityComment);
+            DbContext.SaveChanges();
         }
 
         public void DeleteComment(long commentID)
         {
-            var entity = commentCcontext.Comments.FirstOrDefault(x => x.ID == commentID);
+            var entity = DbContext.Comments.FirstOrDefault(x => x.ID == commentID);
             if (entity != null)
-                commentCcontext.Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
-            commentCcontext.SaveChanges();
+                DbContext.Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
+            DbContext.SaveChanges();
         }
     }
 }
