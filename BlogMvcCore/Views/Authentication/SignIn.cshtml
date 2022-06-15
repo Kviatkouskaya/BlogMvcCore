@@ -5,7 +5,7 @@
 
 <div>
     <h1><b>Signing in...</b></h1>
-    @using (Html.BeginForm("CheckIn", "User", FormMethod.Post))
+    @using (Html.BeginForm("CheckIn", "Authentication", FormMethod.Post))
     {
         <table>
             <tr><td>Login: </td><td>@Html.TextBox("Login", value: "")</td></tr>

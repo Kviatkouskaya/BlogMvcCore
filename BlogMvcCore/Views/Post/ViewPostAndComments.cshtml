@@ -9,7 +9,7 @@
             <td>
                 <p>Let's start discussing...</p>
                 <p></p>
-                @using (Html.BeginForm("AddComment", "User", FormMethod.Post))
+                @using (Html.BeginForm("AddComment", "Comment", FormMethod.Post))
                 {
                     @Html.TextBox("commentText", "", htmlAttributes: true)
                     <input type="hidden" id="postID" name="postID" value=@Model.ID />
@@ -18,7 +18,7 @@
                 <hr class="hr1">
                 @if (Model.Comments.Count() != 0)
                 {
-            <tr><td>@await Html.PartialAsync("_PostComment", Model.Comments)</td> </tr>
+            <tr><td>@Html.Partial("~/Views/Comment/_PostComment.cshtml", Model.Comments)</td> </tr>
                 }
     </table>
 </div>

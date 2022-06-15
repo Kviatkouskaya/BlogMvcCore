@@ -7,12 +7,12 @@
                 <td>
                     <div style="margin-left: @((item.Level + 1) * 20)px">
                         <p>
-                            @Html.ActionLink("Delete", "DeleteComment", "User", new{postID = item.Comment.Post.ID,commentID = item.Comment.ID})
-                            @Html.ActionLink("Edit", "EditComment", "User",new{commentID = item.Comment.ID, text = item.Comment.Text,postID = item.Comment.Post.ID},new {target="_blank"})
+                            @Html.ActionLink("Delete", "DeleteComment", "Comment", new{postID = item.Comment.Post.ID,commentID = item.Comment.ID})
+                            @Html.ActionLink("Edit", "EditComment", "Comment",new{commentID = item.Comment.ID, text = item.Comment.Text,postID = item.Comment.Post.ID},new {target="_blank"})
                         </p>
                         <p> @item.Comment.Author @item.Comment.Date.Day/ @item.Comment.Date.Month/ @item.Comment.Date.Year </p>
                         <p> @item.Comment.Text</p>
-                        @using (Html.BeginForm("AddComment", "User", FormMethod.Post))
+                        @using (Html.BeginForm("AddComment", "Comment", FormMethod.Post))
                         {
                             @Html.TextBox("commentText", "", htmlAttributes: true)
                             <input type="hidden" id="postID" name="postID" value=@item.Comment.Post.ID />
