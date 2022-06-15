@@ -4,7 +4,7 @@
 <div>
     <table>
         <tr><td>@await Html.PartialAsync("_UserInfo")</td></tr>
-        <tr><td></td><td> @await Html.PartialAsync("_AddPost")</td> </tr>
-        <tr><td>@await Html.PartialAsync("_UserPost")</td></tr>
+        <tr><td></td><td> @Html.Partial("~/Views/Post/_AddPost.cshtml")</td> </tr>
+        <tr><td>@Html.Partial("~/Views/Post/_UserPost.cshtml")</td></tr>
     </table>
 </div>

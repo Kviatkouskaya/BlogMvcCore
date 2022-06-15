@@ -68,6 +68,9 @@ namespace BlogMvcCore
                 endpoints.MapControllerRoute(
                     name: "User",
                     pattern: "{controller=User}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: "Post",
+                    pattern: "{controller=Post}/{action=index}/{id?}");
             });
         }
     }
