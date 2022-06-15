@@ -66,26 +66,5 @@ namespace TestProject
             Assert.IsInstanceOfType(result, typeof(ViewResult));
             UserServiceMock.VerifyAll();
         }
-
-        [TestMethod]
-        [DataRow("Post title", "Post text", "admin")]
-        [DataRow("New Post title", "New post text", "adamsm")]
-        [DataRow("Test title", "Test post text", "right")]
-        public void AddPost(string title, string postText, string ownerLogin)
-        {
-            User user = new("testUser", "secondName", "user", "123123");
-            AuthMock.Setup(x => x.CheckStringParams(title, postText, ownerLogin)).Returns(true).Verifiable();
-            PostServiceMock.Setup(x => x.AddPost(title, postText, ownerLogin)).Verifiable();
-            UserController userController = new(AuthMock.Object, UserServiceMock.Object,
-                                                PostServiceMock.Object, CommentServiceMock.Object);
-
-            var result = userController.AddPost(title, postText, ownerLogin);
-
-            Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
-            RedirectToActionResult redirect = (RedirectToActionResult)result;
-            Assert.AreEqual("UserPage", redirect.ActionName);
-            AuthMock.VerifyAll();
-            PostServiceMock.VerifyAll();
-        }
     }
 }
