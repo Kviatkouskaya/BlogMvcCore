@@ -22,16 +22,16 @@ namespace BlogMvcCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IAuthenticationAction, Repository>();
-            services.AddTransient<IUserAction, Repository>();
-            services.AddTransient<IPostAction, Repository>();
-            services.AddTransient<ICommentAction, Repository>();
+            services.AddTransient<IAuthenticationAction, AuthenticationRepository>();
+            services.AddTransient<IUserAction, UserRepository>();
+            services.AddTransient<IPostAction, PostRepository>();
+            services.AddTransient<ICommentAction, CommentRepository>();
             services.AddTransient<Authentication>();
             services.AddTransient<UserService>();
             services.AddTransient<PostService>();
             services.AddTransient<CommentService>();
             services.AddControllersWithViews();
-            services.AddDbContext<UserDbContext>(options =>
+            services.AddDbContext<Storage.DbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("UserContext")));
             services.AddSession();
         }

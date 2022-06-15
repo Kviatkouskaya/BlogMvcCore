@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace BlogMvcCore.Storage
 {
-    public class UserDbContext : IdentityDbContext<IdentityUser>
+    public class DbContext : IdentityDbContext<IdentityUser>
     {
-        public UserDbContext(DbContextOptions<UserDbContext> options)
+        public DbContext(DbContextOptions<DbContext> options)
                            : base(options) { Database.EnsureCreated(); }
         public DbSet<User> BlogUsers { get; set; }
         public DbSet<Post> Posts { get; set; }
