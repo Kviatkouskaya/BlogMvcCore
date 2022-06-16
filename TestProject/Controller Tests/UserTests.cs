@@ -29,6 +29,23 @@ namespace TestProject.Controller_Tests
 
         [TestMethod]
         [DataRow("Admin", "System", "admin1", "12345678")]
+        public void UserPage(string first, string second, string login, string password)
+        {
+            User user = new(first, second, login, password);
+            UserController controller = new(UserServiceMock.Object, CommentServiceMock.Object);
+            MockHttpSession mockHttpSession = new();
+            mockHttpSession.SetUserAsJson("user", user);
+            controller.ControllerContext = CreateControllerContext(mockHttpSession);
+
+            var result = controller.VisitUserPage(login);
+
+            Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
+            RedirectToActionResult redirect = (RedirectToActionResult)result;
+            Assert.AreEqual("UserPage", redirect.ActionName);
+        }
+
+        [TestMethod]
+        [DataRow("Admin", "System", "admin1", "12345678")]
         public void VisitUserPage(string first, string second, string login, string password)
         {
             UserController controller = new(UserServiceMock.Object, CommentServiceMock.Object);

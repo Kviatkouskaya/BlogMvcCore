@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
+using BlogMvcCore.Helpers;
 
 namespace TestProject.Controller_Tests
 {
@@ -23,6 +24,28 @@ namespace TestProject.Controller_Tests
             ControllerContext controllerContext = new();
             controllerContext.HttpContext = httpContext;
             return controllerContext;
+        }
+
+        [TestMethod]
+        [DataRow("Admin", "System", "admin", "12345678")]
+        public void SignOut(string first, string second, string login, string password)
+        {
+            User user = new(first, second, login, password);
+            AuthMock.Setup(x => x.SignOut()).Verifiable();
+            MockHttpSession mockHttpSession = new();
+            mockHttpSession.SetUserAsJson("user", user);
+            AuthenticationController controller = new(AuthMock.Object);
+            controller.ControllerContext = CreateControllerContext(mockHttpSession);
+
+            var result = controller.SignOut();
+
+            Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
+            RedirectToActionResult newResult = (RedirectToActionResult)result;
+            Assert.AreEqual("Index", newResult.ActionName);
+            var sessionResult = mockHttpSession.GetString("user");
+            var userSession = JsonConvert.DeserializeObject<User>(sessionResult.ToString());
+            Assert.AreEqual(null, userSession);
+            AuthMock.VerifyAll();
         }
 
         [TestMethod]
