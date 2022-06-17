@@ -1,10 +1,8 @@
-﻿using BlogMvcCore.DomainModel;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 
 namespace BlogMvcCore.Storage
 {
-    public class AuthenticationRepository : IAuthenticationAction
+    public class AuthenticationRepository : IAuthentication
     {
         private readonly DbContext DbContext;
         public AuthenticationRepository(DbContext dbContext) => DbContext = dbContext;
@@ -17,7 +15,7 @@ namespace BlogMvcCore.Storage
             return result != 0;
         }
 
-        public void Register(DomainModel.User newUser)
+        public void Register(User newUser)
         {
             var user = new User(newUser.FirstName, newUser.SecondName, newUser.Login, newUser.Password);
             DbContext.BlogUsers.Add(user);

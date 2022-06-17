@@ -1,13 +1,12 @@
 ﻿using BlogMvcCore.DomainModel;
-using BlogMvcCore.Services;
 
 namespace BlogMvcCore.Services
 {
     public class Authentication
     {
-        private readonly IAuthenticationAction authenticAction;
+        private readonly Storage.IAuthentication authenticAction;
         private readonly IUserAction userAction;
-        public Authentication(IAuthenticationAction authenticAction, IUserAction userAction)
+        public Authentication(Storage.IAuthentication authenticAction, IUserAction userAction)
         {
             this.authenticAction = authenticAction;
             this.userAction = userAction;
@@ -16,7 +15,7 @@ namespace BlogMvcCore.Services
                                            string password, string repPassword)
         {
             bool stringCheck = CheckStringParams(first, second, login, password, repPassword);
-            authenticAction.Register(new User(first, second, login, password));
+            authenticAction.Register(new Storage.User(first, second, login, password));
 
             return password == repPassword && stringCheck;
         }
