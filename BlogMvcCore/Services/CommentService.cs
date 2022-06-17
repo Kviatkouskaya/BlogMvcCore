@@ -9,8 +9,8 @@ namespace BlogMvcCore.Services
     {
         private readonly ICommentAction commentAction;
         private readonly IPostAction postAction;
-        private readonly IUserAction userAction;
-        public CommentService(ICommentAction commentAction, IPostAction postAction, IUserAction userAction)
+        private readonly Storage.IUser userAction;
+        public CommentService(ICommentAction commentAction, IPostAction postAction, Storage.IUser userAction)
         {
             this.commentAction = commentAction;
             this.postAction = postAction;

@@ -27,7 +27,7 @@ namespace BlogMvcCore.Controllers
             var userLogin = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user").Login;
             return View(userService.VisitUserPage(userLogin));
         }
-        
+
         public IActionResult ShowUsersList() => View(userService.ReturnUsers());
     }
 }

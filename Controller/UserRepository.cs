@@ -1,13 +1,12 @@
-﻿using BlogMvcCore.DomainModel;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace BlogMvcCore.Storage
 {
-    public class UserRepository : IUserAction
+    public class UserRepository : IUser
     {
         private readonly DbContext DbContext;
-        public UserRepository(DbContext context) => this.DbContext = context;
+        public UserRepository(DbContext context) => DbContext = context;
         public void Dispose() => DbContext.Dispose();
 
         public DomainModel.User FindUser(string login)

@@ -5,8 +5,8 @@ namespace BlogMvcCore.Services
     public class Authentication
     {
         private readonly Storage.IAuthentication authenticAction;
-        private readonly IUserAction userAction;
-        public Authentication(Storage.IAuthentication authenticAction, IUserAction userAction)
+        private readonly Storage.IUser userAction;
+        public Authentication(Storage.IAuthentication authenticAction, Storage.IUser userAction)
         {
             this.authenticAction = authenticAction;
             this.userAction = userAction;

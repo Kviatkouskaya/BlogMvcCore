@@ -23,7 +23,7 @@ namespace BlogMvcCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IAuthentication, AuthenticationRepository>();
-            services.AddTransient<IUserAction, UserRepository>();
+            services.AddTransient<IUser, UserRepository>();
             services.AddTransient<IPostAction, PostRepository>();
             services.AddTransient<ICommentAction, CommentRepository>();
             services.AddTransient<Authentication>();
