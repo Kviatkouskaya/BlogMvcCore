@@ -1,13 +1,12 @@
-﻿using BlogMvcCore.DomainModel;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace BlogMvcCore.Storage
 {
-    public class PostRepository : IPostAction
+    public class PostRepository : IPost
     {
         private readonly DbContext DbContext;
-        public PostRepository(DbContext context) => this.DbContext = context;
+        public PostRepository(DbContext context) => DbContext = context;
         public void Dispose() => DbContext.Dispose();
 
         public void AddPost(DomainModel.Post post)

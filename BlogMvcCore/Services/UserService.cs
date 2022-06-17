@@ -6,8 +6,8 @@ namespace BlogMvcCore.Services
     public class UserService
     {
         private readonly Storage.IUser context;
-        private readonly IPostAction postAction;
-        public UserService(Storage.IUser action, IPostAction postAction)
+        private readonly Storage.IPost postAction;
+        public UserService(Storage.IUser action, Storage.IPost postAction)
         {
             context = action;
             this.postAction = postAction;
