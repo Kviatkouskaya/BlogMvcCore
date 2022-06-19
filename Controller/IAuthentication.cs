@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace BlogMvcCore.DomainModel
+namespace BlogMvcCore.Storage
 {
-    public interface IAuthenticationAction : IDisposable
+    public interface IAuthentication : IDisposable
     {
         bool LoginUser(string login, string password);
         void Register(User user);

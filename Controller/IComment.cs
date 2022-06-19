@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlogMvcCore.DomainModel
+namespace BlogMvcCore.Storage
 {
-    public interface ICommentAction
+    public interface IComment
     {
-        void AddComment(Comment comment);
+        void AddComment(DomainModel.Comment comment);
         void UpdateComment(long commentID, string text);
         void DeleteComment(long commentID);
     }
