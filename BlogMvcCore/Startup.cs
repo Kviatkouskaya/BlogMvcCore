@@ -22,18 +22,28 @@ namespace BlogMvcCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IAuthentication, AuthenticationRepository>();
-            services.AddTransient<IUser, UserRepository>();
-            services.AddTransient<IPost, PostRepository>();
-            services.AddTransient<IComment, CommentRepository>();
-            services.AddTransient<Authentication>();
-            services.AddTransient<UserService>();
-            services.AddTransient<PostService>();
-            services.AddTransient<CommentService>();
+            AddAppRepository(services);
+            AddAppUserService(services);
             services.AddControllersWithViews();
             services.AddDbContext<Storage.DbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("UserContext")));
             services.AddSession();
+        }
+      
+        private void AddAppRepository(IServiceCollection services)
+        {
+            services.AddTransient<IAuthenticationAction, AuthenticationRepository>();
+            services.AddTransient<IUserAction, UserRepository>();
+            services.AddTransient<IPostAction, PostRepository>();
+            services.AddTransient<ICommentAction, CommentRepository>();
+        }
+
+        private void AddAppUserService(IServiceCollection services)
+        {
+            services.AddTransient<IAuthentication, AuthenticationRepository>();
+            services.AddTransient<IUser, UserRepository>();
+            services.AddTransient<IPost, PostRepository>();
+            services.AddTransient<IComment, CommentRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
