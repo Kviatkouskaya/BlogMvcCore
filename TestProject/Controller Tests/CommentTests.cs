@@ -12,7 +12,7 @@ namespace TestProject.Controller_Tests
     [TestClass]
     public class CommentTests
     {
-        private static ICommentAction CommentAction { get; set; }
+        private static IComment CommentAction { get; set; }
         private static IPostAction PostAction { get; set; }
         private static IUserAction UserAction { get; set; }
         private readonly Mock<CommentService> CommentService = new(CommentAction, PostAction, UserAction);

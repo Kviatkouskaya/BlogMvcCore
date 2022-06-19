@@ -15,7 +15,7 @@ namespace TestProject.Controller_Tests
     {
         private static IPostAction PostAction { get; set; }
         private static IUserAction UserAction { get; set; }
-        private static ICommentAction CommentAction { get; set; }
+        private static IComment CommentAction { get; set; }
         private Mock<PostService> PostServiceMock = new(PostAction, UserAction);
         private readonly Mock<CommentService> CommentService = new(CommentAction, PostAction, UserAction);
 
