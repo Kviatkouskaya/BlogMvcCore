@@ -14,16 +14,16 @@ namespace BlogMvcCore.Services
             this.userRepository = userRepository;
         }
 
-        public virtual PostDomainModel GetPost(long postID) => postRepository.FindPost(postID);
+        public virtual PostDomain GetPost(long postID) => postRepository.FindPost(postID);
 
-        public virtual List<PostDomainModel> ReturnPostList()
+        public virtual List<PostDomain> ReturnPostList()
         {
             return postRepository.GetPostList();
         }
 
         public virtual void AddPost(string title, string postText, string ownerLogin)
         {
-            PostDomainModel newPost = new()
+            PostDomain newPost = new()
             {
                 Author = userRepository.FindUser(ownerLogin),
                 Title = title,
@@ -35,7 +35,7 @@ namespace BlogMvcCore.Services
 
         public virtual void DeletePost(long postID) => postRepository.DeletePost(postID);
 
-        public virtual PostDomainModel GetPostWithComments(long postID, CommentService commentService)
+        public virtual PostDomain GetPostWithComments(long postID, CommentService commentService)
         {
             var post = GetPost(postID);
             var commentList = postRepository.GetPostComment(post);

@@ -2,9 +2,9 @@
 
 namespace BlogMvcCore.DomainModel
 {
-    public class UserDomainModel
+    public class UserDomain
     {
-        public UserDomainModel(string firstName, string secondName, string login, string password)
+        public UserDomain(string firstName, string secondName, string login, string password)
         {
             FirstName = firstName;
             SecondName = secondName;
@@ -15,6 +15,6 @@ namespace BlogMvcCore.DomainModel
         public string SecondName { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
-        public List<PostDomainModel> Posts { get; set; }
+        public List<PostDomain> Posts { get; set; }
     }
 }

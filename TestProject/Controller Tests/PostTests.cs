@@ -34,7 +34,7 @@ namespace TestProject.Controller_Tests
         [DataRow("Test title", "Test post text", "right")]
         public void AddPost(string title, string postText, string ownerLogin)
         {
-            UserDomainModel user = new("testUser", "secondName", "user", "123123");
+            UserDomain user = new("testUser", "secondName", "user", "123123");
             PostServiceMock.Setup(x => x.AddPost(title, postText, ownerLogin)).Verifiable();
             PostController controller = new(PostServiceMock.Object, CommentService.Object);
 

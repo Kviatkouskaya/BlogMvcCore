@@ -32,7 +32,7 @@ namespace TestProject.Controller_Tests
         [DataRow("Comment", "frank", 4, 5)]
         public void AddComment(string commentText, string ownerLogin, long postID, long parentID)
         {
-            UserDomainModel user = new("admin", "secondName", ownerLogin, "123123");
+            UserDomain user = new("admin", "secondName", ownerLogin, "123123");
             CommentController controller = new(CommentService.Object);
             CommentService.Setup(x => x.AddComment(commentText, postID, parentID, user)).Verifiable();
             MockHttpSession mockHttpSession = new();

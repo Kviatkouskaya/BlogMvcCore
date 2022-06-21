@@ -17,9 +17,9 @@ namespace BlogMvcCore.Services
             this.userRepository = userRepository;
         }
 
-        public virtual void AddComment(string commentText, long postID, long parentID, UserDomainModel user)
+        public virtual void AddComment(string commentText, long postID, long parentID, UserDomain user)
         {
-            CommentDomainModel comment = new()
+            CommentDomain comment = new()
             {
                 Post = postRepository.FindPost(postID),
                 Author = $"{user.FirstName} {user.SecondName}",
@@ -35,10 +35,10 @@ namespace BlogMvcCore.Services
 
         public virtual void DeleteComment(long commentID) => commentRepository.DeleteComment(commentID);
 
-        public virtual void FillCommentGen(List<CommentWithLevel> finalList, List<CommentDomainModel> commentList, int level, long parentID)
+        public virtual void FillCommentGen(List<CommentWithLevel> finalList, List<CommentDomain> commentList, int level, long parentID)
         {
             List<CommentWithLevel> commentWithLevels = new();
-            List<CommentDomainModel> childComment = commentList.Where(x => x.Parent == parentID).ToList();
+            List<CommentDomain> childComment = commentList.Where(x => x.Parent == parentID).ToList();
             if (childComment.Count != 0)
             {
                 foreach (var child in childComment)

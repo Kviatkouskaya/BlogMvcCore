@@ -13,14 +13,14 @@ namespace BlogMvcCore.Services
             this.postRepository = postRepository;
         }
 
-        public virtual UserDomainModel VisitUserPage(string login)
+        public virtual UserDomain VisitUserPage(string login)
         {
-            UserDomainModel user = userRepository.FindUser(login);
+            UserDomain user = userRepository.FindUser(login);
             user.Posts = postRepository.GetUserPost(user);
 
             return user;
         }
 
-        public virtual List<UserDomainModel> ReturnUsers() => userRepository.GetUsersList();
+        public virtual List<UserDomain> ReturnUsers() => userRepository.GetUsersList();
     }
 }
