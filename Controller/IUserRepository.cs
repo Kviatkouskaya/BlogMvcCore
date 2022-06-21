@@ -5,7 +5,7 @@ namespace BlogMvcCore.Storage
 {
     public interface IUserRepository : IDisposable
     {
-        List<DomainModel.User> GetUsersList();
-        DomainModel.User FindUser(string login);
+        List<DomainModel.UserDomainModel> GetUsersList();
+        DomainModel.UserDomainModel FindUser(string login);
     }
 }

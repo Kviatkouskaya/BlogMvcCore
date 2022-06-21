@@ -6,11 +6,11 @@ namespace BlogMvcCore.Storage
 {
     public interface IPostRepository : IDisposable
     {
-        void AddPost(DomainModel.Post post);
+        void AddPost(DomainModel.PostDomainModel post);
         void DeletePost(long postID);
-        List<DomainModel.Post> GetUserPost(DomainModel.User user);
-        List<DomainModel.Comment> GetPostComment(DomainModel.Post post);
-        DomainModel.Post FindPost(long postID);
-        List<DomainModel.Post> GetPostList();
+        List<DomainModel.PostDomainModel> GetUserPost(DomainModel.UserDomainModel user);
+        List<DomainModel.CommentDomainModel> GetPostComment(DomainModel.PostDomainModel post);
+        DomainModel.PostDomainModel FindPost(long postID);
+        List<DomainModel.PostDomainModel> GetPostList();
     }
 }

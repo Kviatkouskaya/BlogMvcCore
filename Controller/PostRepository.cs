@@ -9,7 +9,7 @@ namespace BlogMvcCore.Storage
         public PostRepository(DbContext context) => DbContext = context;
         public void Dispose() => DbContext.Dispose();
 
-        public void AddPost(DomainModel.Post post)
+        public void AddPost(DomainModel.PostDomainModel post)
         {
             UserEntity entityAuthor = DbContext.BlogUsers.Where(u => u.Login == post.Author.Login).
                                                   First();
@@ -33,15 +33,15 @@ namespace BlogMvcCore.Storage
             DbContext.SaveChanges();
         }
 
-        public List<DomainModel.Post> GetUserPost(DomainModel.User user)
+        public List<DomainModel.PostDomainModel> GetUserPost(DomainModel.UserDomainModel user)
         {
             var entityPostsList = DbContext.Posts.Where(p => p.Author.Login == user.Login)
                                                .ToList();
 
-            List<DomainModel.Post> postsDomain = new();
+            List<DomainModel.PostDomainModel> postsDomain = new();
             foreach (var item in entityPostsList)
             {
-                DomainModel.Post postDomain = new()
+                DomainModel.PostDomainModel postDomain = new()
                 {
                     ID = item.ID,
                     Author = user,
@@ -54,11 +54,11 @@ namespace BlogMvcCore.Storage
             return postsDomain.OrderByDescending(p => p.Date).ToList();
         }
 
-        public DomainModel.Post FindPost(long postID)
+        public DomainModel.PostDomainModel FindPost(long postID)
         {
             var postStorage = DbContext.Posts.Find(postID);
 
-            return new DomainModel.Post()
+            return new DomainModel.PostDomainModel()
             {
                 ID = postStorage.ID,
                 Title = postStorage.Title,
@@ -67,14 +67,14 @@ namespace BlogMvcCore.Storage
             }; ;
         }
 
-        public List<DomainModel.Post> GetPostList()
+        public List<DomainModel.PostDomainModel> GetPostList()
         {
             var entityPostsList = DbContext.Posts.ToList().OrderByDescending(p => p.Date);
 
-            List<DomainModel.Post> postList = new();
+            List<DomainModel.PostDomainModel> postList = new();
             foreach (var item in entityPostsList)
             {
-                DomainModel.Post postDomain = new()
+                DomainModel.PostDomainModel postDomain = new()
                 {
                     ID = item.ID,
                     Title = item.Title,
@@ -86,13 +86,13 @@ namespace BlogMvcCore.Storage
             return postList;
         }
 
-        public List<DomainModel.Comment> GetPostComment(DomainModel.Post post)
+        public List<DomainModel.CommentDomainModel> GetPostComment(DomainModel.PostDomainModel post)
         {
             var entityComments = DbContext.Comments.Where(c => c.Post.ID == post.ID).ToList();
 
-            var commentList = entityComments.Select(c => new DomainModel.Comment
+            var commentList = entityComments.Select(c => new DomainModel.CommentDomainModel
             {
-                Post = new DomainModel.Post
+                Post = new DomainModel.PostDomainModel
                 {
                     ID = post.ID,
                     Author = post.Author,

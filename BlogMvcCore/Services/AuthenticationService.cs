@@ -20,7 +20,7 @@ namespace BlogMvcCore.Services
             return password == repPassword && stringCheck;
         }
 
-        public virtual User CheckIn(string login, string password)
+        public virtual UserDomainModel CheckIn(string login, string password)
         {
             if (CheckStringParams(login, password) && authenticationRepository.LoginUser(login, password))
                 return userRepository.FindUser(login);
