@@ -3,17 +3,17 @@ using System.Linq;
 
 namespace BlogMvcCore.Storage
 {
-    public class CommentRepository : IComment
+    public class CommentRepository : ICommentRepository
     {
         private readonly DbContext DbContext;
         public CommentRepository(DbContext context) => DbContext = context;
         public void Dispose() => DbContext.Dispose();
 
-        public void AddComment(DomainModel.Comment comment)
+        public void AddComment(DomainModel.CommentDomain comment)
         {
-            Post entityPost = DbContext.Posts.Find(comment.Post.ID);
+            PostEntity entityPost = DbContext.Posts.Find(comment.Post.ID);
             DbContext.Attach(entityPost);
-            DbContext.Comments.Add(new Comment
+            DbContext.Comments.Add(new CommentEntity
             {
                 ID = comment.ID,
                 Parent = comment.Parent,

@@ -17,17 +17,17 @@ namespace BlogMvcCore.Controllers
         [HttpPost]
         public IActionResult AddComment(string commentText, long postID, long parentID)
         {
-            User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
+            UserDomain user = SessionHelper.GetUserFromJson<UserDomain>(HttpContext.Session, "user");
             commentService.AddComment(commentText, postID, parentID, user);
 
             return RedirectToAction("ViewPostAndComments", "Post", new { postID });
         }
 
-        public IActionResult EditComment(long commentID, string text, long postID) => View(new Comment
+        public IActionResult EditComment(long commentID, string text, long postID) => View(new CommentDomain
         {
             ID = commentID,
             Text = text,
-            Post = new Post { ID = postID }
+            Post = new PostDomain { ID = postID }
         });
 
         public IActionResult UpdateComment(long commentID, string text, long postID)

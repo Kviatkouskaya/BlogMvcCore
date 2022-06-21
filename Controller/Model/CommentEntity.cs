@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace BlogMvcCore.Storage
 {
-    public class Post
+    public class CommentEntity
     {
         public long ID { get; set; }
-        public User Author { get; set; }
-        public string Title { get; set; }
+        public PostEntity Post { get; set; }
+        public long Parent { get; set; }
+        public string Author { get; set; }
         public string Text { get; set; }
         public DateTime Date { get; set; }
     }

@@ -15,7 +15,7 @@ namespace TestProject.Controller_Tests
     {
         private static IAuthenticationAction AuthAction { get; set; }
         private static IUserAction UserAction { get; set; }
-        private readonly Mock<Authentication> AuthMock = new(AuthAction, UserAction);
+        private readonly Mock<AuthenticationService> AuthMock = new(AuthAction, UserAction);
 
         private static ControllerContext CreateControllerContext(MockHttpSession mockHttpSession)
         {
@@ -30,7 +30,7 @@ namespace TestProject.Controller_Tests
         [DataRow("Admin", "System", "admin", "12345678")]
         public void SignOut(string first, string second, string login, string password)
         {
-            User user = new(first, second, login, password);
+            UserDomain user = new(first, second, login, password);
             AuthMock.Setup(x => x.SignOut()).Verifiable();
             MockHttpSession mockHttpSession = new();
             mockHttpSession.SetUserAsJson("user", user);
@@ -43,7 +43,7 @@ namespace TestProject.Controller_Tests
             RedirectToActionResult newResult = (RedirectToActionResult)result;
             Assert.AreEqual("Index", newResult.ActionName);
             var sessionResult = mockHttpSession.GetString("user");
-            var userSession = JsonConvert.DeserializeObject<User>(sessionResult.ToString());
+            var userSession = JsonConvert.DeserializeObject<UserDomain>(sessionResult.ToString());
             Assert.AreEqual(null, userSession);
             AuthMock.VerifyAll();
         }
@@ -53,7 +53,7 @@ namespace TestProject.Controller_Tests
         public void CheckIn(string first, string second, string login, string password)
         {
 
-            User user = new(first, second, login, password);
+            UserDomain user = new(first, second, login, password);
             AuthMock.Setup(x => x.CheckIn(login, password)).Returns(user).Verifiable();
             MockHttpSession mockHttpSession = new();
             AuthenticationController controller = new(AuthMock.Object);
@@ -66,7 +66,7 @@ namespace TestProject.Controller_Tests
             Assert.AreEqual("UserPage", newResult.ActionName);
             var sessionResult = mockHttpSession.GetString("user");
             Assert.IsNotNull(sessionResult);
-            var userSession = JsonConvert.DeserializeObject<User>(sessionResult.ToString());
+            var userSession = JsonConvert.DeserializeObject<UserDomain>(sessionResult.ToString());
             Assert.AreEqual(user, userSession);
             AuthMock.VerifyAll();
         }
@@ -75,7 +75,7 @@ namespace TestProject.Controller_Tests
         [DataRow("admin", "12345679", null)]
         [DataRow("adams1", "qweasdzxc", null)]
         [DataRow("ight1", "123qwe123", null)]
-        public void CheckInFail(string login, string password, User user)
+        public void CheckInFail(string login, string password, UserDomain user)
         {
             AuthMock.Setup(x => x.CheckIn(login, password)).Returns(user).Verifiable();
             MockHttpSession mockHttpSession = new();

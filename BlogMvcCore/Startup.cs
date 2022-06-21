@@ -32,15 +32,15 @@ namespace BlogMvcCore
 
         private void AddAppRepository(IServiceCollection services)
         {
-            services.AddTransient<IAuthentication, AuthenticationRepository>();
-            services.AddTransient<IUser, UserRepository>();
-            services.AddTransient<IPost, PostRepository>();
-            services.AddTransient<IComment, CommentRepository>();
+            services.AddTransient<IAuthenticationRepository, AuthenticationRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IPostRepository, PostRepository>();
+            services.AddTransient<ICommentRepository, CommentRepository>();
         }
 
         private void AddAppUserService(IServiceCollection services)
         {
-            services.AddTransient<Authentication>();
+            services.AddTransient<AuthenticationService>();
             services.AddTransient<UserService>();
             services.AddTransient<PostService>();
             services.AddTransient<CommentService>();

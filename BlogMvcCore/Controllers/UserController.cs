@@ -19,12 +19,12 @@ namespace BlogMvcCore.Controllers
 
         public IActionResult VisitUserPage(string login)
         {
-            return login == SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user").Login ?
+            return login == SessionHelper.GetUserFromJson<UserDomain>(HttpContext.Session, "user").Login ?
                             RedirectToAction("UserPage") : View(userService.VisitUserPage(login));
         }
         public IActionResult UserPage()
         {
-            var userLogin = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user").Login;
+            var userLogin = SessionHelper.GetUserFromJson<UserDomain>(HttpContext.Session, "user").Login;
             return View(userService.VisitUserPage(userLogin));
         }
 

@@ -7,8 +7,8 @@ namespace BlogMvcCore.Controllers
 {
     public class AuthenticationController : Controller
     {
-        public readonly Authentication authentication;
-        public AuthenticationController(Authentication authentication) => this.authentication = authentication;
+        public readonly AuthenticationService authentication;
+        public AuthenticationController(AuthenticationService authentication) => this.authentication = authentication;
         public IActionResult Index() => View();
 
         public IActionResult Register() => View();

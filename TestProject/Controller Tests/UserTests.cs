@@ -31,7 +31,7 @@ namespace TestProject.Controller_Tests
         [DataRow("Admin", "System", "admin1", "12345678")]
         public void UserPage(string first, string second, string login, string password)
         {
-            User user = new(first, second, login, password);
+            UserDomain user = new(first, second, login, password);
             UserController controller = new(UserServiceMock.Object, CommentServiceMock.Object);
             MockHttpSession mockHttpSession = new();
             mockHttpSession.SetUserAsJson("user", user);
@@ -51,7 +51,7 @@ namespace TestProject.Controller_Tests
             UserController controller = new(UserServiceMock.Object, CommentServiceMock.Object);
             MockHttpSession mockHttpSession = new();
             controller.ControllerContext = CreateControllerContext(mockHttpSession);
-            User user = new(first, second, login, password);
+            UserDomain user = new(first, second, login, password);
             controller.ControllerContext.HttpContext.Session.SetUserAsJson("user", user);
 
             var result = controller.VisitUserPage(login);
@@ -68,7 +68,7 @@ namespace TestProject.Controller_Tests
         public void VisitUserPageFail(string first, string second, string login,
                                       string password, string fakeLogin)
         {
-            User user = new(first, second, login, password);
+            UserDomain user = new(first, second, login, password);
             UserServiceMock.Setup(x => x.VisitUserPage(fakeLogin)).Returns(user).Verifiable();
             UserController controller = new(UserServiceMock.Object, CommentServiceMock.Object);
             MockHttpSession mockHttpSession = new();

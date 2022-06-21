@@ -8,13 +8,13 @@ namespace BlogMvcCore.Storage
     {
         public DbContext(DbContextOptions<DbContext> options)
                            : base(options) { Database.EnsureCreated(); }
-        public DbSet<User> BlogUsers { get; set; }
-        public DbSet<Post> Posts { get; set; }
-        public DbSet<Comment> Comments { get; set; }
+        public DbSet<UserEntity> BlogUsers { get; set; }
+        public DbSet<PostEntity> Posts { get; set; }
+        public DbSet<CommentEntity> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<User>(entity =>
+            builder.Entity<UserEntity>(entity =>
             {
                 entity.HasIndex(l => l.Login).
                        IsUnique();

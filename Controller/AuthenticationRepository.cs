@@ -2,7 +2,7 @@
 
 namespace BlogMvcCore.Storage
 {
-    public class AuthenticationRepository : IAuthentication
+    public class AuthenticationRepository : IAuthenticationRepository
     {
         private readonly DbContext DbContext;
         public AuthenticationRepository(DbContext dbContext) => DbContext = dbContext;
@@ -15,9 +15,9 @@ namespace BlogMvcCore.Storage
             return result != 0;
         }
 
-        public void Register(User newUser)
+        public void Register(UserEntity newUser)
         {
-            var user = new User(newUser.FirstName, newUser.SecondName, newUser.Login, newUser.Password);
+            var user = new UserEntity(newUser.FirstName, newUser.SecondName, newUser.Login, newUser.Password);
             DbContext.BlogUsers.Add(user);
             DbContext.SaveChanges();
         }
