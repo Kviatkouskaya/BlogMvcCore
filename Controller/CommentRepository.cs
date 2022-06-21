@@ -11,9 +11,9 @@ namespace BlogMvcCore.Storage
 
         public void AddComment(DomainModel.Comment comment)
         {
-            Post entityPost = DbContext.Posts.Find(comment.Post.ID);
+            PostEntity entityPost = DbContext.Posts.Find(comment.Post.ID);
             DbContext.Attach(entityPost);
-            DbContext.Comments.Add(new Comment
+            DbContext.Comments.Add(new CommentEntity
             {
                 ID = comment.ID,
                 Parent = comment.Parent,

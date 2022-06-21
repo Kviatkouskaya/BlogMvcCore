@@ -15,7 +15,7 @@ namespace BlogMvcCore.Services
                                            string password, string repPassword)
         {
             bool stringCheck = CheckStringParams(first, second, login, password, repPassword);
-            authenticationRepository.Register(new Storage.User(first, second, login, password));
+            authenticationRepository.Register(new Storage.UserEntity(first, second, login, password));
 
             return password == repPassword && stringCheck;
         }

@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-
-namespace BlogMvcCore.Storage
+﻿namespace BlogMvcCore.Storage
 {
-    public class User
+    public class UserEntity
     {
-        public User(string firstName, string secondName, string login, string password)
+        public UserEntity(string firstName, string secondName, string login, string password)
         {
             FirstName = firstName;
             SecondName = secondName;

@@ -11,10 +11,10 @@ namespace BlogMvcCore.Storage
 
         public void AddPost(DomainModel.Post post)
         {
-            User entityAuthor = DbContext.BlogUsers.Where(u => u.Login == post.Author.Login).
+            UserEntity entityAuthor = DbContext.BlogUsers.Where(u => u.Login == post.Author.Login).
                                                   First();
             DbContext.Attach(entityAuthor);
-            DbContext.Posts.Add(new Post()
+            DbContext.Posts.Add(new PostEntity()
             {
                 ID = post.ID,
                 Author = entityAuthor,
