@@ -6,34 +6,39 @@ namespace BlogMvcCore.Services
 {
     public class PostService
     {
-        private readonly IUserAction userActionContext;
-        public PostService(IUserAction userAction) => userActionContext = userAction;
-
-        public virtual Post GetPost(long postID) => userActionContext.FindPost(postID);
-
-        public virtual List<Post> ReturnPostList()
+        private readonly Storage.IPostRepository postRepository;
+        private readonly Storage.IUserRepository userRepository;
+        public PostService(Storage.IPostRepository postRepository, Storage.IUserRepository userRepository)
         {
-            return userActionContext.GetPostList();
+            this.postRepository = postRepository;
+            this.userRepository = userRepository;
+        }
+
+        public virtual PostDomain GetPost(long postID) => postRepository.FindPost(postID);
+
+        public virtual List<PostDomain> ReturnPostList()
+        {
+            return postRepository.GetPostList();
         }
 
         public virtual void AddPost(string title, string postText, string ownerLogin)
         {
-            Post newPost = new()
+            PostDomain newPost = new()
             {
-                Author = userActionContext.FindUser(ownerLogin),
+                Author = userRepository.FindUser(ownerLogin),
                 Title = title,
                 Text = postText,
                 Date = DateTime.Now.Date
             };
-            userActionContext.AddPost(newPost);
+            postRepository.AddPost(newPost);
         }
 
-        public virtual void DeletePost(long postID) => userActionContext.DeletePost(postID);
+        public virtual void DeletePost(long postID) => postRepository.DeletePost(postID);
 
-        public virtual Post GetPostWithComments(long postID, CommentService commentService)
+        public virtual PostDomain GetPostWithComments(long postID, CommentService commentService)
         {
             var post = GetPost(postID);
-            var commentList = userActionContext.GetPostComment(post);
+            var commentList = postRepository.GetPostComment(post);
 
             List<CommentWithLevel> commentWithLevels = new();
             commentService.FillCommentGen(commentWithLevels, commentList, 0, default);

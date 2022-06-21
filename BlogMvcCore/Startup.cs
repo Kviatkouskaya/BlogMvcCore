@@ -22,15 +22,28 @@ namespace BlogMvcCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IUserAction, Repository>();
-            services.AddTransient<Authentication>();
+            AddAppRepository(services);
+            AddAppUserService(services);
+            services.AddControllersWithViews();
+            services.AddDbContext<Storage.DbContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("UserContext")));
+            services.AddSession();
+        }
+
+        private void AddAppRepository(IServiceCollection services)
+        {
+            services.AddTransient<IAuthenticationRepository, AuthenticationRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IPostRepository, PostRepository>();
+            services.AddTransient<ICommentRepository, CommentRepository>();
+        }
+
+        private void AddAppUserService(IServiceCollection services)
+        {
+            services.AddTransient<AuthenticationService>();
             services.AddTransient<UserService>();
             services.AddTransient<PostService>();
             services.AddTransient<CommentService>();
-            services.AddControllersWithViews();
-            services.AddDbContext<UserDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("UserContext")));
-            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,19 +61,19 @@ namespace BlogMvcCore
             }
             app.UseHttpsRedirection();
 
-            app.UseSession();
-
             app.UseStaticFiles();
 
             app.UseRouting();
 
             app.UseAuthorization();
 
+            app.UseSession();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=User}/{action=Index}/{id?}");
+                    pattern: "{controller=Authentication}/{action=index}/{id?}");
             });
         }
     }

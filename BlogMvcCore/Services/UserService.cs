@@ -5,17 +5,22 @@ namespace BlogMvcCore.Services
 {
     public class UserService
     {
-        private readonly IUserAction UserActionContext;
-        public UserService(IUserAction action) => UserActionContext = action;
-
-        public virtual User VisitUserPage(string login)
+        private readonly Storage.IUserRepository userRepository;
+        private readonly Storage.IPostRepository postRepository;
+        public UserService(Storage.IUserRepository userRepository, Storage.IPostRepository postRepository)
         {
-            User user = UserActionContext.FindUser(login);
-            user.Posts = UserActionContext.GetUserPost(user);
+            this.userRepository = userRepository;
+            this.postRepository = postRepository;
+        }
+
+        public virtual UserDomain VisitUserPage(string login)
+        {
+            UserDomain user = userRepository.FindUser(login);
+            user.Posts = postRepository.GetUserPost(user);
 
             return user;
         }
 
-        public virtual List<User> ReturnUsers() => UserActionContext.GetUsersList();
+        public virtual List<UserDomain> ReturnUsers() => userRepository.GetUsersList();
     }
 }

@@ -5,7 +5,7 @@
 
 <div>
     <h1><b>Register new user</b></h1>
-    @using (Html.BeginForm("CheckRegister", "User", FormMethod.Post))
+    @using (Html.BeginForm("CheckRegister", "Authentication", FormMethod.Post))
     {
         <table>
             <tr><td>First name:</td><td> @Html.TextBox("first", "")</td></tr>

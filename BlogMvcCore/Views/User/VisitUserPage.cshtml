@@ -1,4 +1,4 @@
-﻿@model User;
+﻿@model UserDomain;
 @{
     ViewData["Title"] = $"{Model.FirstName} {Model.SecondName}";
 }
@@ -6,6 +6,6 @@
 <div>
     <table>
         <tr><td>@await Html.PartialAsync("_UserInfo")</td></tr>
-        <tr><td>@await Html.PartialAsync("_UserPost")</td></tr>
+        <tr><td>@Html.Partial("~/Views/Post/_UserPost.cshtml")</td></tr>
     </table>
 </div>

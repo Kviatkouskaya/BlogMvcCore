@@ -8,115 +8,26 @@ namespace BlogMvcCore.Controllers
 {
     public class UserController : Controller
     {
-        public readonly Authentication authentication;
         public readonly UserService userService;
-        public readonly PostService postService;
         public readonly CommentService commentService;
-        public UserController(Authentication authentication,
-                              UserService userService,
-                              PostService postService,
+        public UserController(UserService userService,
                               CommentService commentService)
         {
-            this.authentication = authentication;
             this.userService = userService;
-            this.postService = postService;
             this.commentService = commentService;
-        }
-
-        public IActionResult Index() => View();
-
-        public IActionResult Register() => View();
-
-        [HttpPost]
-        public IActionResult CheckRegister(string first, string second, string login,
-                                           string password, string repPassword)
-        {
-            var registrationCheck = authentication.CheckUserRegistration(first, second, login, password, repPassword);
-            return registrationCheck ? RedirectToAction("SignIn") : RedirectToAction("Register");
-        }
-
-        public IActionResult SignIn() => View();
-
-        public new IActionResult SignOut()
-        {
-            SessionHelper.SetUserAsJson(HttpContext.Session, "user", null);
-            authentication.SignOut();
-
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public IActionResult CheckIn(string login, string password)
-        {
-            var user = authentication.CheckIn(login, password);
-            SessionHelper.SetUserAsJson(HttpContext.Session, "user", user);
-
-            return user == null ? RedirectToAction("SignIn") : RedirectToAction("UserPage");
         }
 
         public IActionResult VisitUserPage(string login)
         {
-            return login == SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user").Login ?
+            return login == SessionHelper.GetUserFromJson<UserDomain>(HttpContext.Session, "user").Login ?
                             RedirectToAction("UserPage") : View(userService.VisitUserPage(login));
         }
-
         public IActionResult UserPage()
         {
-            var userLogin = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user").Login;
-
+            var userLogin = SessionHelper.GetUserFromJson<UserDomain>(HttpContext.Session, "user").Login;
             return View(userService.VisitUserPage(userLogin));
         }
 
         public IActionResult ShowUsersList() => View(userService.ReturnUsers());
-
-        public IActionResult ViewRecentAddedPostList() => View("ViewRecentAddedPostList", postService.ReturnPostList());
-
-        [HttpPost]
-        public IActionResult AddPost(string title, string postText, string ownerLogin)
-        {
-            if (authentication.CheckStringParams(title, postText, ownerLogin))
-                postService.AddPost(title, postText, ownerLogin);
-
-            return RedirectToAction("UserPage");
-        }
-        [HttpDelete]
-        public IActionResult DeletePost(long postID)
-        {
-            postService.DeletePost(postID);
-            return RedirectToAction("UserPage");
-        }
-
-        public IActionResult ViewPostAndComments(long postID) => View(postService.GetPostWithComments(postID, commentService));
-
-        [HttpPost]
-        public IActionResult AddComment(string commentText, long postID, long parentID)
-        {
-            User user = SessionHelper.GetUserFromJson<User>(HttpContext.Session, "user");
-            if (authentication.CheckStringParams(commentText))
-                commentService.AddComment(commentText, postID, parentID, user);
-
-            return RedirectToAction("ViewPostAndComments", new { postID });
-        }
-
-        public IActionResult EditComment(long commentID, string text, long postID) => View(new Comment
-        {
-            ID = commentID,
-            Text = text,
-            Post = new Post { ID = postID }
-        });
-
-        public IActionResult UpdateComment(long commentID, string text, long postID)
-        {
-            if (authentication.CheckStringParams(text))
-                commentService.UpdateComment(commentID, text);
-
-            return RedirectToAction("ViewPostAndComments", new { postID });
-        }
-
-        public IActionResult DeleteComment(long postID, long commentID)
-        {
-            commentService.DeleteComment(commentID);
-            return RedirectToAction("ViewPostAndComments", new { postID });
-        }
     }
 }

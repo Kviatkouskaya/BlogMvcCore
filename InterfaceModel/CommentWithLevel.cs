@@ -8,7 +8,7 @@ namespace BlogMvcCore.DomainModel
 {
     public class CommentWithLevel
     {
-        public Comment Comment { get; set; }
+        public CommentDomain Comment { get; set; }
         public int Level { get; set; }
     }
 }

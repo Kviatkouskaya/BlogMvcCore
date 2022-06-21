@@ -1,4 +1,4 @@
-﻿@model User
+﻿@model UserDomain
 
 <table>
     <tr><td><h5><em>Previous posts:</em></h5></td></tr>
@@ -9,17 +9,17 @@
                 @foreach (var item in Model.Posts)
                 {
                     <table>
-                        <tr><td>@Html.ActionLink("Delete post","DeletePost","User", new {postID=item.ID})</td></tr>
+                        <tr><td>@Html.ActionLink("Delete post","DeletePost","Post", new {postID=item.ID})</td></tr>
                         <tr><td>@item.Author.FirstName @item.Author.SecondName @item.Date.Day/@item.Date.Month/@item.Date.Year</td></tr>
                         <tr><td>@item.Title</td></tr>
 
                         @if (item.Text.Count() > 500)
                         {
-                            <tr><td>@item.Text.Substring(0,500) @Html.ActionLink("view more","ViewPostAndComments", "User", new {postID=item.ID}, new {target="_blank"})</td></tr>
+                            <tr><td>@item.Text.Substring(0,500) @Html.ActionLink("view more","ViewPostAndComments", "Post", new {postID=item.ID}, new {target="_blank"})</td></tr>
                         }
                         else
                         {
-                            <tr><td>@item.Text @Html.ActionLink("view more","ViewPostAndComments","User", new {postID=item.ID}, new {target="_blank"})</td></tr>
+                            <tr><td>@item.Text @Html.ActionLink("view more","ViewPostAndComments","Post", new {postID=item.ID}, new {target="_blank"})</td></tr>
                         }
                     </table>
                     <hr class="hr1">
