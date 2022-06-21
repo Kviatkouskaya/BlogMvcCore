@@ -4,7 +4,7 @@ using BlogMvcCore.DomainModel;
 
 namespace BlogMvcCore.Storage
 {
-    public interface IPost : IDisposable
+    public interface IPostRepository : IDisposable
     {
         void AddPost(DomainModel.Post post);
         void DeletePost(long postID);

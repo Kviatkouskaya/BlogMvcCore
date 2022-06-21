@@ -2,33 +2,33 @@
 
 namespace BlogMvcCore.Services
 {
-    public class Authentication
+    public class AuthenticationService
     {
-        private readonly Storage.IAuthentication authenticAction;
-        private readonly Storage.IUser userAction;
-        public Authentication(Storage.IAuthentication authenticAction, Storage.IUser userAction)
+        private readonly Storage.IAuthenticationRepository authenticationRepository;
+        private readonly Storage.IUserRepository userRepository;
+        public AuthenticationService(Storage.IAuthenticationRepository authenticRepository, Storage.IUserRepository userRepository)
         {
-            this.authenticAction = authenticAction;
-            this.userAction = userAction;
+            this.authenticationRepository = authenticRepository;
+            this.userRepository = userRepository;
         }
         public virtual bool CheckUserRegistration(string first, string second, string login,
                                            string password, string repPassword)
         {
             bool stringCheck = CheckStringParams(first, second, login, password, repPassword);
-            authenticAction.Register(new Storage.User(first, second, login, password));
+            authenticationRepository.Register(new Storage.User(first, second, login, password));
 
             return password == repPassword && stringCheck;
         }
 
         public virtual User CheckIn(string login, string password)
         {
-            if (CheckStringParams(login, password) && authenticAction.LoginUser(login, password))
-                return userAction.FindUser(login);
+            if (CheckStringParams(login, password) && authenticationRepository.LoginUser(login, password))
+                return userRepository.FindUser(login);
 
             return null;
         }
 
-        public virtual void SignOut() => authenticAction.Dispose();
+        public virtual void SignOut() => authenticationRepository.Dispose();
 
         public virtual bool CheckStringParams(params string[] input)
         {

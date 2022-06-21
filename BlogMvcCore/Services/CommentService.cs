@@ -7,33 +7,33 @@ namespace BlogMvcCore.Services
 {
     public class CommentService
     {
-        private readonly Storage.IComment commentAction;
-        private readonly Storage.IPost postAction;
-        private readonly Storage.IUser userAction;
-        public CommentService(Storage.IComment commentAction, Storage.IPost postAction, Storage.IUser userAction)
+        private readonly Storage.ICommentRepository commentRepository;
+        private readonly Storage.IPostRepository postRepository;
+        private readonly Storage.IUserRepository userRepository;
+        public CommentService(Storage.ICommentRepository commentRepository, Storage.IPostRepository postRepository, Storage.IUserRepository userRepository)
         {
-            this.commentAction = commentAction;
-            this.postAction = postAction;
-            this.userAction = userAction;
+            this.commentRepository = commentRepository;
+            this.postRepository = postRepository;
+            this.userRepository = userRepository;
         }
 
         public virtual void AddComment(string commentText, long postID, long parentID, User user)
         {
             Comment comment = new()
             {
-                Post = postAction.FindPost(postID),
+                Post = postRepository.FindPost(postID),
                 Author = $"{user.FirstName} {user.SecondName}",
                 Parent = parentID,
                 Text = commentText,
                 Date = DateTime.Now.Date
             };
-            comment.Post.Author = userAction.FindUser(user.Login);
-            commentAction.AddComment(comment);
+            comment.Post.Author = userRepository.FindUser(user.Login);
+            commentRepository.AddComment(comment);
         }
 
-        public virtual void UpdateComment(long commentID, string commentText) => commentAction.UpdateComment(commentID, commentText);
+        public virtual void UpdateComment(long commentID, string commentText) => commentRepository.UpdateComment(commentID, commentText);
 
-        public virtual void DeleteComment(long commentID) => commentAction.DeleteComment(commentID);
+        public virtual void DeleteComment(long commentID) => commentRepository.DeleteComment(commentID);
 
         public virtual void FillCommentGen(List<CommentWithLevel> finalList, List<Comment> commentList, int level, long parentID)
         {

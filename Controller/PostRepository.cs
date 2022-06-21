@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace BlogMvcCore.Storage
 {
-    public class PostRepository : IPost
+    public class PostRepository : IPostRepository
     {
         private readonly DbContext DbContext;
         public PostRepository(DbContext context) => DbContext = context;

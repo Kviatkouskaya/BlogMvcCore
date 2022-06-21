@@ -15,7 +15,7 @@ namespace TestProject.Controller_Tests
     {
         private static IAuthenticationAction AuthAction { get; set; }
         private static IUserAction UserAction { get; set; }
-        private readonly Mock<Authentication> AuthMock = new(AuthAction, UserAction);
+        private readonly Mock<AuthenticationService> AuthMock = new(AuthAction, UserAction);
 
         private static ControllerContext CreateControllerContext(MockHttpSession mockHttpSession)
         {

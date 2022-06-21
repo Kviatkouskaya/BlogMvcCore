@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BlogMvcCore.Storage
 {
-    public interface IComment
+    public interface ICommentRepository
     {
         void AddComment(DomainModel.Comment comment);
         void UpdateComment(long commentID, string text);

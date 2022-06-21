@@ -2,7 +2,7 @@
 
 namespace BlogMvcCore.Storage
 {
-    public class AuthenticationRepository : IAuthentication
+    public class AuthenticationRepository : IAuthenticationRepository
     {
         private readonly DbContext DbContext;
         public AuthenticationRepository(DbContext dbContext) => DbContext = dbContext;
