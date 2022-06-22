@@ -7,8 +7,8 @@ namespace BlogMvcCore.Controllers
 {
     public class AuthenticationController : Controller
     {
-        public readonly AuthenticationService authentication;
-        public AuthenticationController(AuthenticationService authentication) => this.authentication = authentication;
+        public readonly AuthenticationService authenticationService;
+        public AuthenticationController(AuthenticationService authentication) => this.authenticationService = authentication;
         public IActionResult Index() => View();
 
         public IActionResult Register() => View();
@@ -17,7 +17,7 @@ namespace BlogMvcCore.Controllers
         public IActionResult CheckRegister(string first, string second, string login,
                                            string password, string repPassword)
         {
-            var registrationCheck = authentication.CheckUserRegistration(first, second, login, password, repPassword);
+            var registrationCheck = authenticationService.CheckUserRegistration(first, second, login, password, repPassword);
             return registrationCheck ? RedirectToAction("SignIn") : RedirectToAction("Register");
         }
 
@@ -26,7 +26,7 @@ namespace BlogMvcCore.Controllers
         public new IActionResult SignOut()
         {
             SessionHelper.SetUserAsJson(HttpContext.Session, "user", null);
-            authentication.SignOut();
+            authenticationService.SignOut();
 
             return RedirectToAction("Index");
         }
@@ -34,7 +34,7 @@ namespace BlogMvcCore.Controllers
         [HttpPost]
         public IActionResult CheckIn(string login, string password)
         {
-            var user = authentication.CheckIn(login, password);
+            var user = authenticationService.CheckIn(login, password);
             SessionHelper.SetUserAsJson(HttpContext.Session, "user", user);
 
             return user == null ? RedirectToAction("SignIn") : RedirectToAction("UserPage", "User");
