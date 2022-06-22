@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using BlogMvcCore.DomainModel;
 
 namespace BlogMvcCore.Storage
 {
     public interface IUserRepository : IDisposable
     {
-        List<DomainModel.UserDomain> GetUsersList();
-        DomainModel.UserDomain FindUser(string login);
+        List<UserDomain> GetUsersList();
+        UserDomain FindUser(string login);
     }
 }
