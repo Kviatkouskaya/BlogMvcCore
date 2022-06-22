@@ -1,5 +1,6 @@
 ﻿using BlogMvcCore.Controllers;
 using BlogMvcCore.DomainModel;
+using BlogMvcCore.Storage;
 using BlogMvcCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +14,9 @@ namespace TestProject.Controller_Tests
     [TestClass]
     public class AuthenticationTests
     {
-        private static IAuthenticationAction AuthAction { get; set; }
-        private static IUserAction UserAction { get; set; }
-        private readonly Mock<AuthenticationService> AuthMock = new(AuthAction, UserAction);
+        private static IAuthenticationRepository AuthenticationRepository { get; set; }
+        private static IUserRepository UserRepository { get; set; }
+        private readonly Mock<AuthenticationService> AuthMock = new(AuthenticationRepository, UserRepository);
 
         private static ControllerContext CreateControllerContext(MockHttpSession mockHttpSession)
         {
@@ -65,9 +66,6 @@ namespace TestProject.Controller_Tests
             RedirectToActionResult newResult = (RedirectToActionResult)result;
             Assert.AreEqual("UserPage", newResult.ActionName);
             var sessionResult = mockHttpSession.GetString("user");
-            Assert.IsNotNull(sessionResult);
-            var userSession = JsonConvert.DeserializeObject<UserDomain>(sessionResult.ToString());
-            Assert.AreEqual(user, userSession);
             AuthMock.VerifyAll();
         }
 

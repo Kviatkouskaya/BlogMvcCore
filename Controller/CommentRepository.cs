@@ -9,7 +9,7 @@ namespace BlogMvcCore.Storage
         public CommentRepository(DbContext context) => DbContext = context;
         public void Dispose() => DbContext.Dispose();
 
-        public void AddComment(DomainModel.CommentDomain comment)
+        public void AddComment(CommentDomain comment)
         {
             PostEntity entityPost = DbContext.Posts.Find(comment.Post.ID);
             DbContext.Attach(entityPost);

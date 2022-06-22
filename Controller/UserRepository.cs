@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BlogMvcCore.DomainModel;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace BlogMvcCore.Storage
@@ -9,16 +10,16 @@ namespace BlogMvcCore.Storage
         public UserRepository(DbContext context) => DbContext = context;
         public void Dispose() => DbContext.Dispose();
 
-        public DomainModel.UserDomain FindUser(string login)
+        public UserDomain FindUser(string login)
         {
             var user = DbContext.BlogUsers.Where(u => u.Login == login).First();
 
             return new(user.FirstName, user.SecondName, user.Login, user.Password);
         }
 
-        public List<DomainModel.UserDomain> GetUsersList()
+        public List<UserDomain> GetUsersList()
         {
-            var userDomainList = DbContext.BlogUsers.Select(u => new DomainModel.UserDomain(u.FirstName, u.SecondName, u.Login, u.Password))
+            var userDomainList = DbContext.BlogUsers.Select(u => new UserDomain(u.FirstName, u.SecondName, u.Login, u.Password))
                                                   .ToList();
             return userDomainList;
         }
