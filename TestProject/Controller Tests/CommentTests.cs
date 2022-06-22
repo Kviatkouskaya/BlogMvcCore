@@ -15,8 +15,7 @@ namespace TestProject.Controller_Tests
     {
         private static ICommentRepository CommentRepository { get; set; }
         private static IPostRepository PostRepository { get; set; }
-        private static IUserRepository UserAction { get; set; }
-        private readonly Mock<CommentService> CommentService = new(CommentRepository, PostRepository, UserAction);
+        private readonly Mock<CommentService> CommentService = new(CommentRepository, PostRepository);
 
         private static ControllerContext CreateControllerContext(MockHttpSession mockHttpSession)
         {

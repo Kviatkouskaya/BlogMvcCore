@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BlogMvcCore.Services;
+using BlogMvcCore.Helpers;
+using BlogMvcCore.DomainModel;
 
 namespace BlogMvcCore.Controllers
 {
@@ -16,9 +18,10 @@ namespace BlogMvcCore.Controllers
         public IActionResult ViewRecentAddedPostList() => View("ViewRecentAddedPostList", postService.ReturnPostList());
 
         [HttpPost]
-        public IActionResult AddPost(string title, string postText, string ownerLogin)
+        public IActionResult AddPost(string title, string postText)
         {
-            postService.AddPost(title, postText, ownerLogin);
+            var user = SessionHelper.GetUserFromJson<UserDomain>(HttpContext.Session, "user");
+            postService.AddPost(title, postText, user);
             return RedirectToAction("UserPage", "User");
         }
 
