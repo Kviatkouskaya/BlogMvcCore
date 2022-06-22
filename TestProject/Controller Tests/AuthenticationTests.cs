@@ -1,21 +1,22 @@
 ﻿using BlogMvcCore.Controllers;
 using BlogMvcCore.DomainModel;
 using BlogMvcCore.Services;
+using BlogMvcCore.Storage;
+using BlogMvcCore.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
-using BlogMvcCore.Helpers;
 
 namespace TestProject.Controller_Tests
 {
     [TestClass]
     public class AuthenticationTests
     {
-        private static IAuthenticationAction AuthAction { get; set; }
-        private static IUserAction UserAction { get; set; }
-        private readonly Mock<AuthenticationService> AuthMock = new(AuthAction, UserAction);
+        private static IAuthenticationRepository authenticationRepository { get; set; }
+        private static IUserRepository UserRepository { get; set; }
+        private readonly Mock<AuthenticationService> AuthMock = new(authenticationRepository, UserRepository);
 
         private static ControllerContext CreateControllerContext(MockHttpSession mockHttpSession)
         {
@@ -59,15 +60,11 @@ namespace TestProject.Controller_Tests
             AuthenticationController controller = new(AuthMock.Object);
             controller.ControllerContext = CreateControllerContext(mockHttpSession);
 
-            var result = controller.CheckIn(login, password);
+            var expected = controller.CheckIn(login, password);
 
-            Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
-            RedirectToActionResult newResult = (RedirectToActionResult)result;
-            Assert.AreEqual("UserPage", newResult.ActionName);
-            var sessionResult = mockHttpSession.GetString("user");
-            Assert.IsNotNull(sessionResult);
-            var userSession = JsonConvert.DeserializeObject<UserDomain>(sessionResult.ToString());
-            Assert.AreEqual(user, userSession);
+            Assert.IsInstanceOfType(expected, typeof(RedirectToActionResult));
+            RedirectToActionResult actual = (RedirectToActionResult)expected;
+            Assert.AreEqual("UserPage", actual.ActionName);
             AuthMock.VerifyAll();
         }
 

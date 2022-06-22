@@ -1,5 +1,6 @@
 using BlogMvcCore.Controllers;
 using BlogMvcCore.DomainModel;
+using BlogMvcCore.Storage;
 using BlogMvcCore.Helpers;
 using BlogMvcCore.Services;
 using Microsoft.AspNetCore.Http;
@@ -12,11 +13,11 @@ namespace TestProject.Controller_Tests
     [TestClass]
     public class UserTests
     {
-        private static IUserAction UserAction { get; set; }
-        private static IPostAction PostAction { get; set; }
-        private static IComment CommentAction { get; set; }
-        private readonly Mock<UserService> UserServiceMock = new(UserAction, PostAction);
-        private readonly Mock<CommentService> CommentServiceMock = new(CommentAction, PostAction, UserAction);
+        private static IUserRepository RepositoryAction { get; set; }
+        private static IPostRepository PostRepository { get; set; }
+        private static ICommentRepository CommentRepository { get; set; }
+        private readonly Mock<UserService> UserServiceMock = new(RepositoryAction, PostRepository);
+        private readonly Mock<CommentService> CommentServiceMock = new(CommentRepository, PostRepository, RepositoryAction);
 
         private static ControllerContext CreateControllerContext(MockHttpSession mockHttpSession)
         {
