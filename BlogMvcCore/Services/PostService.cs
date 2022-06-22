@@ -7,11 +7,9 @@ namespace BlogMvcCore.Services
     public class PostService
     {
         private readonly Storage.IPostRepository postRepository;
-        private readonly Storage.IUserRepository userRepository;
-        public PostService(Storage.IPostRepository postRepository, Storage.IUserRepository userRepository)
+        public PostService(Storage.IPostRepository postRepository)
         {
             this.postRepository = postRepository;
-            this.userRepository = userRepository;
         }
 
         public virtual PostDomain GetPost(long postID) => postRepository.FindPost(postID);
@@ -21,11 +19,11 @@ namespace BlogMvcCore.Services
             return postRepository.GetPostList();
         }
 
-        public virtual void AddPost(string title, string postText, string ownerLogin)
+        public virtual void AddPost(string title, string postText, UserDomain user)
         {
             PostDomain newPost = new()
             {
-                Author = userRepository.FindUser(ownerLogin),
+                Author = user,
                 Title = title,
                 Text = postText,
                 Date = DateTime.Now.Date
