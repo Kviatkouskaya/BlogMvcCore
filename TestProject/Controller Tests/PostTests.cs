@@ -1,23 +1,22 @@
 ﻿using BlogMvcCore.Controllers;
 using BlogMvcCore.DomainModel;
-using BlogMvcCore.Helpers;
+using BlogMvcCore.Storage;
 using BlogMvcCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Newtonsoft.Json;
 
 namespace TestProject.Controller_Tests
 {
     [TestClass]
     public class PostTests
     {
-        private static IPostAction PostAction { get; set; }
-        private static IUserAction UserAction { get; set; }
-        private static IComment CommentAction { get; set; }
-        private Mock<PostService> PostServiceMock = new(PostAction, UserAction);
-        private readonly Mock<CommentService> CommentService = new(CommentAction, PostAction, UserAction);
+        private static IPostRepository PostRepository { get; set; }
+        private static IUserRepository UserRepository { get; set; }
+        private static ICommentRepository CommentRepository { get; set; }
+        private Mock<PostService> PostServiceMock = new(PostRepository, UserRepository);
+        private readonly Mock<CommentService> CommentService = new(CommentRepository, PostRepository, UserRepository);
 
         private static ControllerContext CreateControllerContext(MockHttpSession mockHttpSession)
         {
