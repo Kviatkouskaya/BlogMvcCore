@@ -16,16 +16,7 @@ namespace TestProject.Controller_Tests
         private static IUserRepository UserRepository { get; set; }
         private static ICommentRepository CommentRepository { get; set; }
         private Mock<PostService> PostServiceMock = new(PostRepository, UserRepository);
-        private readonly Mock<CommentService> CommentService = new(CommentRepository, PostRepository, UserRepository);
-
-        private static ControllerContext CreateControllerContext(MockHttpSession mockHttpSession)
-        {
-            DefaultHttpContext httpContext = new();
-            httpContext.Session = mockHttpSession;
-            ControllerContext controllerContext = new();
-            controllerContext.HttpContext = httpContext;
-            return controllerContext;
-        }
+        private readonly Mock<CommentService> CommentService = new(CommentRepository, PostRepository);
 
         [TestMethod]
         [DataRow("Post title", "Post text", "admin")]
