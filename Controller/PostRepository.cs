@@ -28,9 +28,9 @@ namespace BlogMvcCore.Storage
 
         public void DeletePost(long postID)
         {
-            var deletingPost = DbContext.Posts.FirstOrDefault(x => x.ID == postID);
-            if (deletingPost != null)
-                DbContext.Entry(deletingPost).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
+            var entityPost = new PostEntity() { ID = postID };
+            if (entityPost != null)
+                DbContext.Entry(entityPost).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
             DbContext.SaveChanges();
         }
 
