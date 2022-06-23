@@ -11,7 +11,7 @@ namespace BlogMvcCore.Storage
         public bool LoginUser(string login, string password)
         {
             var result = DbContext.BlogUsers.Where(u => u.Login == login && u.Password == password)
-                                          .Count();
+                                            .Count();
             return result != 0;
         }
 

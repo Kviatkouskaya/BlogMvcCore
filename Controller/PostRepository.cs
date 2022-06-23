@@ -12,13 +12,11 @@ namespace BlogMvcCore.Storage
 
         public void AddPost(PostDomain post)
         {
-            UserEntity entityAuthor = DbContext.BlogUsers.Where(u => u.Login == post.Author.Login).
-                                                  First();
-            DbContext.Attach(entityAuthor);
             DbContext.Posts.Add(new PostEntity()
             {
                 ID = post.ID,
-                Author = entityAuthor,
+                Author = DbContext.BlogUsers.Where(u => u.Login == post.Author.Login)
+                                            .SingleOrDefault(),
                 Title = post.Title,
                 Text = post.Text,
                 Date = post.Date
@@ -28,9 +26,9 @@ namespace BlogMvcCore.Storage
 
         public void DeletePost(long postID)
         {
-            var deletingPost = DbContext.Posts.FirstOrDefault(x => x.ID == postID);
-            if (deletingPost != null)
-                DbContext.Entry(deletingPost).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
+            var entityPost = new PostEntity() { ID = postID };
+            if (entityPost != null)
+                DbContext.Entry(entityPost).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
             DbContext.SaveChanges();
         }
 

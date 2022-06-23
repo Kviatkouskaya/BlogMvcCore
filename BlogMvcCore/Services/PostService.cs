@@ -21,6 +21,8 @@ namespace BlogMvcCore.Services
 
         public virtual void AddPost(string title, string postText, UserDomain user)
         {
+            if (string.IsNullOrEmpty(title) || string.IsNullOrEmpty(postText)) return;
+
             PostDomain newPost = new()
             {
                 Author = user,

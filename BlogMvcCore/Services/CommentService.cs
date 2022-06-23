@@ -17,6 +17,7 @@ namespace BlogMvcCore.Services
 
         public virtual void AddComment(string commentText, long postID, long parentID, UserDomain user)
         {
+            if (string.IsNullOrEmpty(commentText) || string.IsNullOrWhiteSpace(commentText)) return;
             CommentDomain comment = new()
             {
                 Post = postRepository.FindPost(postID),
