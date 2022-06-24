@@ -12,12 +12,13 @@ namespace BlogMvcCore.Services
             this.userRepository = userRepository;
         }
         public virtual bool CheckUserRegistration(string first, string second, string login,
-                                           string password, string repPassword)
+                                           string password)
         {
-            bool stringCheck = CheckStringParams(first, second, login, password, repPassword);
-            authenticationRepository.Register(new Storage.UserEntity(first, second, login, password));
+            bool stringCheck = CheckStringParams(first, second, login, password);
+            if (stringCheck)
+                authenticationRepository.Register(new Storage.UserEntity(first, second, login, password));
 
-            return password == repPassword && stringCheck;
+            return stringCheck;
         }
 
         public virtual UserDomain CheckIn(string login, string password)

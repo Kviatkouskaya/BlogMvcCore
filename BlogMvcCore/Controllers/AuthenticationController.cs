@@ -14,10 +14,10 @@ namespace BlogMvcCore.Controllers
         public IActionResult Register() => View();
 
         [HttpPost]
-        public IActionResult CheckRegister(string first, string second, string login,
-                                           string password, string repPassword)
+        public IActionResult CheckRegister(string firstName, string secondName, string login,
+                                           string password)
         {
-            var registrationCheck = authenticationService.CheckUserRegistration(first, second, login, password, repPassword);
+            var registrationCheck = authenticationService.CheckUserRegistration(firstName, secondName, login, password);
             return registrationCheck ? RedirectToAction("SignIn") : RedirectToAction("Register");
         }
 
