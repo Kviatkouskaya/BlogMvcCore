@@ -1,16 +1,34 @@
-﻿@{
+﻿@model UserDomain
+@{
     ViewData["Title"] = "Sign in";
 }
-
-
-<div>
-    <h1><b>Signing in...</b></h1>
-    @using (Html.BeginForm("CheckIn", "Authentication", FormMethod.Post))
-    {
-        <table>
-            <tr><td>Login: </td><td>@Html.TextBox("Login", value: "")</td></tr>
-            <tr><td>Password: </td><td>@Html.Password("Password", value: "")</td></tr>
-        </table>
-        <p><button type="submit">Submit</button></p>
-    }
-</div>
+<table align="center">
+    <tr>
+        <td>
+            <h2><em><b>Signing in...</b></em></h2>
+        </td>
+    </tr>
+    <form method="post" asp-action="CheckIn" asp-controller="Authentication">
+    <tr>
+        <td>
+            Login
+        </td>
+        <td>
+            <input asp-for="Login" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Password
+        </td>
+        <td>
+            <input asp-for="Password" />
+        </td>
+    </tr>
+    <tr>
+        <td align="right">
+            <button type="submit">Submit</button>
+        </td>
+    </tr>
+    </form>
+</table>
