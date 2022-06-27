@@ -2,23 +2,45 @@
 
 <div>
     <table>
-        <tr><td> @Model.Author</td><td>@Model.Date</td></tr>
-        <tr><td>@Model.Title</td></tr>
-        <tr><td>@Model.Text</td></tr>
+        <tr>
+            <td>@Model.Author</td>
+            <td>@Model.Date</td>
+        </tr>
         <tr>
             <td>
-                <p>Let's start discussing...</p>
-                <p></p>
-                @using (Html.BeginForm("AddComment", "Comment", FormMethod.Post))
-                {
-                    @Html.TextBox("commentText", "", htmlAttributes: true)
-                    <input type="hidden" id="postID" name="postID" value=@Model.ID />
-                    <button type="submit">Comment</button>
-                }
+                @Model.Title
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Model.Text
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            Let's start discussing...
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <form method="post" asp-action="AddComment" asp-controller="Comment" asp-route-postID=@Model.ID asp-route-commentText="">
+
+                                <button type="submit">Submit</button>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
                 <hr class="hr1">
                 @if (Model.Comments.Count() != 0)
                 {
-            <tr><td>@Html.Partial("~/Views/Comment/_PostComment.cshtml", Model.Comments)</td> </tr>
+            <tr>
+                <td>
+                    <partial name="~/Views/Comment/_PostComment.cshtml" for=@Model.Comments></partial>
+                </td>
+            </tr>
                 }
     </table>
 </div>
