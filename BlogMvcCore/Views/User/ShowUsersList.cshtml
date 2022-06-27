@@ -8,7 +8,11 @@
     <table>
         @foreach (var item in Model)
         {
-            <tr><td>@Html.ActionLink($"{item.FirstName} {item.SecondName}", "VisitUserPage", "User", new { login = item.Login }) </td></tr>
+            <tr>
+                <td>
+                    <a asp-action="VisitUserPage" asp-controller="User" asp-route-login=@item.Login>@item.FirstName @item.SecondName</a>
+                </td>
+            </tr>
         }
     </table>
 </div>
