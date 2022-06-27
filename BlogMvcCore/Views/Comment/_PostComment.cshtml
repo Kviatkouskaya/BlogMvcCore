@@ -6,19 +6,39 @@
             <tr>
                 <td>
                     <div style="margin-left: @((item.Level + 1) * 20)px">
-                        <p>
-                            @Html.ActionLink("Delete", "DeleteComment", "Comment", new{postID = item.Comment.Post.ID,commentID = item.Comment.ID})
-                            @Html.ActionLink("Edit", "EditComment", "Comment",new{commentID = item.Comment.ID, text = item.Comment.Text,postID = item.Comment.Post.ID},new {target="_blank"})
-                        </p>
-                        <p> @item.Comment.Author @item.Comment.Date.Day/ @item.Comment.Date.Month/ @item.Comment.Date.Year </p>
-                        <p> @item.Comment.Text</p>
-                        @using (Html.BeginForm("AddComment", "Comment", FormMethod.Post))
-                        {
-                            @Html.TextBox("commentText", "", htmlAttributes: true)
-                            <input type="hidden" id="postID" name="postID" value=@item.Comment.Post.ID />
-                            <input type="hidden" id="parentID" name="parentID" value=@item.Comment.ID />
-                            <button type="submit">Comment</button>
-                        }
+                        <a asp-action="DeleteComment" asp-controller="Comment"
+                       asp-route-postID=@item.Comment.Post.ID
+                       asp-route-commentID=@item.Comment.ID>
+                            Delete
+                        </a>
+                        <a asp-action="EditComment" asp-controller="Comment"
+                       asp-route-commentID=@item.Comment.ID
+                       asp-route-text=@item.Comment.Text
+                       asp-route-postID=@item.Comment.Post.ID target="_blank">
+                            Edit
+                        </a>
+                        <table>
+                            <tr>
+                                <td>
+                                    @item.Comment.Author @item.Comment.Date.Day/ @item.Comment.Date.Month/ @item.Comment.Date.Year
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @item.Comment.Text
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <form method="post" asp-action="AddComment" asp-controller="Comment"
+                                      asp-route-postID=@item.Comment.Post.ID
+                                      asp-route-parentID=@item.Comment.ID>
+                                        <input type="text" id="commentText" name="commentText" />
+                                        <button type="submit">Submit</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </table>
                         <hr class="hr1">
                     </div>
                 </td>
