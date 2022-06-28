@@ -1,4 +1,5 @@
-﻿@model UserDomain
+﻿@addTagHelper *, BlogMvcCore
+@model UserDomain
 
 <table>
     <tr><td><h5><em>Previous posts:</em></h5></td></tr>
@@ -16,33 +17,9 @@
                         </tr>
                         <tr>
                             <td>
-                                @item.Author.FirstName @item.Author.SecondName @item.Date.Day/@item.Date.Month/@item.Date.Year
+                                <post-preview user-post="item"> </post-preview>
+                                <a asp-action="ViewPostAndComments" asp-controller="Post" asp-route-postID=@item.ID target="_blank">view more</a>
                             </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                @item.Title
-                            </td>
-                        </tr>
-
-                        @if (item.Text.Count() > 500)
-                        {
-                            <tr>
-                                <td>
-                                    @item.Text.Substring(0,500)
-                                    <a asp-action="ViewPostAndComments" asp-controller="Post" asp-route-postID=@item.ID target="_blank">view more</a>
-                                </td>
-                            </tr>
-                        }
-                        else
-                        {
-                            <tr>
-                                <td>
-                                    @item.Text
-                                    <a asp-action="ViewPostAndComments" asp-controller="Post" asp-route-postID=@item.ID target="_blank">view more</a>
-                                </td>
-                            </tr>
-                        }
                     </table>
                     <hr class="hr1">
                 }
