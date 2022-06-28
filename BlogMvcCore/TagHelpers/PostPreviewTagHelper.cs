@@ -1,31 +1,60 @@
 ﻿using BlogMvcCore.DomainModel;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using System.Collections.Generic;
 using System.Text;
-using System;
 
 namespace BlogMvcCore.TagHelpers
 {
     public class PostPreviewTagHelper : TagHelper
     {
-        public PostDomain UserPost { get; set; }
+        private readonly IHtmlGenerator _htmlGenerator;
+        [ViewContext]
+        public ViewContext ViewContext { get; set; }
+        public List<PostDomain> PostList { get; set; }
         private const int maxPostLength = 500;
+        public PostPreviewTagHelper(IHtmlGenerator htmlGenerator) => _htmlGenerator = htmlGenerator;
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "postpreview";
-            StringBuilder stringBuilder = new();
-            stringBuilder.Append($"{UserPost.Date.Day}.{UserPost.Date.Month}.{UserPost.Date.Year}</br>");
-            stringBuilder.Append($"{UserPost.Author.FirstName} {UserPost.Author.SecondName} </br>");
-            stringBuilder.Append($"{UserPost.Title}<br>");
-            if (UserPost.Text.Length > maxPostLength)
+            output.TagMode = TagMode.StartTagAndEndTag;
+            var htmlBuilder = new HtmlContentBuilder();
+            foreach (var item in PostList)
             {
-                var postText = UserPost.Text.Substring(0, maxPostLength);
-                stringBuilder.Append($"{postText}<br>");
+                htmlBuilder.AppendHtml($"{item.Date.Day}.{item.Date.Month}.{item.Date.Year}</br>");
+                htmlBuilder.AppendHtml($"{item.Author.FirstName} {item.Author.SecondName} </br>");
+                htmlBuilder.AppendHtml($"{item.Title}<br>");
+                if (item.Text.Length > maxPostLength)
+                {
+                    var postText = item.Text.Substring(0, maxPostLength);
+                    htmlBuilder.AppendHtml($"{postText}<br>");
+                }
+                else
+                {
+                    htmlBuilder.AppendHtml($"{item.Text}<br>");
+                }
+                htmlBuilder.AppendHtml(GenerateHtmlLink(item.ID));
+                htmlBuilder.AppendHtml("<hr class=hr1>");
             }
-            else
-            {
-                stringBuilder.Append($"{UserPost.Text}<br>");
-            }
-            output.Content.SetHtmlContent(stringBuilder.ToString());
+            output.Content.SetHtmlContent(htmlBuilder);
+        }
+        private TagBuilder GenerateHtmlLink(long postID)
+        {
+            var actionLink = _htmlGenerator.GenerateActionLink(
+                ViewContext,
+                linkText: "view more",
+                actionName: "ViewPostAndComments",
+                controllerName: "Post",
+                fragment: null,
+                hostname: null,
+                htmlAttributes: null,
+                protocol: null,
+                routeValues: new { postID }
+                );
+            return actionLink;
         }
     }
 }

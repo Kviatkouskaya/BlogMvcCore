@@ -3,8 +3,15 @@
 <div>
     <table>
         <tr>
-            <td>@Model.Author</td>
-            <td>@Model.Date</td>
+            <td>
+                <a asp-action="DeletePost" asp-controller="Post" asp-route-postID=@Model.ID>Delete post</a>
+            </td>
+        </tr>
+        <tr>
+            @*Model.Author.FirstName @Model.Author.SecondName*@
+            <td>
+                @Model.Date.Day /@Model.Date.Month /@Model.Date.Year
+            </td>
         </tr>
         <tr>
             <td>
@@ -27,7 +34,7 @@
                     <tr>
                         <td>
                             <form method="post" asp-action="AddComment" asp-controller="Comment" asp-route-postID=@Model.ID asp-route-commentText="">
-
+                                <input type="text" id="commentText" name="commentText" />
                                 <button type="submit">Submit</button>
                             </form>
                         </td>

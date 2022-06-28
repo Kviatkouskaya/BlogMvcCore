@@ -7,22 +7,7 @@
         <td>
             @if (Model.Posts.Count > 0)
             {
-                @foreach (var item in Model.Posts)
-                {
-                    <table>
-                        <tr>
-                            <td>
-                                <a asp-action="DeletePost" asp-controller="Post" asp-route-postID=@item.ID>Delete post</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <post-preview user-post="item"> </post-preview>
-                                <a asp-action="ViewPostAndComments" asp-controller="Post" asp-route-postID=@item.ID target="_blank">view more</a>
-                            </td>
-                    </table>
-                    <hr class="hr1">
-                }
+                <post-preview post-list="@Model.Posts"> </post-preview>
             }
             else
             {

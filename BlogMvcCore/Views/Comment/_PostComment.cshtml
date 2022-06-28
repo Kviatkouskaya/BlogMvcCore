@@ -30,9 +30,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <form method="post" asp-action="AddComment" asp-controller="Comment"
-                                      asp-route-postID=@item.Comment.Post.ID
-                                      asp-route-parentID=@item.Comment.ID>
+                                    <form method="post" asp-action="AddComment" asp-controller="Comment" asp-route-postID=@item.Comment.Post.ID asp-route-parentID=@item.Comment.ID>
                                         <input type="text" id="commentText" name="commentText" />
                                         <button type="submit">Submit</button>
                                     </form>
