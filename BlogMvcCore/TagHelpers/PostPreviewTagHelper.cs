@@ -36,12 +36,12 @@ namespace BlogMvcCore.TagHelpers
                 {
                     htmlBuilder.AppendHtml($"{item.Text}<br>");
                 }
-                htmlBuilder.AppendHtml(GenerateHtmlLink(item.ID));
+                htmlBuilder.AppendHtml(GenerateViewMoreLink(item.ID));
                 htmlBuilder.AppendHtml("<hr class=hr1>");
             }
             output.Content.SetHtmlContent(htmlBuilder);
         }
-        private TagBuilder GenerateHtmlLink(long postID)
+        private TagBuilder GenerateViewMoreLink(long postID)
         {
             var actionLink = _htmlGenerator.GenerateActionLink(
                 ViewContext,
