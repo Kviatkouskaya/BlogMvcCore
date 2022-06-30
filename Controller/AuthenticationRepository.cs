@@ -4,8 +4,8 @@ namespace BlogMvcCore.Storage
 {
     public class AuthenticationRepository : IAuthenticationRepository
     {
-        private readonly DbContext DbContext;
-        public AuthenticationRepository(DbContext dbContext) => DbContext = dbContext;
+        private readonly AppDbContext DbContext;
+        public AuthenticationRepository(AppDbContext dbContext) => DbContext = dbContext;
         public void Dispose() => DbContext.Dispose();
 
         public bool LoginUser(string login, string password)

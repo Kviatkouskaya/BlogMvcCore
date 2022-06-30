@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BlogMvcCore.Migrations
 {
-    [DbContext(typeof(Storage.DbContext))]
+    [DbContext(typeof(Storage.AppDbContext))]
     [Migration("20220516153932_ParentField")]
     partial class ParentField
     {

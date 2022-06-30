@@ -6,8 +6,8 @@ namespace BlogMvcCore.Storage
 {
     public class PostRepository : IPostRepository
     {
-        private readonly DbContext DbContext;
-        public PostRepository(DbContext context) => DbContext = context;
+        private readonly AppDbContext DbContext;
+        public PostRepository(AppDbContext context) => DbContext = context;
         public void Dispose() => DbContext.Dispose();
 
         public void AddPost(PostDomain post)
