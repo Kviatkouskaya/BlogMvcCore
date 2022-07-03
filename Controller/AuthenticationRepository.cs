@@ -15,7 +15,7 @@ namespace BlogMvcCore.Storage
             return result != 0;
         }
 
-        public void Register(UserEntity newUser)
+        public void AddUser(UserEntity newUser)
         {
             var user = new UserEntity(newUser.FirstName, newUser.SecondName, newUser.Login, newUser.Password);
             DbContext.BlogUsers.Add(user);

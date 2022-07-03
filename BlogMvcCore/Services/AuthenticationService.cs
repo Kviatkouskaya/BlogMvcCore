@@ -1,5 +1,6 @@
 ﻿using BlogMvcCore.DomainModel;
 
+
 namespace BlogMvcCore.Services
 {
     public class AuthenticationService
@@ -11,13 +12,14 @@ namespace BlogMvcCore.Services
             this.authenticationRepository = authenticRepository;
             this.userRepository = userRepository;
         }
-        public virtual bool CheckUserRegistration(string first, string second, string login,
-                                           string password)
+
+        public virtual bool AddUser(string first, string second, string login, string password)
         {
             bool stringCheck = CheckStringParams(first, second, login, password);
             if (stringCheck)
-                authenticationRepository.Register(new Storage.UserEntity(first, second, login, password));
-
+            {
+                authenticationRepository.AddUser(new Storage.UserEntity(first, second, login, password));
+            }
             return stringCheck;
         }
 
