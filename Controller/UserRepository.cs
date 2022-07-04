@@ -6,8 +6,8 @@ namespace BlogMvcCore.Storage
 {
     public class UserRepository : IUserRepository
     {
-        private readonly DbContext DbContext;
-        public UserRepository(DbContext context) => DbContext = context;
+        private readonly AppDbContext DbContext;
+        public UserRepository(AppDbContext context) => DbContext = context;
         public void Dispose() => DbContext.Dispose();
 
         public UserDomain FindUser(string login)

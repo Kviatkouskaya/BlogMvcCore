@@ -5,8 +5,8 @@ namespace BlogMvcCore.Storage
 {
     public class CommentRepository : ICommentRepository
     {
-        private readonly DbContext DbContext;
-        public CommentRepository(DbContext context) => DbContext = context;
+        private readonly AppDbContext DbContext;
+        public CommentRepository(AppDbContext context) => DbContext = context;
         public void Dispose() => DbContext.Dispose();
 
         public void AddComment(CommentDomain comment)
