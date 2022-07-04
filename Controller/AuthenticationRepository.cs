@@ -8,16 +8,18 @@ namespace BlogMvcCore.Storage
         public AuthenticationRepository(AppDbContext dbContext) => DbContext = dbContext;
         public void Dispose() => DbContext.Dispose();
 
-        public bool LoginUser(string login, string password)
+        public UserEntity LoginUser(string login, string password)
         {
-            var result = DbContext.BlogUsers.Where(u => u.Login == login && u.Password == password)
-                                            .Count();
-            return result != 0;
+            var userCredentials = DbContext.BlogUsers.Select(x => new UserEntity(null, null, x.Login, x.Password, x.Salt))
+                                                     .FirstOrDefault(x => x.Login == login);
+            //var result = DbContext.BlogUsers.Where(u => u.Login == login && u.Password == password)
+            //.Count();
+            return userCredentials;
         }
 
-        public void AddUser(UserEntity newUser)
+        public void AddUser(UserEntity user)
         {
-            var user = new UserEntity(newUser.FirstName, newUser.SecondName, newUser.Login, newUser.Password);
+            // var user = new UserEntity(newUser.FirstName, newUser.SecondName, newUser.Login, newUser.Password, newUser.Salt);
             DbContext.BlogUsers.Add(user);
             DbContext.SaveChanges();
         }
