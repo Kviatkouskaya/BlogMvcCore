@@ -2,7 +2,7 @@
 {
     public class UserEntity
     {
-        public UserEntity(string firstName, string secondName, string login, string password,string salt)
+        public UserEntity(string firstName, string secondName, string login, string password, string salt)
         {
             FirstName = firstName;
             SecondName = secondName;

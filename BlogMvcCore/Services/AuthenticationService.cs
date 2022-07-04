@@ -30,12 +30,10 @@ namespace BlogMvcCore.Services
             if (CheckStringParams(login, password))
             {
                 Storage.UserEntity userEntity = authenticationRepository.LoginUser(login, password);
-
-                bool verifiedPassword = BCrypt.Net.BCrypt.Verify(password + userEntity.Salt, userEntity.Password);
+                bool verifiedPassword = BCrypt.Net.BCrypt.Verify(password, userEntity.Password);
                 if (login == userEntity.Login && verifiedPassword)
                     return userRepository.FindUser(login);
             }
-
             return null;
         }
 

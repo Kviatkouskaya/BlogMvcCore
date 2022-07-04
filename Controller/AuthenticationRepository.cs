@@ -10,16 +10,12 @@ namespace BlogMvcCore.Storage
 
         public UserEntity LoginUser(string login, string password)
         {
-            var userCredentials = DbContext.BlogUsers.Select(x => new UserEntity(null, null, x.Login, x.Password, x.Salt))
-                                                     .FirstOrDefault(x => x.Login == login);
-            //var result = DbContext.BlogUsers.Where(u => u.Login == login && u.Password == password)
-            //.Count();
+            var userCredentials = DbContext.BlogUsers.FirstOrDefault(x => x.Login == login);
             return userCredentials;
         }
 
         public void AddUser(UserEntity user)
         {
-            // var user = new UserEntity(newUser.FirstName, newUser.SecondName, newUser.Login, newUser.Password, newUser.Salt);
             DbContext.BlogUsers.Add(user);
             DbContext.SaveChanges();
         }
