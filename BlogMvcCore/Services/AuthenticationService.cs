@@ -20,7 +20,7 @@ namespace BlogMvcCore.Services
             {
                 string salt = BCrypt.Net.BCrypt.GenerateSalt();
                 string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, salt);
-                authenticationRepository.AddUser(new Storage.UserEntity(first, second, login, hashedPassword, salt));
+                authenticationRepository.AddUser(new Storage.UserEntity(first, second, login, hashedPassword));
             }
             return stringCheck;
         }
