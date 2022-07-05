@@ -17,7 +17,7 @@ namespace BlogMvcCore.Controllers
         public IActionResult CheckRegister(string firstName, string secondName, string login,
                                            string password)
         {
-            var registrationCheck = authenticationService.CheckUserRegistration(firstName, secondName, login, password);
+            var registrationCheck = authenticationService.AddUser(firstName, secondName, login, password);
             return registrationCheck ? RedirectToAction("SignIn") : RedirectToAction("Register");
         }
 

@@ -1,4 +1,5 @@
 ﻿using BlogMvcCore.DomainModel;
+using BCrypt.Net;
 
 namespace BlogMvcCore.Services
 {
@@ -11,21 +12,28 @@ namespace BlogMvcCore.Services
             this.authenticationRepository = authenticRepository;
             this.userRepository = userRepository;
         }
-        public virtual bool CheckUserRegistration(string first, string second, string login,
-                                           string password)
+
+        public virtual bool AddUser(string first, string second, string login, string password)
         {
             bool stringCheck = CheckStringParams(first, second, login, password);
             if (stringCheck)
-                authenticationRepository.Register(new Storage.UserEntity(first, second, login, password));
-
+            {
+                string salt = BCrypt.Net.BCrypt.GenerateSalt();
+                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, salt);
+                authenticationRepository.AddUser(new Storage.UserEntity(first, second, login, hashedPassword, salt));
+            }
             return stringCheck;
         }
 
         public virtual UserDomain CheckIn(string login, string password)
         {
-            if (CheckStringParams(login, password) && authenticationRepository.LoginUser(login, password))
-                return userRepository.FindUser(login);
-
+            if (CheckStringParams(login, password))
+            {
+                Storage.UserEntity userEntity = authenticationRepository.LoginUser(login, password);
+                bool verifiedPassword = BCrypt.Net.BCrypt.Verify(password, userEntity.Password);
+                if (login == userEntity.Login && verifiedPassword)
+                    return userRepository.FindUser(login);
+            }
             return null;
         }
 
