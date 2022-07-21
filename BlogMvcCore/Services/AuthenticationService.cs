@@ -1,5 +1,4 @@
 ﻿using BlogMvcCore.DomainModel;
-using BCrypt.Net;
 
 namespace BlogMvcCore.Services
 {
