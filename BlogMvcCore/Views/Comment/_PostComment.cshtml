@@ -1,13 +1,4 @@
-﻿@* @addTagHelper *, BlogMvcCore*@
-@model List<CommentWithLevel>
-@*
-<div >
-    <table>
-        <hierarchical-comment comment-list="@Model"></hierarchical-comment>
-    </table>
-</div>
-*@
-
+﻿@model List<CommentWithLevel>
 <div>
     <table>
         @foreach (var item in Model)
