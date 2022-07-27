@@ -95,10 +95,10 @@ namespace TestProject.Controller_Tests
         public void Register(string first, string second, string login,
                              string password, string repPassword)
         {
-            AuthMock.Setup(x => x.CheckUserRegistration(first, second, login, password, repPassword)).Returns(true).Verifiable();
+            AuthMock.Setup(x => x.AddUser(first, second, login, password)).Returns(true).Verifiable();
             AuthenticationController userController = new(AuthMock.Object);
 
-            var result = userController.CheckRegister(first, second, login, password, repPassword);
+            var result = userController.CheckRegister(first, second, login, password);
 
             Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
             RedirectToActionResult newResult = (RedirectToActionResult)result;
@@ -113,10 +113,10 @@ namespace TestProject.Controller_Tests
         public void RegisterFail(string first, string second, string login,
                                  string password, string repPassword)
         {
-            AuthMock.Setup(x => x.CheckUserRegistration(first, second, login, password, repPassword)).Returns(false).Verifiable();
+            AuthMock.Setup(x => x.AddUser(first, second, login, password)).Returns(false).Verifiable();
             AuthenticationController userController = new(AuthMock.Object);
 
-            var result = userController.CheckRegister(first, second, login, password, repPassword);
+            var result = userController.CheckRegister(first, second, login, password);
 
             Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
             RedirectToActionResult newResult = (RedirectToActionResult)result;
