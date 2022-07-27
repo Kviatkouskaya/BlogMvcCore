@@ -1,14 +1,15 @@
 ﻿using BlogMvcCore.DomainModel;
+using BlogMvcCore.Storage;
 
 namespace BlogMvcCore.Services
 {
     public class AuthenticationService
     {
-        private readonly Storage.IAuthenticationRepository authenticationRepository;
-        private readonly Storage.IUserRepository userRepository;
-        public AuthenticationService(Storage.IAuthenticationRepository authenticRepository, Storage.IUserRepository userRepository)
+        private readonly IAuthenticationRepository authenticationRepository;
+        private readonly IUserRepository userRepository;
+        public AuthenticationService(IAuthenticationRepository authenticRepository, IUserRepository userRepository)
         {
-            this.authenticationRepository = authenticRepository;
+            authenticationRepository = authenticRepository;
             this.userRepository = userRepository;
         }
 
@@ -19,7 +20,7 @@ namespace BlogMvcCore.Services
             {
                 string salt = BCrypt.Net.BCrypt.GenerateSalt();
                 string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, salt);
-                authenticationRepository.AddUser(new Storage.UserEntity(first, second, login, hashedPassword));
+                authenticationRepository.AddUser(new UserEntity(first, second, login, hashedPassword));
             }
             return stringCheck;
         }
@@ -28,7 +29,7 @@ namespace BlogMvcCore.Services
         {
             if (CheckStringParams(login, password))
             {
-                Storage.UserEntity userEntity = authenticationRepository.LoginUser(login, password);
+                UserEntity userEntity = authenticationRepository.LoginUser(login, password);
                 bool verifiedPassword = BCrypt.Net.BCrypt.Verify(password, userEntity.Password);
                 if (login == userEntity.Login && verifiedPassword)
                     return userRepository.FindUser(login);
