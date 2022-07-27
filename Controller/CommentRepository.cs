@@ -5,19 +5,18 @@ namespace BlogMvcCore.Storage
 {
     public class CommentRepository : ICommentRepository
     {
-        private readonly DbContext DbContext;
-        public CommentRepository(DbContext context) => DbContext = context;
+        private readonly AppDbContext DbContext;
+        public CommentRepository(AppDbContext context) => DbContext = context;
         public void Dispose() => DbContext.Dispose();
 
-        public void AddComment(DomainModel.CommentDomain comment)
+        public void AddComment(CommentDomain comment)
         {
-            PostEntity entityPost = DbContext.Posts.Find(comment.Post.ID);
-            DbContext.Attach(entityPost);
             DbContext.Comments.Add(new CommentEntity
             {
                 ID = comment.ID,
                 Parent = comment.Parent,
-                Post = entityPost,
+                Post = DbContext.Posts.Where(x => x.ID == comment.Post.ID)
+                                      .SingleOrDefault(),
                 Author = comment.Author,
                 Text = comment.Text,
                 Date = comment.Date
@@ -27,7 +26,7 @@ namespace BlogMvcCore.Storage
 
         public void UpdateComment(long commentID, string commentText)
         {
-            var entityComment = DbContext.Comments.Find(commentID);
+            var entityComment = new CommentEntity() { ID = commentID, Text = commentText };
             entityComment.Text = commentText;
             DbContext.Comments.Update(entityComment);
             DbContext.SaveChanges();
@@ -35,9 +34,8 @@ namespace BlogMvcCore.Storage
 
         public void DeleteComment(long commentID)
         {
-            var entity = DbContext.Comments.FirstOrDefault(x => x.ID == commentID);
-            if (entity != null)
-                DbContext.Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
+            var entity = new CommentEntity() { ID = commentID };
+            DbContext.Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
             DbContext.SaveChanges();
         }
     }

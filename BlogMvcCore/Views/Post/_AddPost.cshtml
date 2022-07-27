@@ -1,11 +1,25 @@
 ﻿@model UserDomain
-@using (Html.BeginForm("AddPost", "Post", FormMethod.Post))
-{
-    <table>
-        <tr><td><h5><em>Create a new post:</em></h5></td></tr>
-        <tr><td>Title:  @Html.TextBox("title", "", htmlAttributes: true)</td></tr>
-        <tr><td> @Html.TextArea("postText", "", rows: 8, columns: 40, htmlAttributes: true)</td></tr>
-        <tr><td><button type="submit">Save</button></td></tr>
-    </table>
-    <input type="hidden" id="ownerLogin" name="ownerLogin" value=@Model.Login />
-}
+<table>
+    <tr>
+        <td>
+            <h5><em>Create a new post:</em></h5>
+        </td>
+    </tr>
+    <tr>
+        <form method="post" asp-action="AddPost" asp-controller="Post">
+        <td>
+            Title <input type="text" id="title" name="title" />
+        </td>
+    <tr />
+    <tr>
+        <td>
+            <input type="text" id="postText" name="postText" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <button type="submit">Submit</button>
+        </td>
+        </form>
+    </tr>
+</table>

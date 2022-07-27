@@ -1,15 +1,28 @@
-﻿@{
-    var time = DateTime.Now.Hour;
-    var dayTime = time < 12 && time > 6 ? $"morning" :
-                      (time < 18 ? "afternoon" : "evening");
-    var greeting = $"Good {dayTime}!";
-}
+﻿@addTagHelper *, BlogMvcCore
 @{
-    ViewData["Title"] = "Sign in or register";
+    ViewData["Title"] = "Start page";
 }
-
 <div>
-    <p><h2 align="center"><b><em>@greeting</em></b></h2></p>
-    <p></p>
-    <p align="center">@Html.ActionLink("Sign in", "SignIn") or @Html.ActionLink("Register", "Register")</p>
+    <table align="center">
+        <tr>
+            <td>
+                <h2><b><em><greeting></greeting></em></b></h2>
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <a asp-area="" asp-controller="Authentication" asp-action="SignIn">Sign in</a>
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <b>or</b>
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <a asp-area="" asp-controller="Authentication" asp-action="Register">Register</a>
+            </td>
+        </tr>
+    </table>
 </div>

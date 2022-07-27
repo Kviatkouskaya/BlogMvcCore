@@ -9,13 +9,12 @@
         </tr>
         <tr>
             <td>
-                @using (Html.BeginForm("UpdateComment", "Comment", FormMethod.Post))
-                {
-                    @Html.TextBox("text", $"{Model.Text}", htmlAttributes: true)
+                <form method="post" asp-controller="Comment" asp-action="UpdateComment">
+                    <input asp-for="Text" />
                     <input type="hidden" id="commentID" name="commentID" value=@Model.ID />
                     <input type="hidden" id="postID" name="postID" value=@Model.Post.ID />
-                    <button type="submit">Comment</button>
-                }
+                    <button type="submit">Submit</button>
+                </form>
             </td>
         </tr>
     </table>

@@ -1,4 +1,5 @@
-﻿@model List<UserDomain>
+﻿@addTagHelper *, BlogMvcCore
+@model List<UserDomain>
 
 @{
     ViewData["Title"] = "Blogs List";
@@ -6,9 +7,6 @@
 
 <div>
     <table>
-        @foreach (var item in Model)
-        {
-            <tr><td>@Html.ActionLink($"{item.FirstName} {item.SecondName}", "VisitUserPage", "User", new { login = item.Login }) </td></tr>
-        }
+        <users-list user-list="@Model"></users-list>
     </table>
 </div>

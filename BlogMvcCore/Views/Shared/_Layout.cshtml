@@ -11,9 +11,9 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="User" asp-action="Index"><p align="left"><h4><em> @Html.ActionLink("Users", "ShowUsersList", "User")</em></h4></p></a>
-                <a class="navbar-brand" asp-area="" asp-controller="User" asp-action="Index"><p align="left"><h4><em> @Html.ActionLink("Posts", "ViewRecentAddedPostList", "Post")</em></h4></p></a>
-                <a class="navbar-brand" asp-area="" asp-controller="User" asp-action="SignOut"><p align="right"><em> @Html.ActionLink("SignOut", "SignOut", "Authentication")</em></a>
+                <a class="navbar-brand" asp-area="" asp-controller="User" asp-action="ShowUsersList">Users</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Post" asp-action="ViewRecentAddedPostList">Posts</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Authentication" asp-action="SignOut">SignOut</a>
             </div>
         </nav>
     </header>

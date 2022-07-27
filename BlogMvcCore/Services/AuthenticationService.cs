@@ -1,30 +1,39 @@
 ﻿using BlogMvcCore.DomainModel;
+using BlogMvcCore.Storage;
 
 namespace BlogMvcCore.Services
 {
     public class AuthenticationService
     {
-        private readonly Storage.IAuthenticationRepository authenticationRepository;
-        private readonly Storage.IUserRepository userRepository;
-        public AuthenticationService(Storage.IAuthenticationRepository authenticRepository, Storage.IUserRepository userRepository)
+        private readonly IAuthenticationRepository authenticationRepository;
+        private readonly IUserRepository userRepository;
+        public AuthenticationService(IAuthenticationRepository authenticRepository, IUserRepository userRepository)
         {
-            this.authenticationRepository = authenticRepository;
+            authenticationRepository = authenticRepository;
             this.userRepository = userRepository;
         }
-        public virtual bool CheckUserRegistration(string first, string second, string login,
-                                           string password, string repPassword)
-        {
-            bool stringCheck = CheckStringParams(first, second, login, password, repPassword);
-            authenticationRepository.Register(new Storage.UserEntity(first, second, login, password));
 
-            return password == repPassword && stringCheck;
+        public virtual bool AddUser(string first, string second, string login, string password)
+        {
+            bool stringCheck = CheckStringParams(first, second, login, password);
+            if (stringCheck)
+            {
+                string salt = BCrypt.Net.BCrypt.GenerateSalt();
+                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, salt);
+                authenticationRepository.AddUser(new UserEntity(first, second, login, hashedPassword));
+            }
+            return stringCheck;
         }
 
         public virtual UserDomain CheckIn(string login, string password)
         {
-            if (CheckStringParams(login, password) && authenticationRepository.LoginUser(login, password))
-                return userRepository.FindUser(login);
-
+            if (CheckStringParams(login, password))
+            {
+                UserEntity userEntity = authenticationRepository.LoginUser(login, password);
+                bool verifiedPassword = BCrypt.Net.BCrypt.Verify(password, userEntity.Password);
+                if (login == userEntity.Login && verifiedPassword)
+                    return userRepository.FindUser(login);
+            }
             return null;
         }
 

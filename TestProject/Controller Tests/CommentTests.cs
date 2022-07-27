@@ -1,5 +1,6 @@
 ﻿using BlogMvcCore.Controllers;
 using BlogMvcCore.DomainModel;
+using BlogMvcCore.Storage;
 using BlogMvcCore.Helpers;
 using BlogMvcCore.Services;
 using Microsoft.AspNetCore.Http;
@@ -12,10 +13,9 @@ namespace TestProject.Controller_Tests
     [TestClass]
     public class CommentTests
     {
-        private static IComment CommentAction { get; set; }
-        private static IPostAction PostAction { get; set; }
-        private static IUserAction UserAction { get; set; }
-        private readonly Mock<CommentService> CommentService = new(CommentAction, PostAction, UserAction);
+        private static ICommentRepository CommentRepository { get; set; }
+        private static IPostRepository PostRepository { get; set; }
+        private readonly Mock<CommentService> CommentService = new(CommentRepository, PostRepository);
 
         private static ControllerContext CreateControllerContext(MockHttpSession mockHttpSession)
         {
@@ -34,17 +34,16 @@ namespace TestProject.Controller_Tests
         {
             UserDomain user = new("admin", "secondName", ownerLogin, "123123");
             CommentController controller = new(CommentService.Object);
-            CommentService.Setup(x => x.AddComment(commentText, postID, parentID, user)).Verifiable();
+            CommentService.Setup(x => x.AddComment(commentText, postID, parentID, user));
             MockHttpSession mockHttpSession = new();
             controller.ControllerContext = CreateControllerContext(mockHttpSession);
             controller.ControllerContext.HttpContext.Session.SetUserAsJson("user", user);
 
-            var result = controller.AddComment(commentText, postID, parentID);
+            var expected = controller.AddComment(commentText, postID, parentID);
 
-            Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
-            RedirectToActionResult redirect = (RedirectToActionResult)result;
+            Assert.IsInstanceOfType(expected, typeof(RedirectToActionResult));
+            RedirectToActionResult redirect = (RedirectToActionResult)expected;
             Assert.AreEqual("ViewPostAndComments", redirect.ActionName);
-            CommentService.VerifyAll();
         }
     }
 }

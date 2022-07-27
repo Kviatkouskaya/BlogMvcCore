@@ -25,7 +25,7 @@ namespace BlogMvcCore
             AddAppRepository(services);
             AddAppUserService(services);
             services.AddControllersWithViews();
-            services.AddDbContext<Storage.DbContext>(options =>
+            services.AddDbContext<Storage.AppDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("UserContext")));
             services.AddSession();
         }

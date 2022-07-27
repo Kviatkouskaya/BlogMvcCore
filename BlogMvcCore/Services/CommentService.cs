@@ -9,16 +9,15 @@ namespace BlogMvcCore.Services
     {
         private readonly Storage.ICommentRepository commentRepository;
         private readonly Storage.IPostRepository postRepository;
-        private readonly Storage.IUserRepository userRepository;
-        public CommentService(Storage.ICommentRepository commentRepository, Storage.IPostRepository postRepository, Storage.IUserRepository userRepository)
+        public CommentService(Storage.ICommentRepository commentRepository, Storage.IPostRepository postRepository)
         {
             this.commentRepository = commentRepository;
             this.postRepository = postRepository;
-            this.userRepository = userRepository;
         }
 
         public virtual void AddComment(string commentText, long postID, long parentID, UserDomain user)
         {
+            if (string.IsNullOrEmpty(commentText) || string.IsNullOrWhiteSpace(commentText)) return;
             CommentDomain comment = new()
             {
                 Post = postRepository.FindPost(postID),
@@ -27,7 +26,7 @@ namespace BlogMvcCore.Services
                 Text = commentText,
                 Date = DateTime.Now.Date
             };
-            comment.Post.Author = userRepository.FindUser(user.Login);
+            comment.Post.Author = user;
             commentRepository.AddComment(comment);
         }
 

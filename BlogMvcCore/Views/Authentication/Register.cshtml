@@ -1,24 +1,43 @@
-﻿@{
+﻿@model UserDomain
+@{
     ViewData["Title"] = "Register";
 }
+<h1><em><b>Register new user</b></em></h1>
 
-
-<div>
-    <h1><b>Register new user</b></h1>
-    @using (Html.BeginForm("CheckRegister", "Authentication", FormMethod.Post))
-    {
-        <table>
-            <tr><td>First name:</td><td> @Html.TextBox("first", "")</td></tr>
-            <tr><td><p></p></td></tr>
-            <tr><td>Second name:</td><td> @Html.TextBox("second", "")</td></tr>
-            <tr><td><p></p></td></tr>
-            <tr><td>Login:</td><td> @Html.TextBox("login", "")</td></tr>
-            <tr><td><p></p></td></tr>
-            <tr><td>Password:</td><td> @Html.TextBox("password", "")</td></tr>
-            <tr><td><p></p></td></tr>
-            <tr><td>Repeat password:</td><td> @Html.TextBox("repPassword", "")</td></tr>
-            <tr><td><p></p></td></tr>
-        </table>
-        <p><button type="submit">Submit</button></p>
-    }
-</div>
+<form method="post" asp-controller="Authentication" asp-action="CheckRegister">
+    <table>
+        <tr>
+            <td>
+                First name
+            </td>
+            <td>
+                <input asp-for="FirstName" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Second name
+            </td>
+            <td>
+                <input asp-for="SecondName" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Login
+            </td>
+            <td>
+                <input asp-for="Login" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Password
+            </td>
+            <td>
+                <input asp-for="Password" />
+            </td>
+        </tr>
+    </table>
+    <input type="submit" value="Register" />
+</form>
